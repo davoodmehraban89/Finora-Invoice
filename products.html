@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>کالاها | فینورا</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+        * { font-family: Vazir, sans-serif; }
+        body { background: #f4f6f9; padding-top: 70px; }
+        .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 220px; background: #0d47a1; padding: 20px 0; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar a { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.8); text-decoration: none; padding: 14px 24px; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.12); color: #fff; border-right-color: #f9a825; }
+        .sidebar a i { font-size: 20px; width: 24px; }
+        .sidebar .brand { font-size: 22px; font-weight: 700; color: #fff; text-align: center; padding: 10px 0 30px 0; }
+        .sidebar .brand span { color: #f9a825; }
+        .content { margin-right: 240px; padding: 20px; }
+        .logout-btn { position: absolute; bottom: 30px; right: 24px; left: 24px; color: rgba(255,255,255,0.7); text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; transition: 0.3s; }
+        .logout-btn:hover { background: rgba(255,0,0,0.15); color: #fff; }
+        .btn-gold { background: #f9a825; color: #fff; border: none; border-radius: 10px; padding: 8px 20px; }
+        .btn-gold:hover { background: #f57f17; color: #fff; }
+        @media (max-width: 768px) { .sidebar { width: 70px; } .sidebar a span { display: none; } .sidebar .brand { font-size: 16px; } .content { margin-right: 80px; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="brand">فینورا <span>✨</span></div>
+    <a href="dashboard.html"><i class="bi bi-grid"></i> <span>داشبورد</span></a>
+    <a href="customers.html"><i class="bi bi-people"></i> <span>اشخاص</span></a>
+    <a href="products.html" class="active"><i class="bi bi-box"></i> <span>کالاها</span></a>
+    <a href="new-invoice.html"><i class="bi bi-file-earmark-plus"></i> <span>فاکتور جدید</span></a>
+    <a href="invoices.html"><i class="bi bi-receipt"></i> <span>لیست فاکتورها</span></a>
+    <a href="#" id="logoutBtn" class="logout-btn"><i class="bi bi-box-arrow-left"></i> <span>خروج</span></a>
+</div>
+
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-primary">📦 مدیریت کالاها</h3>
+        <button class="btn btn-gold" data-bs-toggle="modal" data-bs-target="#productModal">+ کالای جدید</button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <input type="text" id="searchProduct" class="form-control mb-3" placeholder="جستجوی کالا..." />
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>کد</th><th>نام</th><th>قیمت خرید</th><th>قیمت فروش</th><th>موجودی</th><th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsList">
+                        <tr><td colspan="6" class="text-center text-muted">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">افزودن

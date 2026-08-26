@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>فاکتور جدید | فینورا</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+        * { font-family: Vazir, sans-serif; }
+        body { background: #f4f6f9; padding-top: 70px; }
+        .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 220px; background: #0d47a1; padding: 20px 0; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar a { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.8); text-decoration: none; padding: 14px 24px; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.12); color: #fff; border-right-color: #f9a825; }
+        .sidebar a i { font-size: 20px; width: 24px; }
+        .sidebar .brand { font-size: 22px; font-weight: 700; color: #fff; text-align: center; padding: 10px 0 30px 0; }
+        .sidebar .brand span { color: #f9a825; }
+        .content { margin-right: 240px; padding: 20px; }
+        .logout-btn { position: absolute; bottom: 30px; right: 24px; left: 24px; color: rgba(255,255,255,0.7); text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; transition: 0.3s; }
+        .logout-btn:hover { background: rgba(255,0,0,0.15); color: #fff; }
+        .btn-gold { background: #f9a825; color: #fff; border: none; border-radius: 10px; padding: 8px 20px; }
+        .btn-gold:hover { background: #f57f17; color: #fff; }
+        .btn-outline-gold { border: 2px solid #f9a825; color: #f9a825; background: transparent; border-radius: 10px; }
+        .btn-outline-gold:hover { background: #f9a825; color: #fff; }
+        .invoice-item { background: #f8f9fa; border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        @media (max-width: 768px) { .sidebar { width: 70px; } .sidebar a span { display: none; } .sidebar .brand { font-size: 16px; } .content { margin-right: 80px; } }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="brand">فینورا <span>✨</span></div>
+    <a href="dashboard.html"><i class="bi bi-grid"></i> <span>داشبورد</span></a>
+    <a href="customers.html"><i class="bi bi-people"></i> <span>اشخاص</span></a>
+    <a href="products.html"><i class="bi bi-box"></i> <span>کالاها</span></a>
+    <a href="new-invoice.html" class="active"><i class="bi bi-file-earmark-plus"></i> <span>فاکتور جدید</span></a>
+    <a href="invoices.html"><i class="bi bi-receipt"></i> <span>لیست فاکتورها</span></a>
+    <a href="#" id="logoutBtn" class="logout-btn"><i class="bi bi-box-arrow-left"></i> <span>خروج</span></a>
+</div>
+
+<div class="content">
+    <h3 class="fw-bold text-primary mb-4">📝 صدور فاکتور جدید</h3>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <label class="form-label fw-semibold">مشتری *</label>
+                            <select id="customerSelect" class="form-select"><option value="">انتخاب مشتری...</option></select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fw-semibold">تاریخ</label>
+                            <input type="text" id="invoiceDate" class="form-control" />
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fw-semibold">شماره فاکتور</label>
+                            <input type="text" id="invoiceNumber" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white fw-bold">🛒 افزودن کالا</div>
+                <div class="card-body">
+                    <div class="row g-2">
+                        <div class="col-md-4"><select id="productSelect" class="form-select"><option value="">انتخاب کالا...</option></select></div>
+                        <div class="col-md-2"><input type="number" id="itemQty" class="form-control" placeholder="تعداد" value="1" /></div>
+                        <div class="col-md-2"><input type="number" id="itemPrice" class="form-control" placeholder="قیمت" /></div>
+                        <div class="col-md-2"><button class="btn btn-gold w-100" id="addItemBtn">➕ افزودن</button></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">📋 اقلام فاکتور</div>
+                <div class="card-body" id="itemsContainer">
+                    <p class="text-muted text-center">هیچ کالایی اضافه نشده است</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">💰 جمع‌آوری</div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between"><span>جمع کل:</span><strong id="subtotal">0</strong></div>
+                    <div class="d-flex justify-content-between"><span>تخفیف (٪):</span><input type="number" id="discountPercent" class="form-control form-control-sm w-50" value="0" /></div>
+                    <div class="d-flex justify-content-between"><span>مالیات (۹٪):</span><strong id="taxAmount">0</strong></div>
+                    <hr />
+                    <div class="d-flex justify-content-between"><span class="fw-bold">مبلغ نهایی:</span><strong class="text-primary fs-5" id="finalTotal">0</strong></div>
+                    <button class="btn btn-gold w-100 mt-3" id="saveInvoiceBtn">💾 ثبت فاکتور</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase & Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyCIndzPklwMiFl_mIg_J3WYjBj3bUsbwwY", authDomain: "finora-49289.firebaseapp.com", projectId: "finora-49289", storageBucket: "finora-49289.firebasestorage.app", messagingSenderId: "469630865556", appId: "1:469630865556:web:f6f4241f066e3b5f466481" };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(user => { if (!user) window.location.href = 'index.html'; else loadData(); });
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); auth.signOut().then(() => window.location.href = 'index.html'); });
+
+    let items = [];
+    let customers = [];
+    let products = [];
+
+    // ===== تاریخ شمسی =====
+    function getPersianDate() {
+        const d = new Date();
+        const f = new Intl.DateTimeFormat('fa-IR', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        return f.format(d);
+    }
+    document.getElementById('invoiceDate').value = getPersianDate();
+
+    // ===== شماره فاکتور خودکار =====
+    async function generateInvoiceNumber() {
+        const snap = await db.collection('invoices').orderBy('createdAt', 'desc').limit(1).get();
+        let num = 1;
+        if (!snap.empty) {
+            const last = snap.docs[0].data().invoiceNumber || '0';
+            num = parseInt(last) + 1;
+        }
+        document.getElementById('invoiceNumber').value = num;
+        return num;
+    }
+
+    // ===== بارگذاری مشتریان و کالاها =====
+    async function loadData() {
+        const custSnap = await db.collection('customers').orderBy('name').get();
+        const custSelect = document.getElementById('customerSelect');
+        custSelect.innerHTML = '<option value="">انتخاب مشتری...</option>';
+        customers = [];
+        custSnap.forEach(doc => {
+            const d = doc.data();
+            customers.push({ id: doc.id, ...d });
+            custSelect.innerHTML += `<option value="${doc.id}">${d.name}</option>`;
+        });
+
+        const prodSnap = await db.collection('products').orderBy('name').get();
+        const prodSelect = document.getElementById('productSelect');
+        prodSelect.innerHTML = '<option value="">انتخاب کالا...</option>';
+        products = [];
+        prodSnap.forEach(doc => {
+            const d = doc.data();
+            products.push({ id: doc.id, ...d });
+            prodSelect.innerHTML += `<option value="${doc.id}">${d.name} - ${(d.sellPrice||0).toLocaleString()} تومان</option>`;
+        });
+
+        await generateInvoiceNumber();
+
+        // وقتی کالا انتخاب شد، قیمت رو پر کن
+        prodSelect.addEventListener('change', () => {
+            const id = prodSelect.value;
+            const p = products.find(x => x.id === id);
+            if (p) document.getElementById('itemPrice').value = p.sellPrice || 0;
+        });
+    }
+
+    // ===== افزودن کالا به لیست =====
+    document.getElementById('addItemBtn').addEventListener('click', () => {
+        const prodId = document.getElementById('productSelect').value;
+        if (!prodId) return alert('لطفاً کالا را انتخاب کنید');
+        const qty = parseInt(document.getElementById('itemQty').value) || 1;
+        const price = parseInt(document.getElementById('itemPrice').value) || 0;
+        const prod = products.find(p => p.id === prodId);
+        if (!prod) return alert('کالا یافت نشد');
+
+        items.push({ productId: prodId, name: prod.name, qty, price, total: qty * price });
+        renderItems();
+        updateTotals();
+        document.getElementById('productSelect').value = '';
+        document.getElementById('itemQty').value = 1;
+        document.getElementById('itemPrice').value = '';
+    });
+
+    function renderItems() {
+        const container = document.getElementById('itemsContainer');
+        if (items.length === 0) {
+            container.innerHTML = '<p class="text-muted text-center">هیچ کالایی اضافه نشده است</p>';
+            return;
+        }
+        container.innerHTML = items.map((item, index) => `
+            <div class="invoice-item">
+                <div><strong>${item.name}</strong> × ${item.qty} = ${item.total.toLocaleString()} تومان</div>
+                <button class="btn btn-sm btn-outline-danger" onclick="removeItem(${index})"><i class="bi bi-x"></i></button>
+            </div>
+        `).join('');
+    }
+
+    window.removeItem = (index) => {
+        items.splice(index, 1);
+        renderItems();
+        updateTotals();
+    };
+
+    // ===== محاسبه =====
+    function updateTotals() {
+        const subtotal = items.reduce((sum, i) => sum + i.total, 0);
+        const discount = parseInt(document.getElementById('discountPercent').value) || 0;
+        const discountAmount = (subtotal * discount) / 100;
+        const afterDiscount = subtotal - discountAmount;
+        const tax = Math.round(afterDiscount * 0.09);
+        const finalTotal = afterDiscount + tax;
+
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString();
+        document.getElementById('taxAmount').textContent = tax.toLocaleString();
+        document.getElementById('finalTotal').textContent = finalTotal.toLocaleString();
+    }
+
+    document.getElementById('discountPercent').addEventListener('input', updateTotals);
+
+    // ===== ثبت فاکتور =====
+    document.getElementById('saveInvoiceBtn').addEventListener('click', async () => {
+        const customerId = document.getElementById('customerSelect').value;
+        if (!customerId) return alert('لطفاً مشتری را انتخاب کنید');
+        if (items.length === 0) return alert('حداقل یک کالا اضافه کنید');
+
+        const customer = customers.find(c => c.id === customerId);
+        const subtotal = items.reduce((sum, i) => sum + i.total, 0);
+        const discount = parseInt(document.getElementById('discountPercent').value) || 0;
+        const discountAmount = (subtotal * discount) / 100;
+        const afterDiscount = subtotal - discountAmount;
+        const tax = Math.round(afterDiscount * 0.09);
+        const finalTotal = afterDiscount + tax;
+
+        const data = {
+            invoiceNumber: document.getElementById('invoiceNumber').value,
+            date: document.getElementById('invoiceDate').value,
+            customerId,
+            customerName: customer ? customer.name : 'نامشخص',
+            items,
+            subtotal,
+            discountPercent: discount,
+            discountAmount,
+            tax,
+            total: finalTotal,
+            status: 'در انتظار پرداخت',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+
+        try {
+            await db.collection('invoices').add(data);
+            alert('✅ فاکتور با موفقیت ثبت شد!');
+            items = [];
+            renderItems();
+            updateTotals();
+            await generateInvoiceNumber();
+            document.getElementById('customerSelect').value = '';
+            document.getElementById('discountPercent').value = 0;
+            document.getElementById('invoiceDate').value = getPersianDate();
+        } catch (err) {
+            alert('❌ خطا در ثبت: ' + err.message);
+        }
+    });
+</script>
+</body>
+</html>

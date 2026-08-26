@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>ورود | نرم‌افزار فینورا</title>
+    <!-- Bootstrap & Vazir Font -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" />
+    <style>
+        * { font-family: Vazir, sans-serif; }
+        body {
+            background: linear-gradient(135deg, #0d47a1, #1a237e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .login-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px 35px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .login-card h1 {
+            color: #0d47a1;
+            font-weight: 700;
+            font-size: 28px;
+        }
+        .login-card .sub {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .login-card .gold {
+            color: #f9a825;
+        }
+        .btn-gold {
+            background: #f9a825;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .btn-gold:hover {
+            background: #f57f17;
+            color: #fff;
+        }
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+        }
+        .form-control:focus {
+            border-color: #f9a825;
+            box-shadow: 0 0 0 3px rgba(249,168,37,0.2);
+        }
+        .alert-custom {
+            border-radius: 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="text-center">
+        <h1>فینورا <span class="gold">✨</span></h1>
+        <p class="sub">نرم‌افزار چاپ فاکتور</p>
+    </div>
+
+    <div id="loginError" class="alert alert-danger alert-custom d-none" role="alert">
+        ❌ ایمیل یا رمز عبور اشتباه است.
+    </div>
+
+    <form id="loginForm">
+        <div class="mb-3">
+            <label class="form-label fw-semibold">ایمیل</label>
+            <input type="email" id="email" class="form-control" placeholder="example@domain.com" value="Davoodmehraban89@gmail.com" required />
+        </div>
+        <div class="mb-3">
+            <label class="form-label fw-semibold">رمز عبور</label>
+            <input type="password" id="password" class="form-control" placeholder="********" required />
+        </div>
+        <button type="submit" class="btn btn-gold w-100">ورود به داشبورد</button>
+    </form>
+
+    <p class="text-center text-muted mt-3" style="font-size:13px;">سیستم مدیریت فاکتور Finora © ۱۴۰۵</p>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+    // ============ تنظیمات فایربیس شما ============
+    const firebaseConfig = {
+        apiKey: "AIzaSyCIndzPklwMiFl_mIg_J3WYjBj3bUsbwwY",
+        authDomain: "finora-49289.firebaseapp.com",
+        projectId: "finora-49289",
+        storageBucket: "finora-49289.firebasestorage.app",
+        messagingSenderId: "469630865556",
+        appId: "1:469630865556:web:f6f4241f066e3b5f466481"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // ============ ورود کاربر ============
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            window.location.href = 'dashboard.html';
+        } catch (err) {
+            loginError.classList.remove('d-none');
+            loginError.textContent = '❌ ' + err.message;
+        }
+    });
+
+    // اگر قبلاً وارد شده بود، مستقیم ببر داشبورد
+    auth.onAuthStateChanged(user => {
+        if (user) window.location.href = 'dashboard.html';
+    });
+</script>
+
+</body>
+</html>

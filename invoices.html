@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>لیست فاکتورها | فینورا</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+        * { font-family: Vazir, sans-serif; }
+        body { background: #f4f6f9; padding-top: 70px; }
+        .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 220px; background: #0d47a1; padding: 20px 0; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar a { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.8); text-decoration: none; padding: 14px 24px; transition: 0.3s; font-size: 15px; border-right: 4px solid transparent; }
+        .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.12); color: #fff; border-right-color: #f9a825; }
+        .sidebar a i { font-size: 20px; width: 24px; }
+        .sidebar .brand { font-size: 22px; font-weight: 700; color: #fff; text-align: center; padding: 10px 0 30px 0; }
+        .sidebar .brand span { color: #f9a825; }
+        .content { margin-right: 240px; padding: 20px; }
+        .logout-btn { position: absolute; bottom: 30px; right: 24px; left: 24px; color: rgba(255,255,255,0.7); text-decoration: none; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; transition: 0.3s; }
+        .logout-btn:hover { background: rgba(255,0,0,0.15); color: #fff; }
+        .btn-gold { background: #f9a825; color: #fff; border: none; border-radius: 10px; padding: 8px 20px; }
+        .btn-gold:hover { background: #f57f17; color: #fff; }
+        @media (max-width: 768px) { .sidebar { width: 70px; } .sidebar a span { display: none; } .sidebar .brand { font-size: 16px; } .content { margin-right: 80px; } }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="brand">فینورا <span>✨</span></div>
+    <a href="dashboard.html"><i class="bi bi-grid"></i> <span>داشبورد</span></a>
+    <a href="customers.html"><i class="bi bi-people"></i> <span>اشخاص</span></a>
+    <a href="products.html"><i class="bi bi-box"></i> <span>کالاها</span></a>
+    <a href="new-invoice.html"><i class="bi bi-file-earmark-plus"></i> <span>فاکتور جدید</span></a>
+    <a href="invoices.html" class="active"><i class="bi bi-receipt"></i> <span>لیست فاکتورها</span></a>
+    <a href="#" id="logoutBtn" class="logout-btn"><i class="bi bi-box-arrow-left"></i> <span>خروج</span></a>
+</div>
+
+<div class="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-primary">📋 لیست فاکتورها</h3>
+        <a href="new-invoice.html" class="btn btn-gold">+ فاکتور جدید</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <input type="text" id="searchInvoice" class="form-control mb-3" placeholder="جستجوی فاکتور (شماره، مشتری)..." />
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>شماره</th><th>تاریخ</th><th>مشتری</th>
+                            <th>مبلغ (تومان)</th><th>وضعیت</th><th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="invoicesList">
+                        <tr><td colspan="6" class="text-center text-muted">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase & Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyCIndzPklwMiFl_mIg_J3WYjBj3bUsbwwY", authDomain: "finora-49289.firebaseapp.com", projectId: "finora-49289", storageBucket: "finora-49289.firebasestorage.app", messagingSenderId: "469630865556", appId: "1:469630865556:web:f6f4241f066e3b5f466481" };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(user => { if (!user) window.location.href = 'index.html'; else loadInvoices(); });
+    document.getElementById('logoutBtn').addEventListener('click', (e) => { e.preventDefault(); auth.signOut().then(() => window.location.href = 'index.html'); });
+
+    async function loadInvoices(filter = '') {
+        const tbody = document.getElementById('invoicesList');
+        try {
+            const snap = await db.collection('invoices').orderBy('createdAt', 'desc').get();
+            if (snap.empty) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">هیچ فاکتوری ثبت نشده</td></tr>'; return; }
+            let html = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                const search = d.invoiceNumber + ' ' + d.customerName;
+                if (filter && !search.includes(filter)) return;
+                const statusColor = d.status === 'پرداخت شده' ? 'bg-success' : 'bg-warning';
+                html += `<tr>
+                    <td><strong>${d.invoiceNumber || '---'}</strong></td>
+                    <td>${d.date || '---'}</td>
+                    <td>${d.customerName || '---'}</td>
+                    <td>${(d.total || 0).toLocaleString()}</td>
+                    <td><span class="status-badge ${statusColor} text-white">${d.status || 'در انتظار'}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="viewInvoice('${doc.id}')"><i class="bi bi-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteInvoice('${doc.id}')"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html || '<tr><td colspan="6" class="text-center text-muted">نتیجه‌ای یافت نشد</td></tr>';
+        } catch (err) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">خطا در بارگذاری</td></tr>'; }
+    }
+
+    document.getElementById('searchInvoice').addEventListener('input', (e) => loadInvoices(e.target.value));
+
+    window.viewInvoice = async (id) => {
+        // برای نمایش فاکتور، کاربر رو به صفحه preview میبریم
+        window.location.href = `invoice-preview.html?id=${id}`;
+    };
+
+    window.deleteInvoice = async (id) => {
+        if (!confirm('آیا فاکتور حذف شود؟')) return;
+        await db.collection('invoices').doc(id).delete();
+        loadInvoices();
+    };
+</script>
+</body>
+</html>
