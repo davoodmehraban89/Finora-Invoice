@@ -17,6 +17,13 @@ test('reports payment states', () => {
   assert.equal(core.paymentStatus(1000, 1000).code, 'paid');
 });
 
+test('keeps balance while presenting document lifecycle', () => {
+  const draft = core.documentStatus({ documentStatus: 'draft', total: 1200, paidAmount: 200 });
+  assert.equal(draft.label, 'پیش‌نویس');
+  assert.equal(draft.balance, 1000);
+  assert.equal(core.documentStatus({ documentStatus: 'void', total: 1200, paidAmount: 0 }).label, 'باطل‌شده');
+});
+
 test('validates required invoice fields', () => {
   assert.equal(core.validateInvoice({ items:[] }).length, 3);
 });
