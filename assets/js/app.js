@@ -20,7 +20,16 @@
   const collection = name => sdk.db.collection('users').doc(state.user.uid).collection(name);
 
   async function requireAuth(callback) {
-    if (demo) return callback(state.user);
+    if (demo) {
+      document.querySelectorAll('a[href$=".html"],a[href*=".html?"]').forEach(link => {
+        const url = new URL(link.getAttribute('href'), location.href);
+        if (url.origin === location.origin) {
+          url.searchParams.set('demo', '1');
+          link.href = url.pathname.split('/').pop() + url.search;
+        }
+      });
+      return callback(state.user);
+    }
     if (!sdk) return location.replace('index.html?error=config');
     sdk.auth.onAuthStateChanged(user => {
       if (!user) location.replace('index.html');
@@ -46,6 +55,29 @@
     return doc.exists ? { id: doc.id, ...doc.data() } : null;
   }
 
+  async function save(name, record) {
+    const clean = { ...record };
+    delete clean.id;
+    if (demo) {
+      const records = localRead(name);
+      const id = record.id || `demo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+      const value = { ...clean, id, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
+      const index = records.findIndex(item => item.id === id);
+      if (index >= 0) records[index] = { ...records[index], ...value }; else records.unshift(value);
+      localWrite(name, records);
+      return value;
+    }
+    const ref = record.id ? collection(name).doc(record.id) : collection(name).doc();
+    const value = { ...clean, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (!record.id) value.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    await ref.set(value, { merge: true });
+    return { id: ref.id, ...value };
+  }
+
+  async function archive(name, id) {
+    return save(name, { id, active: false, archivedAt: new Date().toISOString() });
+  }
+
   async function saveInvoice(invoice) {
     if (demo) {
       const invoices = localRead('invoices');
@@ -63,7 +95,9 @@
       const counter = await tx.get(counterRef);
       const next = (counter.exists ? Number(counter.data().value) : 0) + 1;
       const ref = invoice.id ? userRef.collection('invoices').doc(invoice.id) : userRef.collection('invoices').doc();
-      const data = { ...invoice, invoiceNumber: invoice.invoiceNumber || `FI-${String(next).padStart(6, '0')}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+      const clean = { ...invoice };
+      delete clean.id;
+      const data = { ...clean, invoiceNumber: invoice.invoiceNumber || `FI-${String(next).padStart(6, '0')}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
       if (!invoice.id) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
       tx.set(ref, data, { merge: true });
       if (!invoice.id) tx.set(counterRef, { value: next }, { merge: true });
@@ -80,5 +114,5 @@
   function escape(value) { const el = document.createElement('div'); el.textContent = value == null ? '' : String(value); return el.innerHTML; }
   function today() { return new Intl.DateTimeFormat('fa-IR-u-nu-latn', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).replaceAll('/', '-'); }
 
-  window.Finora = { demo, sdk, state, requireAuth, list, get, saveInvoice, signOut, money, escape, today };
+  window.Finora = { demo, sdk, state, requireAuth, list, get, save, archive, saveInvoice, signOut, money, escape, today };
 })();
