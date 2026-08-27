@@ -6,8 +6,41 @@ service cloud.firestore {
     match /users/{uid} {
       allow read, create, update: if owner(uid);
       allow delete: if false;
-      match /{collection}/{document=**} {
-        allow read, write: if owner(uid);
+      match /customers/{id} {
+        allow read: if owner(uid);
+        allow create, update: if owner(uid)
+          && request.resource.data.name is string
+          && request.resource.data.name.size() >= 2
+          && request.resource.data.name.size() <= 160;
+        allow delete: if false;
+      }
+      match /products/{id} {
+        allow read: if owner(uid);
+        allow create, update: if owner(uid)
+          && request.resource.data.name is string
+          && request.resource.data.name.size() >= 2
+          && request.resource.data.sellPrice is number
+          && request.resource.data.sellPrice >= 0;
+        allow delete: if false;
+      }
+      match /invoices/{id} {
+        allow read: if owner(uid);
+        allow create, update: if owner(uid)
+          && request.resource.data.items is list
+          && request.resource.data.items.size() <= 200
+          && request.resource.data.total is number
+          && request.resource.data.total >= 0
+          && request.resource.data.paidAmount is number
+          && request.resource.data.paidAmount >= 0;
+        allow delete: if false;
+      }
+      match /counters/{id} {
+        allow read, create, update: if owner(uid);
+        allow delete: if false;
+      }
+      match /settings/{id} {
+        allow read, create, update: if owner(uid);
+        allow delete: if false;
       }
     }
     match /{document=**} { allow read, write: if false; }
