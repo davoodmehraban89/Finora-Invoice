@@ -40,6 +40,13 @@
     return { code: 'partial', label: 'پرداخت ناقص', balance };
   }
 
+  function documentStatus(invoice) {
+    const payment = paymentStatus(invoice.total, invoice.paidAmount);
+    if (invoice.documentStatus === 'void') return { ...payment, code: 'draft', label: 'باطل‌شده' };
+    if (invoice.documentStatus === 'draft') return { ...payment, code: 'draft', label: 'پیش‌نویس' };
+    return payment;
+  }
+
   function validateInvoice(invoice) {
     const errors = [];
     if (!invoice.customerId || !invoice.customerName) errors.push('انتخاب مشتری الزامی است.');
@@ -53,5 +60,5 @@
     return errors;
   }
 
-  return { calculateLine, calculateInvoice, paymentStatus, validateInvoice, round };
+  return { calculateLine, calculateInvoice, paymentStatus, documentStatus, validateInvoice, round };
 });
