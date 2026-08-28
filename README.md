@@ -1,6 +1,19 @@
-# Finora Invoice
+# Finora — نرم‌افزار جامع ERP سازمانی
 
-فاز اجرایی ماژول فاکتور فینورا: صدور، پیش‌نویس، وصول، مانده، ابطال، مشتری، کالا/خدمت و چاپ A4.
+این مخزن اجرای تدریجی **Finora — Comprehensive Enterprise ERP Software** است. نقشه راه دائمی محصول در سند مادر ۲۶۰‌فصلی نگهداری می‌شود. برش اجرایی فعلی با عنوان **صدور فاکتور** شامل صدور، پیش‌نویس، وصول، مانده، ابطال، مشتری، کالا/خدمت و چاپ A4 است.
+
+## بازیابی پروژه در هر چت جدید
+
+فایل `FINORA_CHATGPT_BOOTSTRAP_PROMPT.txt` را کامل به عامل جدید بدهید. عامل موظف است وضعیت را از GitHub و فایل‌های پایدار زیر بازسازی کند:
+
+- `AGENTS.md`
+- `PROJECT_STATUS.md`
+- `docs/handoff/MASTER_RECOVERY_PROMPT.md`
+- `docs/handoff/LATEST_HANDOFF.md`
+- `docs/ROADMAP_260_CONTROL.md`
+- `docs/PROJECT_LOG.md`
+- `docs/DECISION_LOG.md`
+- `docs/ACCEPTANCE_POLICY.md`
 
 ## نسخه آنلاین
 
