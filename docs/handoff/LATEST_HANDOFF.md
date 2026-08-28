@@ -4,6 +4,8 @@ Prepared: 2026-08-28 UTC
 Authoritative HEAD: always resolve from GitHub at recovery time  
 Latest verified code baseline: `62fe92eacbfd3a369432ece83e642fad46b62239`
 
+Durable control foundation: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`
+
 ## Product and roadmap
 
 - Product: **Finora — Comprehensive Enterprise ERP Software / فینورا — نرم‌افزار جامع ERP سازمانی**
@@ -26,6 +28,12 @@ Latest verified code baseline: `62fe92eacbfd3a369432ece83e642fad46b62239`
 Customer type values were aligned with the SQL constraint: `person | legal`. This prevents natural-person customer creation from being rejected by the real Supabase database.
 
 Evidence: `62fe92eacbfd3a369432ece83e642fad46b62239`.
+
+## Last completed project-control change
+
+The repository now contains the mandatory bootstrap prompt, agent contract, roadmap integrity control, current status, append-oriented project and decision logs, acceptance policy, task template, pull-request checklist, and automated control tests.
+
+Evidence: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
 
 ## Verified behavior
 
@@ -54,4 +62,3 @@ Evidence: `62fe92eacbfd3a369432ece83e642fad46b62239`.
 ## Safest next action
 
 Execute and record authenticated mobile UAT and a two-user isolation test for the invoice workstream before expanding scope.
-

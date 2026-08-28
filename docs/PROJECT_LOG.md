@@ -28,9 +28,9 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 
 ## 2026-08-28 — Durable project-control foundation
 
-- Status: `IN_PROGRESS` until remote commit and deployment evidence are recorded
-- Planned files: `AGENTS.md`, `PROJECT_STATUS.md`, bootstrap/recovery and handoff files, roadmap control, acceptance policy, decision log, project log, task template, and PR checklist.
+- Status: `ACCEPTED` on `main`
+- Files: `AGENTS.md`, `PROJECT_STATUS.md`, bootstrap/recovery and handoff files, roadmap control, acceptance policy, decision log, project log, task template, PR checklist, and automated control tests.
 - Purpose: make GitHub the durable project memory and prevent loss of the 260-chapter roadmap when chats disappear.
-- Tests planned: file-link validation, required-section checks, roadmap integrity hash, `git diff --check`, and existing invoice tests.
+- Evidence: commit `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
+- Tests: `node --test tests/*.test.js` passed 9/9; master roadmap SHA-256 matched; required control files and product identity rules passed; all inline scripts parsed; `git diff --check` passed.
 - Rollback: documentation-only files can be reverted without changing runtime behavior; code baseline remains `62fe92e`.
-
