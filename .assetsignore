@@ -1,0 +1,14 @@
+.git
+.github
+docs
+supabase
+tests
+*.pdf
+*.PDF
+*.docx
+*.mp4
+*.MP4
+firebase.json
+firestore.rules
+firestore.indexes.json
+README.md

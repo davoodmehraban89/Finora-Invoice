@@ -1,118 +1,25 @@
-(function () {
-  'use strict';
-  const demo = new URLSearchParams(location.search).get('demo') === '1';
-  const demoData = {
-    customers: [{ id: 'demo-customer', name: 'شرکت نمونه پارس', nationalId: '۱۰۱۰۱۲۳۴۵۶۷', phone: '۰۲۱۸۸۷۷۶۶۵۵' }],
-    products: [{ id: 'demo-product', name: 'خدمات مشاوره مالی', code: 'SRV-001', unit: 'ساعت', sellPrice: 2500000, taxPercent: 10 }]
-  };
-
-  function initFirebase() {
-    if (demo || !window.firebase || !window.FINORA_FIREBASE_CONFIG) return null;
-    if (!firebase.apps.length) firebase.initializeApp(window.FINORA_FIREBASE_CONFIG);
-    return { auth: firebase.auth(), db: firebase.firestore() };
-  }
-
-  const sdk = initFirebase();
-  const state = { user: demo ? { uid: 'demo-user', email: 'demo@finora.local' } : null };
-  const localKey = name => `finora:${state.user.uid}:${name}`;
-  const localRead = name => JSON.parse(localStorage.getItem(localKey(name)) || '[]');
-  const localWrite = (name, value) => localStorage.setItem(localKey(name), JSON.stringify(value));
-  const collection = name => sdk.db.collection('users').doc(state.user.uid).collection(name);
-
-  async function requireAuth(callback) {
-    if (demo) {
-      document.querySelectorAll('a[href$=".html"],a[href*=".html?"]').forEach(link => {
-        const url = new URL(link.getAttribute('href'), location.href);
-        if (url.origin === location.origin) {
-          url.searchParams.set('demo', '1');
-          link.href = url.pathname.split('/').pop() + url.search;
-        }
-      });
-      return callback(state.user);
-    }
-    if (!sdk) return location.replace('index.html?error=config');
-    sdk.auth.onAuthStateChanged(user => {
-      if (!user) location.replace('index.html');
-      else { state.user = user; callback(user); }
-    });
-  }
-
-  async function list(name, orderField = 'createdAt') {
-    if (demo) {
-      const stored = localRead(name);
-      if (stored.length) return stored;
-      return demoData[name] || [];
-    }
-    let query = collection(name);
-    if (orderField) query = query.orderBy(orderField, 'desc');
-    const snap = await query.get();
-    return snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  }
-
-  async function get(name, id) {
-    if (demo) return (await list(name, null)).find(x => x.id === id) || null;
-    const doc = await collection(name).doc(id).get();
-    return doc.exists ? { id: doc.id, ...doc.data() } : null;
-  }
-
-  async function save(name, record) {
-    const clean = { ...record };
-    delete clean.id;
-    if (demo) {
-      const records = localRead(name);
-      const id = record.id || `demo-${Date.now()}-${Math.random().toString(16).slice(2)}`;
-      const value = { ...clean, id, updatedAt: new Date().toISOString(), createdAt: record.createdAt || new Date().toISOString() };
-      const index = records.findIndex(item => item.id === id);
-      if (index >= 0) records[index] = { ...records[index], ...value }; else records.unshift(value);
-      localWrite(name, records);
-      return value;
-    }
-    const ref = record.id ? collection(name).doc(record.id) : collection(name).doc();
-    const value = { ...clean, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-    if (!record.id) value.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-    await ref.set(value, { merge: true });
-    return { id: ref.id, ...value };
-  }
-
-  async function archive(name, id) {
-    return save(name, { id, active: false, archivedAt: new Date().toISOString() });
-  }
-
-  async function saveInvoice(invoice) {
-    if (demo) {
-      const invoices = localRead('invoices');
-      invoice.id = invoice.id || `demo-${Date.now()}`;
-      invoice.invoiceNumber = invoice.invoiceNumber || `FI-${String(invoices.length + 1).padStart(6, '0')}`;
-      invoice.createdAt = invoice.createdAt || new Date().toISOString();
-      const index = invoices.findIndex(x => x.id === invoice.id);
-      if (index >= 0) invoices[index] = invoice; else invoices.unshift(invoice);
-      localWrite('invoices', invoices);
-      return invoice;
-    }
-    const userRef = sdk.db.collection('users').doc(state.user.uid);
-    return sdk.db.runTransaction(async tx => {
-      const counterRef = userRef.collection('counters').doc('invoices');
-      const counter = await tx.get(counterRef);
-      const next = (counter.exists ? Number(counter.data().value) : 0) + 1;
-      const ref = invoice.id ? userRef.collection('invoices').doc(invoice.id) : userRef.collection('invoices').doc();
-      const clean = { ...invoice };
-      delete clean.id;
-      const data = { ...clean, invoiceNumber: invoice.invoiceNumber || `FI-${String(next).padStart(6, '0')}`, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
-      if (!invoice.id) data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-      tx.set(ref, data, { merge: true });
-      if (!invoice.id) tx.set(counterRef, { value: next }, { merge: true });
-      return { id: ref.id, ...data };
-    });
-  }
-
-  async function signOut() {
-    if (demo) return location.replace('index.html');
-    await sdk.auth.signOut(); location.replace('index.html');
-  }
-
-  function money(value) { return `${new Intl.NumberFormat('fa-IR').format(Math.round(Number(value) || 0))} ریال`; }
-  function escape(value) { const el = document.createElement('div'); el.textContent = value == null ? '' : String(value); return el.innerHTML; }
-  function today() { return new Intl.DateTimeFormat('fa-IR-u-nu-latn', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date()).replaceAll('/', '-'); }
-
-  window.Finora = { demo, sdk, state, requireAuth, list, get, save, archive, saveInvoice, signOut, money, escape, today };
+(function(){'use strict';
+const demo=new URLSearchParams(location.search).get('demo')==='1',config=window.FINORA_SUPABASE_CONFIG||{};
+const client=!demo&&window.supabase&&config.url&&config.publishableKey?window.supabase.createClient(config.url,config.publishableKey,{auth:{persistSession:true,autoRefreshToken:true}}):null;
+const demoData={customers:[{id:'demo-customer',name:'شرکت نمونه پارس',nationalId:'۱۰۱۰۱۲۳۴۵۶۷',phone:'۰۲۱۸۸۷۷۶۶۵۵',active:true}],products:[{id:'demo-product',name:'خدمات مشاوره مالی',code:'SRV-001',unit:'ساعت',type:'service',sellPrice:2500000,taxPercent:10,active:true}]};
+const state={user:demo?{id:'demo-user',uid:'demo-user',email:'demo@finora.local'}:null};
+const localKey=name=>`finora:${state.user.id}:${name}`,localRead=name=>JSON.parse(localStorage.getItem(localKey(name))||'[]'),localWrite=(name,value)=>localStorage.setItem(localKey(name),JSON.stringify(value));
+const tableName=name=>name==='settings'?'seller_settings':name,snake=value=>value.replace(/[A-Z]/g,letter=>`_${letter.toLowerCase()}`),camel=value=>value.replace(/_([a-z])/g,(_,letter)=>letter.toUpperCase());
+function toDb(record){return Object.fromEntries(Object.entries(record).filter(([,v])=>v!==undefined).map(([k,v])=>[snake(k),v]));}
+function fromDb(record){if(!record)return null;const value=Object.fromEntries(Object.entries(record).map(([k,v])=>[camel(k),v]));delete value.userId;return value;}
+function showFatal(error){console.error(error);const box=document.createElement('div');box.className='app-error';box.textContent=`خطا در ارتباط با پایگاه داده: ${error?.message||'دوباره تلاش کنید.'}`;document.body.prepend(box);}
+function enhanceMobileNav(){const sidebar=document.querySelector('.sidebar');if(!sidebar)return;const button=document.createElement('button');button.className='mobile-nav-toggle screen-only';button.type='button';button.setAttribute('aria-label','باز کردن منو');button.textContent='☰';button.onclick=()=>sidebar.classList.toggle('open');document.body.appendChild(button);sidebar.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>sidebar.classList.remove('open')));}
+document.readyState==='loading'?document.addEventListener('DOMContentLoaded',enhanceMobileNav):enhanceMobileNav();
+async function requireAuth(callback){if(demo){document.querySelectorAll('a[href$=".html"],a[href*=".html?"]').forEach(link=>{const url=new URL(link.getAttribute('href'),location.href);if(url.origin===location.origin){url.searchParams.set('demo','1');link.href=url.pathname.split('/').pop()+url.search;}});return callback(state.user);}if(!client)return location.replace('index.html?error=config');const{data,error}=await client.auth.getSession();if(error)return showFatal(error);if(!data.session?.user)return location.replace('index.html');state.user={...data.session.user,uid:data.session.user.id};try{await callback(state.user);}catch(err){showFatal(err);}}
+async function queryResult(promise){const{data,error}=await promise;if(error)throw error;return data;}
+async function list(name,orderField='createdAt'){if(demo){const stored=localRead(name);return stored.length?stored:(demoData[name]||[]);}let query=client.from(tableName(name)).select('*');if(orderField)query=query.order(snake(orderField),{ascending:false});return(await queryResult(query)).map(fromDb);}
+async function get(name,id){if(demo)return(await list(name,null)).find(x=>x.id===id)||null;const key=name==='settings'?'user_id':'id',value=name==='settings'?state.user.id:id;const data=await queryResult(client.from(tableName(name)).select('*').eq(key,value).maybeSingle());const result=fromDb(data);return name==='settings'&&result?{...result,id:'seller'}:result;}
+async function save(name,record){if(demo){const records=localRead(name),id=record.id||`demo-${Date.now()}-${Math.random().toString(16).slice(2)}`,value={...record,id,updatedAt:new Date().toISOString(),createdAt:record.createdAt||new Date().toISOString()},index=records.findIndex(item=>item.id===id);index>=0?records[index]={...records[index],...value}:records.unshift(value);localWrite(name,records);return value;}const clean={...record,userId:state.user.id};delete clean.createdAt;delete clean.updatedAt;let request;if(name==='settings'){clean.userId=state.user.id;delete clean.id;request=client.from(tableName(name)).upsert(toDb(clean)).select().single();}else if(clean.id){const id=clean.id;delete clean.id;request=client.from(tableName(name)).update(toDb(clean)).eq('id',id).select().single();}else{delete clean.id;request=client.from(tableName(name)).insert(toDb(clean)).select().single();}const data=await queryResult(request),result=fromDb(data);return name==='settings'?{...result,id:'seller'}:result;}
+async function archive(name,id){return save(name,{id,active:false,archivedAt:new Date().toISOString()});}
+async function saveInvoice(invoice){return save('invoices',invoice);}
+async function signOut(){if(!demo&&client)await client.auth.signOut();location.replace('index.html');}
+function money(value){return`${new Intl.NumberFormat('fa-IR').format(Math.round(Number(value)||0))} ریال`;}
+function escape(value){const el=document.createElement('div');el.textContent=value==null?'':String(value);return el.innerHTML;}
+function today(){return new Intl.DateTimeFormat('fa-IR-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('/','-');}
+window.Finora={demo,sdk:client,state,requireAuth,list,get,save,archive,saveInvoice,signOut,money,escape,today};
 })();

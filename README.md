@@ -1,26 +1,25 @@
 # Finora Invoice
 
-فاز نخست نرم‌افزار فینورا: گردش فاکتور فروش از پیش‌نویس و صدور تا ثبت دریافت، محاسبه مانده و چاپ A4.
+فاز اجرایی ماژول فاکتور فینورا: صدور، پیش‌نویس، وصول، مانده، ابطال، مشتری، کالا/خدمت و چاپ A4.
 
-## اجرای محلی
+## نسخه آنلاین
 
-از ریشه مخزن یک وب‌سرور استاتیک اجرا کنید:
+Cloudflare Workers Builds شاخه `main` را به‌صورت خودکار منتشر می‌کند:
 
-```bash
-python3 -m http.server 4173
-```
+https://finora-invoice.davoodmehraban89.workers.dev
 
-سپس `http://localhost:4173/?demo=1` یا پیوند «مشاهده نسخه نمایشی» را باز کنید. حالت نمایشی به Firebase نیاز ندارد و داده را در LocalStorage نگه می‌دارد.
+## زیرساخت
 
-## Firebase
+- Frontend استاتیک و راست‌چین
+- Supabase Auth و PostgreSQL
+- مالکیت داده بر اساس `auth.uid()`
+- RLS اجباری روی همه جداول عملیاتی
+- شماره‌گذاری اتمیک فاکتور در دیتابیس
+- حالت نمایشی مستقل در LocalStorage
 
-پروژه به `finora-49289` متصل است. قبل از استفاده عملی:
+## راه‌اندازی دیتابیس
 
-1. Email/Password را در Firebase Authentication فعال کنید.
-2. قواعد و ایندکس‌ها را با `firebase deploy --only firestore` منتشر کنید.
-3. Hosting را با `firebase deploy --only hosting` منتشر کنید.
-
-داده‌ها به‌صورت tenant-per-user در `users/{uid}/...` نگهداری می‌شوند. شماره فاکتور داخل Firestore transaction تولید می‌شود.
+مهاجرت `supabase/migrations/202608280001_invoice_phase.sql` باید یک‌بار در SQL Editor پروژه Supabase اجرا شود. این فایل جداول، ایندکس‌ها، تریگر شماره فاکتور و سیاست‌های RLS را ایجاد می‌کند.
 
 ## آزمون
 
@@ -28,18 +27,10 @@ python3 -m http.server 4173
 node --test tests/invoice-core.test.js
 ```
 
-## محدوده این فاز
+## انتشار Cloudflare
 
-- داشبورد فروش و مطالبات
-- صدور و ذخیره پیش‌نویس فاکتور
-- محاسبه اقلام، تخفیف و مالیات
-- ثبت مبلغ وصول‌شده و نمایش مانده
-- فهرست و فیلتر فاکتورها
-- پیش‌نمایش و چاپ A4
-- مدیریت مشتریان و کاتالوگ کالا/خدمت
-- تنظیم مشخصات فروشنده برای چاپ
-- ویرایش، ثبت وصول و ابطال فاکتور
-- قواعد امنیتی Firestore و حالت نمایشی
-- CI خودکار GitHub Actions
+```bash
+npx wrangler deploy --assets . --name finora-invoice
+```
 
-معماری کل محصول در `Finora_Master_Specification_Final_Chapters_001_260.docx` باقی مانده و این انتشار عمداً فقط vertical slice فاکتور را عملیاتی می‌کند.
+فایل `.assetsignore` مانع انتشار مستندات، آزمون‌ها و migrationها به‌عنوان دارایی عمومی می‌شود.

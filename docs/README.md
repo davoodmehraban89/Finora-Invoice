@@ -1,62 +1,13 @@
-# 📚 Finora Invoice - مستندات پروژه
+# مستندات Finora Invoice
 
-## 📋 فهرست مطالب
+- `PHASE_1_INVOICE.md`: دامنه، چرخه عمر، مدل داده و معیارهای پذیرش فاز فاکتور
+- `v1-FaktoraPro/README.md`: شواهد استخراج‌شده از مرجع فاکتورا پرو
+- `../supabase/migrations/202608280001_invoice_phase.sql`: اسکیمای اجرایی و سیاست‌های امنیتی Supabase
 
-### 🎯 نسخه فعلی (V1)
-- **current-version.pdf** - مشخصات و نیازمندی‌های نسخه اول
+## مسیر عملیاتی
 
-### 🚀 چشم‌انداز آینده
-- **future-roadmap.docx** - ویژگی‌های برنامه‌ریزی‌شده برای نسخه‌های بعدی
+مرورگر ← Supabase Auth ← PostgreSQL با RLS
 
-### 📹 راهنمای ویدئویی
-- **guide-video.mp4** - آموزش کاملی برای درک پروژه
+GitHub `main` ← Cloudflare Workers Builds ← نسخه آنلاین
 
----
-
-## 🏗️ ساختار پروژه
-
-```
-Finora-Invoice/
-├── index.html
-├── dashboard.html
-├── invoices.html
-├── new-invoice.html
-├── invoice-preview.html
-├── customers.html
-├── products.html
-├── firebase.json
-├── docs/
-│   └── README.md
-└── README.md
-```
-
----
-
-## ✅ اگر فولدر دیده نمی‌شود:
-
-**دو راه حل:**
-
-### **راه 1: GitHub Desktop استفاده کنید**
-```bash
-git clone https://github.com/davoodmehraban89/Finora-Invoice.git
-cd Finora-Invoice
-mkdir docs
-touch docs/README.md
-git add docs/
-git commit -m "Add docs folder"
-git push
-```
-
-### **راه 2: Terminal / Command Line**
-```bash
-# در دایرکتوری پروژه
-mkdir docs
-echo "# Documentation" > docs/README.md
-git add docs/
-git commit -m "Create docs folder"
-git push origin main
-```
-
----
-
-**کدام روش برای شما راحت‌تر است؟** 🤔
+تمام تغییرات ساختاری دیتابیس باید به شکل migration نسخه‌دار ثبت شوند و هیچ کلید Secret در مخزن قرار نگیرد.
