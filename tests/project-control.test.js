@@ -61,3 +61,15 @@ test('customer UI enum matches the Supabase database contract', () => {
     assert.ok(!content.includes('individual'), `${relative} contains incompatible customer type`);
   }
 });
+
+test('invoice tax context is versioned in UI, core and migration', () => {
+  const form = read('new-invoice.html');
+  const preview = read('invoice-preview.html');
+  const migration = read('supabase/migrations/202608310001_invoice_tax_context.sql');
+  const rules = read('assets/js/tax-rules.js');
+  for (const token of ['invoiceType', 'vatMode', 'taxRuleVersion']) assert.match(form, new RegExp(token));
+  assert.match(preview, /ذخیره PDF/);
+  assert.match(preview, /چاپ با چاپگر/);
+  for (const column of ['invoice_type', 'vat_mode', 'vat_rate', 'tax_year', 'tax_rule_version']) assert.match(migration, new RegExp(column));
+  assert.match(rules, /IR-VAT-1405\.1/);
+});
