@@ -89,3 +89,5 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Added `wrangler.jsonc` for an assets-only static Worker and expanded `.assetsignore` to keep non-runtime repository files private.
 - GitHub CI run `33406241542` passed on `0064cdd4b032d7297aeb077ac70588038e1e4179` with 15/15 tests.
 - Cloudflare has not yet reported a build for the repair commit; the last visible report remains the failed `2fcd34d` build. Do not claim a preview until a later Cloudflare report supplies a successful URL.
+- Cloudflare subsequently reported a successful deployment for `0064cdd4`. Stable branch preview: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`; commit preview: `https://64eed8bd-finora-invoice.davoodmehraban89.workers.dev`.
+- GitHub CI run `33406506407` also passed after the evidence-lock update. Production remains unchanged; Supabase migrations and authenticated UAT are still required before merge.
