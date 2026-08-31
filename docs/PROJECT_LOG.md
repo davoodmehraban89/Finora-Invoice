@@ -16,6 +16,8 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Expanded seller settings with legal identity/contact/location fields plus invoice, VAT, payment, output, and footer defaults.
 - Added migration `202608310002_invoice_settings_numbering.sql` and ADR-008.
 - Local checks: `node --test tests/*.test.js` 14/14 passed; affected inline scripts parsed; JavaScript syntax and `git diff --check` passed.
+- Remote evidence: PR #2 is mergeable and remains Draft; GitHub Actions run `33402769849` succeeded for commit `2a3c9f3bd564ea7b525622210921bb1cd6a98a10`.
+- Deployment evidence: no new Cloudflare preview URL exists; the Cloudflare PR report still shows a failed branch build. Production was not changed.
 
 ## 2026-08-31 — CI contract repair for Supabase
 
