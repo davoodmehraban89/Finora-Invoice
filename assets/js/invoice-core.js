@@ -33,6 +33,24 @@
     return { lines, subtotal, lineDiscount, discountPercent, invoiceDiscountAmount, tax, total };
   }
 
+  function applyTaxMode(items, vatMode = 'excluded', vatRate = 0) {
+    const enabled = vatMode === 'included';
+    const rate = enabled ? clamp(vatRate, 0, 100) : 0;
+    return (items || []).map(item => ({ ...item, taxPercent: rate }));
+  }
+
+  function taxContext(invoice = {}) {
+    const invoiceType = invoice.invoiceType === 'official' ? 'official' : 'ordinary';
+    const vatMode = invoice.vatMode === 'included' ? 'included' : 'excluded';
+    return {
+      invoiceType,
+      invoiceTypeLabel: invoiceType === 'official' ? 'فاکتور رسمی' : 'فاکتور معمولی',
+      vatMode,
+      vatModeLabel: vatMode === 'included' ? 'با ارزش افزوده' : 'بدون ارزش افزوده',
+      vatRate: vatMode === 'included' ? clamp(invoice.vatRate, 0, 100) : 0
+    };
+  }
+
   function paymentStatus(total, paid) {
     const balance = round(Math.max(0, (Number(total) || 0) - (Number(paid) || 0)));
     if (!total || !paid) return { code: 'unpaid', label: 'پرداخت‌نشده', balance };
@@ -52,6 +70,9 @@
     if (!invoice.customerId || !invoice.customerName) errors.push('انتخاب مشتری الزامی است.');
     if (!invoice.issueDate) errors.push('تاریخ صدور الزامی است.');
     if (!invoice.items || invoice.items.length === 0) errors.push('حداقل یک قلم فاکتور لازم است.');
+    if (invoice.invoiceType != null && !['ordinary', 'official'].includes(invoice.invoiceType)) errors.push('نوع فاکتور معتبر نیست.');
+    if (invoice.vatMode != null && !['excluded', 'included'].includes(invoice.vatMode)) errors.push('وضعیت ارزش افزوده معتبر نیست.');
+    if (invoice.vatMode === 'included' && !(Number(invoice.vatRate) > 0)) errors.push('برای فاکتور دارای ارزش افزوده، نرخ معتبر لازم است.');
     (invoice.items || []).forEach((item, index) => {
       if (!item.description) errors.push(`شرح قلم ${index + 1} الزامی است.`);
       if (!(Number(item.quantity) > 0)) errors.push(`تعداد قلم ${index + 1} باید بیشتر از صفر باشد.`);
@@ -60,5 +81,5 @@
     return errors;
   }
 
-  return { calculateLine, calculateInvoice, paymentStatus, documentStatus, validateInvoice, round };
+  return { calculateLine, calculateInvoice, applyTaxMode, taxContext, paymentStatus, documentStatus, validateInvoice, round };
 });
