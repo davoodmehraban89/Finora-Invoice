@@ -51,3 +51,11 @@
 - Decision: Invoice classification, VAT mode, applied rate, tax year, and rule version are persisted with the invoice. Annual rates and other legal rules are maintained outside the calculation engine as effective-dated compliance profiles.
 - Reason: Chapters 16, 31, 46, 63, 231, 251, 259, and 260 prohibit silent hardcoding and require source/version/evidence traceability.
 - Consequence: `IR-VAT-1405.1` is a provisional 10% general-rate profile requested by the product owner. Exemptions, special rates, Taxpayer System submission, and complete Iranian legal compliance remain unverified until official-source and specialist acceptance evidence is recorded in `docs/IRAN_COMPLIANCE_REGISTER.md`.
+
+## ADR-008 — Invoice-number policy is enforced in PostgreSQL
+
+- Date: 2026-08-31
+- Status: Accepted for architecture; deployment verification remains open
+- Decision: Each seller chooses either automatic locked numbering or user-editable numbering. The UI reflects the policy, while PostgreSQL assigns locked numbers and rejects later edits when the policy is locked.
+- Reason: A UI-only lock can be bypassed and cannot protect accounting document identity across clients or integrations.
+- Consequence: Invoice numbers remain unique per user. Manual mode permits any non-empty value up to 80 characters, but does not itself certify statutory sequence compliance. Policy changes and manual renumbering require audit logging in a later accounting-control workstream.
