@@ -97,3 +97,15 @@ test('Cloudflare Worker is configured as an assets-only static deployment', () =
     assert.match(ignored, new RegExp(`^${privatePath}$`, 'm'), `${privatePath} must not be public`);
   }
 });
+
+test('ordinary and official invoices use distinct compact A4 print contracts', () => {
+  const preview = read('invoice-preview.html');
+  const mobileCss = read('assets/css/mobile.css');
+  for (const token of ['invoice-official', 'invoice-ordinary', 'صورتحساب رسمی فروش کالا و خدمات', 'فاکتور فروش', 'official-parties', 'ordinary-parties']) {
+    assert.match(preview, new RegExp(token), `missing print contract ${token}`);
+  }
+  assert.match(mobileCss, /@media print/);
+  assert.match(mobileCss, /grid-template-columns:repeat\(4,1fr\)!important/);
+  assert.match(mobileCss, /@page\{size:A4 portrait;margin:6mm\}/);
+  assert.match(mobileCss, /break-inside:avoid/);
+});
