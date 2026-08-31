@@ -2,6 +2,13 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-08-31 — One-page professional invoice print templates
+
+- Status: `PLANNED` on PR #2 from the product-owner PDF evidence `فاکتور | فینورا-4.pdf`.
+- Evidence: the Safari A4 export contains two pages with one line item; page 2 contains only receipt/balance and the legal footer. The print viewport activates the mobile `max-width` rule, collapsing invoice metadata to one column and consuming excessive vertical space.
+- Requested scope: professional compact A4 output, separate ordinary and official visual/data structures, and one-page output for normal invoice sizes.
+- Planned controls: print-specific grid overrides, compact header/party/summary layout, distinct official legal-identification table, distinct ordinary commercial layout, controlled page breaks, automated UI contracts, deployed PDF visual verification, and synchronized status/handoff evidence.
+
 ## 2026-08-31 — Cloudflare static-assets deployment repair
 
 - Status: `PLANNED` on PR #2 after direct build-log evidence supplied by the product owner.
