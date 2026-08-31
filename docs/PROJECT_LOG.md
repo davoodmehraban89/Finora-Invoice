@@ -2,6 +2,12 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-08-31 — CI contract repair for Supabase
+
+- Status: `IMPLEMENTED_UNVERIFIED` pending the follow-up GitHub Actions run on PR #2.
+- Scope: replace the obsolete Firebase `firestore.rules` presence check with the active Supabase migration checks, add the tax-rule module check, and run all Node test files in CI.
+- Evidence: the first PR #2 workflow passed all seven invoice tests and failed only at the stale `firestore.rules` check.
+
 ## 2026-08-28 — Invoice vertical slice foundation
 
 - Status: `ACCEPTED` on `main`
