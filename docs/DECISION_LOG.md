@@ -44,3 +44,10 @@
 - Evidence: code baseline `62fe92eacbfd3a369432ece83e642fad46b62239`.
 - Consequence: Display labels may be Persian, but persisted enum values must follow the database contract.
 
+## ADR-007 — Iranian legal rules use versioned compliance profiles
+
+- Date: 2026-08-31
+- Status: Accepted for architecture; legal verification remains open
+- Decision: Invoice classification, VAT mode, applied rate, tax year, and rule version are persisted with the invoice. Annual rates and other legal rules are maintained outside the calculation engine as effective-dated compliance profiles.
+- Reason: Chapters 16, 31, 46, 63, 231, 251, 259, and 260 prohibit silent hardcoding and require source/version/evidence traceability.
+- Consequence: `IR-VAT-1405.1` is a provisional 10% general-rate profile requested by the product owner. Exemptions, special rates, Taxpayer System submission, and complete Iranian legal compliance remain unverified until official-source and specialist acceptance evidence is recorded in `docs/IRAN_COMPLIANCE_REGISTER.md`.
