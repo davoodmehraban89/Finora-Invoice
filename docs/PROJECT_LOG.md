@@ -34,3 +34,19 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Evidence: commit `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
 - Tests: `node --test tests/*.test.js` passed 9/9; master roadmap SHA-256 matched; required control files and product identity rules passed; all inline scripts parsed; `git diff --check` passed.
 - Rollback: documentation-only files can be reverted without changing runtime behavior; code baseline remains `62fe92e`.
+
+## 2026-08-31 — Invoice type, VAT profile, and print/PDF choices
+
+- Status: `PLANNED`
+- Work branch: `codex/invoice-tax-print-options`
+- Roadmap chapters: 14, 16, 17, 31, 46, 63, 231, 251, 259, 260.
+- Scope class: `IN_V1` for invoice UX and persisted tax context; `FOUNDATION_ONLY` for the wider Iran compliance register.
+- User outcome: choose formal or ordinary invoice, choose VAT-enabled or VAT-free calculation, retain the applied annual tax profile, and explicitly choose printer or PDF output.
+- In scope: invoice form controls, deterministic VAT mode calculation, versioned Iran VAT profile, A4 preview labels, output-choice dialog, database migration, automated tests, and durable documentation.
+- Out of scope: production Taxpayer System submission, legal certification, automatic ingestion of every Iranian law, special-goods/exemption classification, and final accountant/legal approval.
+- Intended files: `new-invoice.html`, `invoice-preview.html`, `assets/js/invoice-core.js`, `assets/js/tax-rules.js`, `assets/css/app.css`, `supabase/migrations/202608310001_invoice_tax_context.sql`, tests, and project-control documents.
+- Tests: Node unit/negative tests, JavaScript syntax checks, migration/static contract checks, and demo browser flow when a preview deployment is available.
+- Risks: an annual general VAT rate does not determine exemptions or special rates; browser security does not permit preselecting “Save as PDF”; the migration must be applied before authenticated production saves use the new columns.
+- Security/data impact: no secret or credential change; new invoice classification and tax-rule provenance remain subject to existing per-user RLS.
+- Migration impact: additive nullable/defaulted columns; existing invoices remain readable through compatibility defaults.
+- Rollback: revert UI/core changes and the additive migration; do not destructively remove populated columns without an explicit data-retention decision.
