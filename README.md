@@ -36,6 +36,7 @@ https://finora-invoice.davoodmehraban89.workers.dev
 
 1. `supabase/migrations/202608280001_invoice_phase.sql` برای جداول، ایندکس‌ها، شماره‌گذاری و RLS.
 2. `supabase/migrations/202608310001_invoice_tax_context.sql` برای نوع فاکتور و زمینه نسخه‌دار ارزش افزوده.
+3. `supabase/migrations/202608310002_invoice_settings_numbering.sql` برای تنظیمات تکمیلی فروشنده، پیش‌فرض‌های صدور و قفل شماره فاکتور.
 
 ## آزمون
 
