@@ -80,4 +80,5 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Expanded settings include seller registration, website, province, city, postal code, invoice prefix, invoice/tax/payment/output defaults, and footer text.
 - New required migration: `supabase/migrations/202608310002_invoice_settings_numbering.sql`, applied after `202608310001_invoice_tax_context.sql`.
 - Local verification: 14/14 Node tests, all affected inline scripts parsed, JavaScript syntax passed, and `git diff --check` passed.
-- Status remains `IMPLEMENTED_UNVERIFIED`: remote CI, Cloudflare preview, migration application, and authenticated UAT are still required.
+- Remote evidence: PR #2 is mergeable and Draft. GitHub Actions run `33402769849` succeeded on `2a3c9f3bd564ea7b525622210921bb1cd6a98a10`.
+- Status remains `IMPLEMENTED_UNVERIFIED`: Cloudflare preview, migration application, and authenticated UAT are still required. Production was not changed.
