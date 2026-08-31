@@ -98,3 +98,6 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Ordinary and official invoices now have different DOM/template structures; official uses legal identification panels and ordinary uses a compact commercial layout.
 - Print CSS explicitly restores multi-column metadata, uses 6 mm A4 margins, compacts totals and signatures, and controls internal page breaks.
 - GitHub Actions run `33409656301` succeeded on `0486750a20e6b7dfe80687c8c0727f866c502330`; deployed PDF visual verification remains the acceptance gate.
+- Local PDF visual QA passed: one combined fixture rendered as two A4 pages total, with the complete ordinary template on page 1 and the complete official template on page 2; neither invoice overflowed, clipped, or overlapped.
+- Latest GitHub CI run `33410529987` passed on evidence commit `775447d4a3ab198f9197b07665c94c65608a5a03` with 16/16 tests.
+- Cloudflare's PR report still points to the older successful `47335538` deployment and has not rebuilt the newer A4-template commits. The branch preview must be rebuilt at `775447d` or later before product-owner browser acceptance.
