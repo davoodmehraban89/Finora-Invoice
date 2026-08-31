@@ -34,3 +34,17 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Evidence: commit `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
 - Tests: `node --test tests/*.test.js` passed 9/9; master roadmap SHA-256 matched; required control files and product identity rules passed; all inline scripts parsed; `git diff --check` passed.
 - Rollback: documentation-only files can be reverted without changing runtime behavior; code baseline remains `62fe92e`.
+
+
+## 2026-08-31 — Formal and informal invoice templates
+
+- Status: `PLANNED`
+- Roadmap chapters: 10, 13, 14, 16, 31, 45, 46, 141, 142, 231–260; scope class: `IN_V1`.
+- User outcome: connect the existing Finora invoice slice end-to-end and provide distinct Persian A4 print outputs for رسمی and غیررسمی invoices based on supplied references.
+- In scope: invoice template type, seller/buyer legal identity fields, serial and payment terms, official tax columns, informal compact layout, print preview, database compatibility migration, automated calculation/UI/security contract tests, deployed verification.
+- Out of scope: legal certification, production tax-authority submission, final organization/tenant architecture, and storing sample personal data from reference images.
+- Intended files: invoice pages, shared JS/CSS, Supabase migration, tests, status/handoff/decision documentation.
+- Data/security impact: new optional document metadata remains protected by existing authenticated-user RLS; no service-role credential or personal sample data is introduced.
+- Migration/rollback: additive versioned migration with nullable/defaulted columns; UI remains compatible with existing invoice rows; rollback is documented and avoids destructive loss of posted financial history.
+- Risks: official-layout claims without legal review, tax-rate hardcoding, print clipping, migration not yet applied, and missing two-user isolation evidence.
+- Planned tests: invoice math and validation, formal/informal rendering contracts, legacy-row compatibility, JavaScript syntax, print layout inspection, live demo regression, and authenticated/two-user UAT when credentials can be securely authorized.
