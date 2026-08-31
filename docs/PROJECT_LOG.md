@@ -2,6 +2,12 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-08-31 — Cloudflare static-assets deployment repair
+
+- Status: `PLANNED` on PR #2 after direct build-log evidence supplied by the product owner.
+- Root cause: Cloudflare successfully initialized, cloned, and installed, then `npx wrangler versions upload` failed because the repository had neither a Wrangler configuration nor an explicit static-assets directory.
+- Planned repair: add an assets-only `wrangler.jsonc`, preserve `.assetsignore` exclusions, validate the configuration, push to the review branch, and use the Cloudflare branch build as acceptance evidence.
+
 ## 2026-08-31 — Invoice numbering policy and settings expansion
 
 - Status: `PLANNED` on `codex/invoice-tax-print-options`.
