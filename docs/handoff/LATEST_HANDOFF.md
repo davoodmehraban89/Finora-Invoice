@@ -82,3 +82,10 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Local verification: 14/14 Node tests, all affected inline scripts parsed, JavaScript syntax passed, and `git diff --check` passed.
 - Remote evidence: PR #2 is mergeable and Draft. GitHub Actions run `33402769849` succeeded on `2a3c9f3bd564ea7b525622210921bb1cd6a98a10`.
 - Status remains `IMPLEMENTED_UNVERIFIED`: Cloudflare preview, migration application, and authenticated UAT are still required. Production was not changed.
+
+## Cloudflare repair continuation — 2026-08-31
+
+- Product-owner screenshots confirmed that `npx wrangler versions upload` failed because no assets directory or Wrangler configuration existed.
+- Added `wrangler.jsonc` for an assets-only static Worker and expanded `.assetsignore` to keep non-runtime repository files private.
+- GitHub CI run `33406241542` passed on `0064cdd4b032d7297aeb077ac70588038e1e4179` with 15/15 tests.
+- Cloudflare has not yet reported a build for the repair commit; the last visible report remains the failed `2fcd34d` build. Do not claim a preview until a later Cloudflare report supplies a successful URL.
