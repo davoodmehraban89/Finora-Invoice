@@ -15,6 +15,7 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Hardened `.assetsignore` so repository controls, documentation, tests, migrations, and deployment configuration are not published as website files.
 - Local tests pass 15/15 and GitHub Actions run `33406241542` succeeded on commit `0064cdd4b032d7297aeb077ac70588038e1e4179`.
 - GitHub's Cloudflare comment still references the older failed commit `2fcd34d`; a new Cloudflare build/preview has not yet been observed and must not be claimed successful.
+- Follow-up deployment evidence: Cloudflare successfully deployed repair commit `0064cdd4`; stable branch preview is `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev` and commit preview is `https://64eed8bd-finora-invoice.davoodmehraban89.workers.dev`.
 
 ## 2026-08-31 — Invoice numbering policy and settings expansion
 
