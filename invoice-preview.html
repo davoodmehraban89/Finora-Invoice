@@ -11,7 +11,7 @@
 <body>
 <main class="content" style="margin:0">
 <div class="actions screen-only" style="max-width:900px;margin:0 auto 16px">
-<button class="btn btn-primary" type="button" onclick="print()">چاپ / ذخیره PDF</button>
+<button class="btn btn-primary" id="outputButton" type="button">خروجی فاکتور</button>
 <a class="btn btn-secondary" id="editLink">ویرایش</a>
 <input class="input" id="paymentInput" type="number" min="0" placeholder="دریافت جدید (ریال)" style="max-width:190px">
 <button class="btn btn-secondary" id="paymentBtn" type="button">ثبت دریافت</button>
@@ -22,6 +22,15 @@
 <div class="empty">در حال بارگذاری فاکتور…</div>
 </article>
 </main>
+<dialog id="outputDialog" class="screen-only">
+<div class="dialog-card">
+<div class="dialog-head"><div><h2>نوع خروجی را انتخاب کنید</h2><p class="muted">مرورگر پنجره استاندارد چاپ را باز می‌کند.</p></div><button class="btn btn-secondary" id="closeOutput" type="button">بستن</button></div>
+<div class="choice-grid">
+<button class="choice-card" id="pdfOutput" type="button"><strong>ذخیره PDF</strong><br><small class="muted">در پنجره بعدی مقصد «Save as PDF» را انتخاب کنید.</small></button>
+<button class="choice-card" id="printerOutput" type="button"><strong>چاپ با چاپگر</strong><br><small class="muted">چاپگر و تنظیمات کاغذ A4 را انتخاب کنید.</small></button>
+</div>
+</div>
+</dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
 <script src="assets/js/supabase-config.js">
@@ -30,11 +39,12 @@
 </script>
 <script src="assets/js/app.js">
 </script>
-<script>Finora.requireAuth(async()=>{const byId=id=>document.getElementById(id),back=byId('back'),editLink=byId('editLink'),paymentButton=byId('paymentBtn'),voidButton=byId('voidBtn'),paymentInput=byId('paymentInput'),paper=byId('paper');if(Finora.demo)back.href='invoices.html?demo=1';const id=new URLSearchParams(location.search).get('id'),x=await Finora.get('invoices',id);if(!x){paper.innerHTML='<div class="empty">فاکتور یافت نشد.</div>';paymentButton.disabled=true;voidButton.disabled=true;return}const seller=await Finora.get('settings','seller');editLink.href=`new-invoice.html?id=${id}${Finora.demo?'&demo=1':''}`;paymentButton.onclick=async()=>{const amount=Number(paymentInput.value)||0;if(amount<=0){alert('مبلغ دریافت را وارد کنید.');paymentInput.focus();return}paymentButton.disabled=true;paymentButton.textContent='در حال ثبت…';try{await Finora.saveInvoice({...x,paidAmount:(Number(x.paidAmount)||0)+amount});location.reload()}catch(error){alert(`ثبت دریافت انجام نشد: ${error.message||'خطا'}`);paymentButton.disabled=false;paymentButton.textContent='ثبت دریافت'}};voidButton.onclick=async()=>{if(!confirm('فاکتور ابطال شود؟'))return;voidButton.disabled=true;try{await Finora.saveInvoice({...x,documentStatus:'void',voidedAt:new Date().toISOString()});location.reload()}catch(error){alert(`ابطال فاکتور انجام نشد: ${error.message||'خطا'}`);voidButton.disabled=false}};const payment=FinoraInvoice.paymentStatus(x.total,x.paidAmount),pay=FinoraInvoice.documentStatus(x);paper.innerHTML=`<header>
+<script>Finora.requireAuth(async()=>{const byId=id=>document.getElementById(id),back=byId('back'),editLink=byId('editLink'),paymentButton=byId('paymentBtn'),voidButton=byId('voidBtn'),paymentInput=byId('paymentInput'),paper=byId('paper'),outputButton=byId('outputButton'),outputDialog=byId('outputDialog');outputButton.onclick=()=>outputDialog.showModal();byId('closeOutput').onclick=()=>outputDialog.close();const openPrintDialog=mode=>{outputDialog.close();const originalTitle=document.title;if(mode==='pdf')document.title='Finora-Invoice';window.addEventListener('afterprint',()=>{document.title=originalTitle},{once:true});window.print()};byId('pdfOutput').onclick=()=>openPrintDialog('pdf');byId('printerOutput').onclick=()=>openPrintDialog('printer');if(Finora.demo)back.href='invoices.html?demo=1';const id=new URLSearchParams(location.search).get('id'),x=await Finora.get('invoices',id);if(!x){paper.innerHTML='<div class="empty">فاکتور یافت نشد.</div>';paymentButton.disabled=true;voidButton.disabled=true;outputButton.disabled=true;return}const seller=await Finora.get('settings','seller');editLink.href=`new-invoice.html?id=${id}${Finora.demo?'&demo=1':''}`;paymentButton.onclick=async()=>{const amount=Number(paymentInput.value)||0;if(amount<=0){alert('مبلغ دریافت را وارد کنید.');paymentInput.focus();return}paymentButton.disabled=true;paymentButton.textContent='در حال ثبت…';try{await Finora.saveInvoice({...x,paidAmount:(Number(x.paidAmount)||0)+amount});location.reload()}catch(error){alert(`ثبت دریافت انجام نشد: ${error.message||'خطا'}`);paymentButton.disabled=false;paymentButton.textContent='ثبت دریافت'}};voidButton.onclick=async()=>{if(!confirm('فاکتور ابطال شود؟'))return;voidButton.disabled=true;try{await Finora.saveInvoice({...x,documentStatus:'void',voidedAt:new Date().toISOString()});location.reload()}catch(error){alert(`ابطال فاکتور انجام نشد: ${error.message||'خطا'}`);voidButton.disabled=false}};const payment=FinoraInvoice.paymentStatus(x.total,x.paidAmount),pay=FinoraInvoice.documentStatus(x),taxContext=FinoraInvoice.taxContext(x);paper.innerHTML=`<header>
 <div>
 <div class="eyebrow">FINORA</div>
-<h1>فاکتور فروش</h1>
+<h1>${taxContext.invoiceTypeLabel}</h1>
 <div class="muted">سند فروش و مطالبه</div>
+<div class="invoice-kind"><span class="badge badge-draft">${taxContext.invoiceTypeLabel}</span><span class="badge badge-${taxContext.vatMode==='included'?'paid':'draft'}">${taxContext.vatModeLabel}${taxContext.vatMode==='included'?` • ${taxContext.vatRate}٪`:''}</span></div>
 </div>
 <div>
 <strong>${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong>
@@ -95,7 +105,7 @@
 <strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong>
 </div>
 <div class="summary-row">
-<span>مالیات</span>
+<span>${taxContext.vatMode==='included'?`ارزش افزوده (${taxContext.vatRate}٪)`:'ارزش افزوده'}</span>
 <strong>${Finora.money(x.tax)}</strong>
 </div>
 <div class="summary-row total">
@@ -113,6 +123,6 @@
 </section>${x.notes?`<section>
 <h3>توضیحات</h3>
 <p>${Finora.escape(x.notes)}</p>
-</section>`:''}<footer style="margin-top:60px;border-top:1px solid #dfe7e4;padding-top:14px" class="muted">این سند توسط سامانه فینورا ایجاد شده است.</footer>`});</script>
+</section>`:''}<footer style="margin-top:60px;border-top:1px solid #dfe7e4;padding-top:14px" class="muted">این سند توسط سامانه فینورا ایجاد شده است.${x.taxRuleVersion?` پروفایل مالیاتی: ${Finora.escape(x.taxRuleVersion)}، سال ${Finora.escape(x.taxYear||'—')}.`:''} انتخاب «رسمی» به‌تنهایی به معنی ارسال یا تأیید در سامانه مؤدیان نیست.</footer>`});</script>
 </body>
 </html>
