@@ -32,7 +32,10 @@ https://finora-invoice.davoodmehraban89.workers.dev
 
 ## راه‌اندازی دیتابیس
 
-مهاجرت `supabase/migrations/202608280001_invoice_phase.sql` باید یک‌بار در SQL Editor پروژه Supabase اجرا شود. این فایل جداول، ایندکس‌ها، تریگر شماره فاکتور و سیاست‌های RLS را ایجاد می‌کند.
+مهاجرت‌ها باید به ترتیب در SQL Editor پروژه Supabase اجرا شوند:
+
+1. `supabase/migrations/202608280001_invoice_phase.sql` برای جداول، ایندکس‌ها، شماره‌گذاری و RLS.
+2. `supabase/migrations/202608310001_invoice_tax_context.sql` برای نوع فاکتور و زمینه نسخه‌دار ارزش افزوده.
 
 ## آزمون
 
