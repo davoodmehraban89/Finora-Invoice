@@ -87,3 +87,13 @@ test('invoice-number editing is controlled by settings and the database', () => 
   assert.match(migration, /unique|invoice_number_editable/);
   assert.match(migration, /raise exception 'Invoice number editing is locked/);
 });
+
+test('Cloudflare Worker is configured as an assets-only static deployment', () => {
+  const config = JSON.parse(read('wrangler.jsonc'));
+  assert.equal(config.name, 'finora-invoice');
+  assert.equal(config.assets.directory, '.');
+  const ignored = read('.assetsignore');
+  for (const privatePath of ['docs', 'supabase', 'tests', 'AGENTS.md', 'PROJECT_STATUS.md']) {
+    assert.match(ignored, new RegExp(`^${privatePath}$`, 'm'), `${privatePath} must not be public`);
+  }
+});
