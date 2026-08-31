@@ -64,7 +64,7 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - Automated Node and static contract tests pass; authenticated production UAT, migration application, Cloudflare preview/deployment, and legal/accounting review remain required before acceptance.
 - The same review branch now includes expanded seller/invoice settings and a database-enforced invoice-number policy: automatic locked numbering or user-editable numbering, with per-user uniqueness retained.
 - Invoice defaults now cover ordinary/formal type, VAT mode, payment method, output preference, automatic prefix, seller registration/location/contact data, and invoice footer text.
-- Local evidence: all inline scripts parse, `git diff --check` passes, and `node --test tests/*.test.js` passes 14/14.
+- Evidence: all inline scripts parse, `git diff --check` passes, `node --test tests/*.test.js` passes 14/14, and GitHub Actions run `33402769849` succeeded on review commit `2a3c9f3`.
 
 ## Current blockers and risks
 
@@ -72,6 +72,7 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - User-level ownership is a safe initial boundary but is not yet the final multi-tenant organization model.
 - The application depends on correct Supabase Auth settings, RLS policies, and the applied migration.
 - Review-branch saves require both additive migrations `202608310001` and `202608310002`; deploying the UI before the migrations will make the new settings fail against Supabase.
+- Cloudflare has not produced a usable preview for the review branch; its last reported branch build failed, so production remains on the prior accepted code.
 - The 260-chapter specification is broad; work must be gated by Chapter 251 and accepted by Chapter 259 to prevent scope collapse.
 
 ## Safest next action
