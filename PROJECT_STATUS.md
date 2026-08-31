@@ -54,6 +54,15 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - Iranian tax/e-invoicing compliance, accounting posting engine, inventory integration, and the rest of Version 1 defined by Chapter 251.
 - Backup/restore drill, monitoring, incident process, and independent security review.
 
+## Implemented on review branch — not accepted
+
+- Branch: `codex/invoice-tax-print-options`.
+- Formal/ordinary invoice classification and VAT-enabled/VAT-free selection are implemented.
+- The applied VAT rate, tax year, and rule version are persisted through an additive Supabase migration.
+- The 1405 general VAT profile is provisionally set to 10% as requested; exemptions, special rates, and enacted-source verification remain open.
+- Invoice preview distinguishes invoice/VAT type and provides explicit PDF or printer output choices.
+- Automated Node and static contract tests pass; authenticated production UAT, migration application, Cloudflare preview/deployment, and legal/accounting review remain required before acceptance.
+
 ## Current blockers and risks
 
 - The repository currently represents only the invoice vertical slice, not the complete ERP architecture.
@@ -64,4 +73,3 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 ## Safest next action
 
 Run an authenticated mobile UAT of customer, product, invoice, payment, archive, and isolation paths; record evidence before expanding the invoice workstream.
-
