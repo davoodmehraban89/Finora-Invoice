@@ -64,7 +64,8 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - Automated Node and static contract tests pass; authenticated production UAT, migration application, Cloudflare preview/deployment, and legal/accounting review remain required before acceptance.
 - The same review branch now includes expanded seller/invoice settings and a database-enforced invoice-number policy: automatic locked numbering or user-editable numbering, with per-user uniqueness retained.
 - Invoice defaults now cover ordinary/formal type, VAT mode, payment method, output preference, automatic prefix, seller registration/location/contact data, and invoice footer text.
-- Evidence: all inline scripts parse, `git diff --check` passes, `node --test tests/*.test.js` passes 14/14, and GitHub Actions run `33402769849` succeeded on review commit `2a3c9f3`.
+- Invoice preview now uses distinct ordinary and official templates. Print-specific A4 rules override mobile layout, compact party metadata and totals, and keep normal-size invoices on one page.
+- Evidence: all inline scripts parse, `git diff --check` passes, `node --test tests/*.test.js` passes 16/16, and GitHub Actions run `33409656301` succeeded on review commit `0486750`.
 
 ## Current blockers and risks
 
