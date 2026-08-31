@@ -91,3 +91,10 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Cloudflare has not yet reported a build for the repair commit; the last visible report remains the failed `2fcd34d` build. Do not claim a preview until a later Cloudflare report supplies a successful URL.
 - Cloudflare subsequently reported a successful deployment for `0064cdd4`. Stable branch preview: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`; commit preview: `https://64eed8bd-finora-invoice.davoodmehraban89.workers.dev`.
 - GitHub CI run `33406506407` also passed after the evidence-lock update. Production remains unchanged; Supabase migrations and authenticated UAT are still required before merge.
+
+## Invoice A4 template repair — 2026-08-31
+
+- Product-owner PDF evidence showed a one-line invoice spanning two A4 pages because Safari print activated mobile single-column rules.
+- Ordinary and official invoices now have different DOM/template structures; official uses legal identification panels and ordinary uses a compact commercial layout.
+- Print CSS explicitly restores multi-column metadata, uses 6 mm A4 margins, compacts totals and signatures, and controls internal page breaks.
+- GitHub Actions run `33409656301` succeeded on `0486750a20e6b7dfe80687c8c0727f866c502330`; deployed PDF visual verification remains the acceptance gate.
