@@ -15,6 +15,7 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Replaced the shared title-only print view with separate ordinary and official structures. Official output has legal seller/buyer identification panels; ordinary output uses compact commercial party cards.
 - Added print-specific A4 rules after mobile CSS so Safari print cannot collapse party metadata into one column. Header, metadata, rows, totals, signatures, and legal footer are compact and use controlled page breaks.
 - Local checks pass 16/16, the inline preview script parses, `git diff --check` passes, and GitHub Actions run `33409656301` succeeded on `0486750a20e6b7dfe80687c8c0727f866c502330`.
+- PDF visual QA: a combined A4 fixture rendered as exactly two pages—page 1 contained the complete ordinary invoice and page 2 contained the complete official invoice. Neither template overflowed to an additional page; headers, party panels, line table, totals, signatures, and legal footer were visually inspected without clipping or overlap.
 
 ## 2026-08-31 — Cloudflare static-assets deployment repair
 
