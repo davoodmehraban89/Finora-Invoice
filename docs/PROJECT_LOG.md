@@ -9,6 +9,13 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Requested scope: professional compact A4 output, separate ordinary and official visual/data structures, and one-page output for normal invoice sizes.
 - Planned controls: print-specific grid overrides, compact header/party/summary layout, distinct official legal-identification table, distinct ordinary commercial layout, controlled page breaks, automated UI contracts, deployed PDF visual verification, and synchronized status/handoff evidence.
 
+### Implementation evidence
+
+- Status: `IMPLEMENTED_UNVERIFIED` pending deployed PDF visual verification.
+- Replaced the shared title-only print view with separate ordinary and official structures. Official output has legal seller/buyer identification panels; ordinary output uses compact commercial party cards.
+- Added print-specific A4 rules after mobile CSS so Safari print cannot collapse party metadata into one column. Header, metadata, rows, totals, signatures, and legal footer are compact and use controlled page breaks.
+- Local checks pass 16/16, the inline preview script parses, `git diff --check` passes, and GitHub Actions run `33409656301` succeeded on `0486750a20e6b7dfe80687c8c0727f866c502330`.
+
 ## 2026-08-31 — Cloudflare static-assets deployment repair
 
 - Status: `PLANNED` on PR #2 after direct build-log evidence supplied by the product owner.
