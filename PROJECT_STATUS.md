@@ -72,7 +72,7 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - User-level ownership is a safe initial boundary but is not yet the final multi-tenant organization model.
 - The application depends on correct Supabase Auth settings, RLS policies, and the applied migration.
 - Review-branch saves require both additive migrations `202608310001` and `202608310002`; deploying the UI before the migrations will make the new settings fail against Supabase.
-- Cloudflare has not produced a usable preview for the review branch; its last reported branch build failed, so production remains on the prior accepted code.
+- Cloudflare branch deployment succeeded after adding `wrangler.jsonc`; review URL: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`. Production remains on the prior accepted code.
 - The 260-chapter specification is broad; work must be gated by Chapter 251 and accepted by Chapter 259 to prevent scope collapse.
 
 ## Safest next action
