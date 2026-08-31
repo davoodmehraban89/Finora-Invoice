@@ -9,6 +9,14 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Planned controls: database-enforced lock, per-user uniqueness, editable/manual mode, automatic prefix, invoice/tax/payment/output defaults, seller identity/contact/print fields, additive migration, tests, and synchronized status/log/handoff evidence.
 - Acceptance boundary: implementation on the review branch is not accepted until migration application, CI, Cloudflare preview, and authenticated UAT are evidenced.
 
+### Implementation evidence
+
+- Status: `IMPLEMENTED_UNVERIFIED` on the review branch.
+- Added database-enforced automatic locked/manual editable numbering, configurable prefix, duplicate protection, and demo-mode parity.
+- Expanded seller settings with legal identity/contact/location fields plus invoice, VAT, payment, output, and footer defaults.
+- Added migration `202608310002_invoice_settings_numbering.sql` and ADR-008.
+- Local checks: `node --test tests/*.test.js` 14/14 passed; affected inline scripts parsed; JavaScript syntax and `git diff --check` passed.
+
 ## 2026-08-31 — CI contract repair for Supabase
 
 - Status: `IMPLEMENTED_UNVERIFIED` pending the follow-up GitHub Actions run on PR #2.
