@@ -8,6 +8,14 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Root cause: Cloudflare successfully initialized, cloned, and installed, then `npx wrangler versions upload` failed because the repository had neither a Wrangler configuration nor an explicit static-assets directory.
 - Planned repair: add an assets-only `wrangler.jsonc`, preserve `.assetsignore` exclusions, validate the configuration, push to the review branch, and use the Cloudflare branch build as acceptance evidence.
 
+### Implementation evidence
+
+- Status: `IMPLEMENTED_UNVERIFIED` pending a new Cloudflare branch build.
+- Added assets-only `wrangler.jsonc` for `finora-invoice` with the repository root as the static directory.
+- Hardened `.assetsignore` so repository controls, documentation, tests, migrations, and deployment configuration are not published as website files.
+- Local tests pass 15/15 and GitHub Actions run `33406241542` succeeded on commit `0064cdd4b032d7297aeb077ac70588038e1e4179`.
+- GitHub's Cloudflare comment still references the older failed commit `2fcd34d`; a new Cloudflare build/preview has not yet been observed and must not be claimed successful.
+
 ## 2026-08-31 — Invoice numbering policy and settings expansion
 
 - Status: `PLANNED` on `codex/invoice-tax-print-options`.
