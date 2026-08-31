@@ -2,6 +2,13 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-08-31 — Invoice numbering policy and settings expansion
+
+- Status: `PLANNED` on `codex/invoice-tax-print-options`.
+- Requested scope: allow user-defined invoice numbers when enabled, allow administrators to lock invoice-number editing from settings, and expand invoice-related seller defaults.
+- Planned controls: database-enforced lock, per-user uniqueness, editable/manual mode, automatic prefix, invoice/tax/payment/output defaults, seller identity/contact/print fields, additive migration, tests, and synchronized status/log/handoff evidence.
+- Acceptance boundary: implementation on the review branch is not accepted until migration application, CI, Cloudflare preview, and authenticated UAT are evidenced.
+
 ## 2026-08-31 — CI contract repair for Supabase
 
 - Status: `IMPLEMENTED_UNVERIFIED` pending the follow-up GitHub Actions run on PR #2.
