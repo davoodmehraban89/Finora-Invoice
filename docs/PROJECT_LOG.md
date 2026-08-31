@@ -50,3 +50,16 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Security/data impact: no secret or credential change; new invoice classification and tax-rule provenance remain subject to existing per-user RLS.
 - Migration impact: additive nullable/defaulted columns; existing invoices remain readable through compatibility defaults.
 - Rollback: revert UI/core changes and the additive migration; do not destructively remove populated columns without an explicit data-retention decision.
+
+## 2026-08-31 — Invoice tax and output controls implemented for review
+
+- Status: `IMPLEMENTED_UNVERIFIED` on `codex/invoice-tax-print-options`; not accepted on `main`.
+- Outcome: formal/ordinary invoice selection, VAT on/off selection, provisional 1405 general rate of 10%, stored tax year/rule version, preview labels, and explicit PDF/printer choices.
+- Files: `new-invoice.html`, `invoice-preview.html`, `assets/js/invoice-core.js`, `assets/js/tax-rules.js`, `assets/css/app.css`, `supabase/migrations/202608310001_invoice_tax_context.sql`, `docs/IRAN_COMPLIANCE_REGISTER.md`, README, tests, status, decision log, and handoff.
+- Tests: `node --test tests/*.test.js` passed 13/13; `node --check` passed for application/core/rule scripts; `git diff --check` passed.
+- Negative coverage: VAT-enabled invoices reject zero rates; VAT-free mode deterministically removes tax; unknown tax year visibly falls back and warns.
+- Database/security: additive invoice columns inherit the existing table RLS; no credential or policy broadening.
+- Limitation: browser security requires the user to choose “Save as PDF” in the native print dialog; the application cannot preselect it.
+- Legal limitation: this is compliance infrastructure, not certification or complete implementation of Iranian tax, commercial, direct-tax, or Taxpayer System law.
+- Verification gap: the cloud browser could not reach the isolated local preview; authenticated Supabase UAT and deployed Cloudflare verification remain open.
+- Rollback: revert the branch before merge; after migration/data use, retain populated additive columns unless a separately approved data migration removes them.
