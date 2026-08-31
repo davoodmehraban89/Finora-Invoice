@@ -71,3 +71,13 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Test evidence: `node --test tests/*.test.js` passed 13/13; JavaScript syntax and diff checks passed.
 - Required before merge/deployment: review the PR, verify the enacted 1405 VAT source and applicability with a qualified accountant/legal reviewer, apply `202608310001_invoice_tax_context.sql`, then run authenticated and demo UAT on the Cloudflare deployment.
 - This change does not submit invoices to the Taxpayer System and must not be represented as complete Iranian legal compliance.
+
+## Invoice-number and settings continuation — 2026-08-31
+
+- Same branch and PR: `codex/invoice-tax-print-options`, PR #2.
+- Added an invoice number field governed by seller settings. `automatic locked` assigns the configured prefix plus a per-user counter and prevents later edits; `editable` permits a user-defined unique value and falls back to automatic numbering when empty.
+- Enforcement exists in PostgreSQL through `assign_invoice_number` and `guard_invoice_number_update`, not only in the browser.
+- Expanded settings include seller registration, website, province, city, postal code, invoice prefix, invoice/tax/payment/output defaults, and footer text.
+- New required migration: `supabase/migrations/202608310002_invoice_settings_numbering.sql`, applied after `202608310001_invoice_tax_context.sql`.
+- Local verification: 14/14 Node tests, all affected inline scripts parsed, JavaScript syntax passed, and `git diff --check` passed.
+- Status remains `IMPLEMENTED_UNVERIFIED`: remote CI, Cloudflare preview, migration application, and authenticated UAT are still required.
