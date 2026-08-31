@@ -73,3 +73,17 @@ test('invoice tax context is versioned in UI, core and migration', () => {
   for (const column of ['invoice_type', 'vat_mode', 'vat_rate', 'tax_year', 'tax_rule_version']) assert.match(migration, new RegExp(column));
   assert.match(rules, /IR-VAT-1405\.1/);
 });
+
+test('invoice-number editing is controlled by settings and the database', () => {
+  const settings = read('settings.html');
+  const form = read('new-invoice.html');
+  const migration = read('supabase/migrations/202608310002_invoice_settings_numbering.sql');
+  for (const token of ['invoiceNumberPolicy', 'invoicePrefix', 'defaultInvoiceType', 'defaultVatMode', 'defaultPaymentMethod', 'defaultOutputMode']) {
+    assert.match(settings, new RegExp(token), `missing ${token}`);
+  }
+  assert.match(form, /id="invoiceNumber"/);
+  assert.match(form, /settings\.invoiceNumberEditable/);
+  assert.match(migration, /guard_invoice_number_update/);
+  assert.match(migration, /unique|invoice_number_editable/);
+  assert.match(migration, /raise exception 'Invoice number editing is locked/);
+});
