@@ -62,3 +62,12 @@ Evidence: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
 ## Safest next action
 
 Execute and record authenticated mobile UAT and a two-user isolation test for the invoice workstream before expanding scope.
+
+## Review branch update — 2026-08-31
+
+- Branch: `codex/invoice-tax-print-options`.
+- Status: `IMPLEMENTED_UNVERIFIED`; not merged, deployed, or accepted.
+- Added: formal/ordinary invoice type, VAT on/off, provisional versioned 1405 general rate (10%), stored tax context, PDF/printer output choice, additive migration, compliance register, and automated tests.
+- Test evidence: `node --test tests/*.test.js` passed 13/13; JavaScript syntax and diff checks passed.
+- Required before merge/deployment: review the PR, verify the enacted 1405 VAT source and applicability with a qualified accountant/legal reviewer, apply `202608310001_invoice_tax_context.sql`, then run authenticated and demo UAT on the Cloudflare deployment.
+- This change does not submit invoices to the Taxpayer System and must not be represented as complete Iranian legal compliance.
