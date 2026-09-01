@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+    let renderCount = 0;
+
+    // Simulate real rendering logic
+    function simulateRender(dataSize, q, s) {
+        renderCount++;
+        let matchCount = 0;
+        for (let i = 0; i < dataSize; i++) {
+            const x = {
+                invoiceNumber: "INV-" + i,
+                customerName: "Cust " + i,
+                documentStatus: i % 2 === 0 ? "issued" : "draft",
+                total: i * 1000,
+                paidAmount: i * 500
+            };
+
+            const matchStatus = (!s || x.documentStatus === s);
+            const matchQuery = (!q || x.invoiceNumber.includes(q) || x.customerName.includes(q));
+
+            if (matchStatus && matchQuery) {
+                matchCount++;
+                // Simulate innerHTML string concatenation work
+                const p = { balance: x.total - x.paidAmount, code: 'ok', label: 'OK' };
+                const html = `<tr><td>${x.invoiceNumber}</td><td>${x.customerName}</td></tr>`;
+            }
+        }
+    }
+
+    console.log("--- Baseline: Without Debounce ---");
+    renderCount = 0;
+    console.time("100 input events (sync)");
+    for(let i=0; i<100; i++) {
+        simulateRender(1000, "C", "issued");
+    }
+    console.timeEnd("100 input events (sync)");
+    console.log("Renders executed:", renderCount);
+
+    console.log("\n--- Improved: With Debounce ---");
+    renderCount = 0;
+    function debounce(fn, ms) {
+        let t;
+        return (...args) => {
+            clearTimeout(t);
+            t = setTimeout(() => fn(...args), ms);
+        };
+    }
+
+    let debouncedRender = debounce(simulateRender, 300);
+
+    // Simulate typing 100 characters fast (one per 10ms)
+    // we use a simple loop with fake setTimeout because we are just simulating event triggers
+
+    let simulatedTime = 0;
+    let maxEvents = 100;
+
+    // For synchronous measurement, let's just show that debounce reduces the call count.
+    console.time("100 input events (debounced)");
+    for(let i=0; i<100; i++) {
+        debouncedRender(1000, "C", "issued");
+    }
+    console.timeEnd("100 input events (debounced)");
+    console.log("Renders executed immediately:", renderCount);
+</script>
+</head>
+<body></body>
+</html>
