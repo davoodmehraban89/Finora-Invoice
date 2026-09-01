@@ -42,36 +42,58 @@
 <form class="card" id="form" style="max-width:900px">
 <div id="message" class="notice" hidden>
 </div>
-<div class="form-grid">
-<div class="field">
-<label>نام تجاری/شخص *</label>
-<input class="input" id="businessName" required maxlength="160">
+<h3 style="margin-top: 0;">اطلاعات پایه و هویتی</h3>
+<div class="form-grid mb-4">
+  <div class="field">
+    <label>نام تجاری/شخص *</label>
+    <input class="input" id="businessName" required maxlength="160">
+  </div>
+  <div class="field">
+    <label>شماره ثبت</label>
+    <input class="input" id="registrationNumber" maxlength="30">
+  </div>
+  <div class="field">
+    <label>شناسه/کد ملی</label>
+    <input class="input" id="nationalId" maxlength="30">
+  </div>
+  <div class="field">
+    <label>شماره اقتصادی</label>
+    <input class="input" id="economicCode" maxlength="30">
+  </div>
+  <div class="field">
+    <label>تلفن تماس</label>
+    <input class="input" id="phone" maxlength="30">
+  </div>
+  <div class="field">
+    <label>پست الکترونیک (ایمیل)</label>
+    <input class="input" id="email" type="email">
+  </div>
+  <div class="field" style="grid-column:span 2">
+    </div><div class="field"><label>کد پستی</label><input class="input" id="postalCode" maxlength="30"></div><div class="field" style="grid-column:span 2"><label>نشانی پستی دقیق</label>
+    <textarea class="textarea" id="address" rows="3"></textarea>
+  </div>
 </div>
-<div class="field">
-<label>شناسه/کد ملی</label>
-<input class="input" id="nationalId" maxlength="30">
-</div>
-<div class="field">
-<label>شماره اقتصادی</label>
-<input class="input" id="economicCode" maxlength="30">
-</div>
-<div class="field">
-<label>تلفن</label>
-<input class="input" id="phone" maxlength="30">
-</div>
-<div class="field">
-<label>ایمیل</label>
-<input class="input" id="email" type="email">
-</div>
-<div class="field">
-<label>شماره شبا/حساب</label>
-<input class="input" id="bankAccount" maxlength="60">
-</div>
-<div class="field" style="grid-column:span 2">
-<label>نشانی</label>
-<textarea class="textarea" id="address" rows="3">
-</textarea>
-</div>
+
+<h3 style="margin-top: 24px; border-top: 1px solid var(--line); padding-top: 16px;">تنظیمات مالی و فاکتور</h3>
+<div class="form-grid mb-4">
+  <div class="field">
+    <label>نوع پیش‌فرض فاکتور</label>
+    <select class="select" id="invoiceTypeDefault">
+      <option value="official">رسمی (مالیاتی)</option>
+      <option value="unofficial">غیر رسمی (فروشگاهی)</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>واحد پول</label>
+    <select class="select" id="currency">
+      <option value="rial">ریال</option>
+      <option value="toman">تومان</option>
+    </select>
+  </div>
+  <div class="field" style="grid-column:span 2">
+    <label>شماره شبا/حساب بانکی (چاپ در ذیل فاکتور)</label>
+    <input class="input" id="bankAccount" maxlength="60">
+  </div>
 </div>
 <button class="btn btn-primary" id="saveSettings" style="margin-top:18px" type="submit">ذخیره تنظیمات</button>
 </form>
@@ -82,6 +104,6 @@
 </script>
 <script src="assets/js/app.js">
 </script>
-<script>(()=>{'use strict';const byId=id=>document.getElementById(id),form=byId('form'),message=byId('message'),button=byId('saveSettings'),businessName=byId('businessName'),nationalId=byId('nationalId'),economicCode=byId('economicCode'),phone=byId('phone'),email=byId('email'),bankAccount=byId('bankAccount'),address=byId('address');let profile=null;function fill(x){businessName.value=x?.businessName||'';nationalId.value=x?.nationalId||'';economicCode.value=x?.economicCode||'';phone.value=x?.phone||'';email.value=x?.email||'';bankAccount.value=x?.bankAccount||'';address.value=x?.address||''}function notify(text,error=false){message.hidden=false;message.textContent=text;message.classList.toggle('notice-error',error)}form.addEventListener('submit',async event=>{event.preventDefault();if(!businessName.value.trim()){notify('نام تجاری یا نام شخص را وارد کنید.',true);businessName.focus();return}button.disabled=true;button.textContent='در حال ذخیره…';try{profile=await Finora.save('settings',{id:'seller',businessName:businessName.value.trim(),nationalId:nationalId.value.trim(),economicCode:economicCode.value.trim(),phone:phone.value.trim(),email:email.value.trim(),bankAccount:bankAccount.value.trim(),address:address.value.trim()});notify('تنظیمات فروشنده ذخیره شد.')}catch(error){notify(`ذخیره تنظیمات انجام نشد: ${error.message||'خطا'}`,true)}finally{button.disabled=false;button.textContent='ذخیره تنظیمات'}});Finora.requireAuth(async()=>{profile=await Finora.get('settings','seller');fill(profile)});})();</script>
+<script>(()=>{'use strict';const byId=id=>document.getElementById(id),form=byId('form'),message=byId('message'),button=byId('saveSettings'),businessName=byId('businessName'),nationalId=byId('nationalId'),economicCode=byId('economicCode'),phone=byId('phone'),email=byId('email'),bankAccount=byId('bankAccount'),address=byId('address'),registrationNumber=byId('registrationNumber'),invoiceTypeDefault=byId('invoiceTypeDefault'),currency=byId('currency'),postalCode=byId('postalCode');let profile=null;function fill(x){businessName.value=x?.businessName||'';nationalId.value=x?.nationalId||'';economicCode.value=x?.economicCode||'';phone.value=x?.phone||'';email.value=x?.email||'';bankAccount.value=x?.bankAccount||'';address.value=x?.address||'';registrationNumber.value=x?.registrationNumber||'';invoiceTypeDefault.value=x?.invoiceTypeDefault||'unofficial';currency.value=x?.currency||'rial';postalCode.value=x?.postalCode||''}function notify(text,error=false){message.hidden=false;message.textContent=text;message.classList.toggle('notice-error',error)}form.addEventListener('submit',async event=>{event.preventDefault();if(!businessName.value.trim()){notify('نام تجاری یا نام شخص را وارد کنید.',true);businessName.focus();return}button.disabled=true;button.textContent='در حال ذخیره…';try{profile=await Finora.save('settings',{id:'seller',businessName:businessName.value.trim(),nationalId:nationalId.value.trim(),economicCode:economicCode.value.trim(),phone:phone.value.trim(),email:email.value.trim(),bankAccount:bankAccount.value.trim(),address:address.value.trim(),registrationNumber:registrationNumber.value.trim(),invoiceTypeDefault:invoiceTypeDefault.value,currency:currency.value,postalCode:postalCode.value.trim()});notify('تنظیمات فروشنده ذخیره شد.')}catch(error){notify(`ذخیره تنظیمات انجام نشد: ${error.message||'خطا'}`,true)}finally{button.disabled=false;button.textContent='ذخیره تنظیمات'}});Finora.requireAuth(async()=>{profile=await Finora.get('settings','seller');fill(profile)});})();</script>
 </body>
 </html>
