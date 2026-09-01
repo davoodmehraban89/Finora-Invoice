@@ -17,6 +17,7 @@ jobs:
       - name: Validate required application files
         run: |
           test -s index.html
-          test -s firestore.rules
           test -s assets/js/app.js
           test -s assets/js/invoice-core.js
+          test -s assets/js/supabase-config.js
+          test -d supabase/migrations
