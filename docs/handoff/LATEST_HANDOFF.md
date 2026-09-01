@@ -101,3 +101,12 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Local PDF visual QA passed: one combined fixture rendered as two A4 pages total, with the complete ordinary template on page 1 and the complete official template on page 2; neither invoice overflowed, clipped, or overlapped.
 - Latest GitHub CI run `33410529987` passed on evidence commit `775447d4a3ab198f9197b07665c94c65608a5a03` with 16/16 tests.
 - Cloudflare's PR report still points to the older successful `47335538` deployment and has not rebuilt the newer A4-template commits. The branch preview must be rebuilt at `775447d` or later before product-owner browser acceptance.
+
+## Production database and deployed UAT continuation — 2026-09-01
+
+- Authorized Supabase dashboard access succeeded for production project `npqeyfghtewymiqyxuce`.
+- Pre-migration evidence confirmed all five operational tables and five per-user `owner_all` RLS policies using `auth.uid()`.
+- Both additive migrations were applied in order: `202608310001_invoice_tax_context.sql`, then `202608310002_invoice_settings_numbering.sql`. Supabase reported successful completion.
+- The Cloudflare branch preview was independently opened and demonstrated the latest formal/ordinary controls and compact official template. A formal 1405 VAT-enabled demo invoice produced locked number `FI-000001`, the versioned 10% tax profile, legal party panels, line/tax totals, signatures, payment balance, and the Taxpayer System disclaimer.
+- A test Supabase Auth account was created, but authenticated UAT is blocked until the signup email is confirmed. The confirmation message was not found in the connected Gmail account.
+- Status: database migration and deployed demo flow are `VERIFIED`; authenticated data persistence and two-user isolation remain `IMPLEMENTED_UNVERIFIED`. Do not merge or call the work accepted until those gates pass or the product owner explicitly accepts the residual test limitation.
