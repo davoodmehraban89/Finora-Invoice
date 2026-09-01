@@ -98,7 +98,7 @@ test('Cloudflare Worker is configured as an assets-only static deployment', () =
   }
 });
 
-test('ordinary and official invoices use distinct compact A4 print contracts', () => {
+test('ordinary and official invoices use distinct single-page landscape A4 print contracts', () => {
   const preview = read('invoice-preview.html');
   const mobileCss = read('assets/css/mobile.css');
   for (const token of ['invoice-official', 'invoice-ordinary', 'صورتحساب رسمی فروش کالا و خدمات', 'فاکتور فروش', 'official-parties', 'ordinary-parties']) {
@@ -106,6 +106,12 @@ test('ordinary and official invoices use distinct compact A4 print contracts', (
   }
   assert.match(mobileCss, /@media print/);
   assert.match(mobileCss, /grid-template-columns:repeat\(4,1fr\)!important/);
-  assert.match(mobileCss, /@page\{size:A4 portrait;margin:6mm\}/);
+  assert.match(mobileCss, /@page\{size:A4 landscape;margin:6mm\}/);
+  assert.match(mobileCss, /width:297mm;height:210mm/);
+  assert.match(mobileCss, /width:285mm!important;height:198mm!important/);
+  assert.match(mobileCss, /print-density-tight/);
   assert.match(mobileCss, /break-inside:avoid/);
+  assert.match(preview, /maxSinglePageLines=15/);
+  assert.match(preview, /lineCount>12\?'print-density-tight'/);
+  assert.match(read('new-invoice.html'), /items\.length>=15/);
 });
