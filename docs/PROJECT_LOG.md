@@ -126,3 +126,14 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Legal limitation: this is compliance infrastructure, not certification or complete implementation of Iranian tax, commercial, direct-tax, or Taxpayer System law.
 - Verification gap: the cloud browser could not reach the isolated local preview; authenticated Supabase UAT and deployed Cloudflare verification remain open.
 - Rollback: revert the branch before merge; after migration/data use, retain populated additive columns unless a separately approved data migration removes them.
+## 2026-09-01 — Landscape single-page invoice printing
+
+- Status: `PLANNED` on `codex/invoice-landscape-single-page`.
+- Roadmap chapters: 14, 29, 247, 251, 259, and 260; scope class `IN_V1`.
+- User outcome: every formal and ordinary invoice print/PDF uses A4 landscape and stays on one physical page for the supported invoice line budget.
+- In scope: explicit landscape page contract, compact official/ordinary layouts, print-density classes based on item count, single-page overflow protection, automated contract tests, and rendered PDF inspection.
+- Acceptance target: both formal and ordinary fixtures with 15 invoice rows each produce one readable A4 landscape PDF page without clipped content.
+- Intended files: `invoice-preview.html`, `assets/css/mobile.css`, `tests/project-control.test.js`, status/log/handoff documents, and temporary PDF QA fixtures.
+- Risks: browser print engines can apply different header/footer and scaling defaults; unbounded item counts cannot remain readable on a fixed A4 sheet. The application will enforce its supported single-page row budget rather than silently clipping rows.
+- Security/data/migration impact: none; presentation-only change with no database, RLS, credential, or invoice-calculation change.
+- Rollback: revert the print CSS, density marker, row-budget validation, and related tests.
