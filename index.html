@@ -1,1 +1,58 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ورود | فینورا</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css"></head><body><main class="login"><section class="login-card"><div class="eyebrow">FINORA • INVOICE</div><h1>فروش حرفه‌ای، از صدور تا وصول</h1><p class="muted">فاز نخست فینورا؛ مدیریت امن و یکپارچه فاکتور فروش</p><div id="message" class="notice" hidden></div><form id="loginForm"><div class="field"><label for="email">ایمیل</label><input class="input" id="email" type="email" autocomplete="username" required></div><div class="field" style="margin-top:14px"><label for="password">رمز عبور</label><input class="input" id="password" type="password" autocomplete="current-password" required></div><button class="btn btn-primary" style="width:100%;margin-top:20px" type="submit">ورود امن</button><button class="btn btn-secondary" style="width:100%;margin-top:10px" type="button" id="signupBtn">ایجاد حساب کاربری</button></form><a class="btn btn-secondary" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="dashboard.html?demo=1">مشاهده نسخه نمایشی</a></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script>const cfg=window.FINORA_SUPABASE_CONFIG,client=supabase.createClient(cfg.url,cfg.publishableKey),form=document.querySelector('#loginForm'),msg=document.querySelector('#message');function show(text){msg.hidden=false;msg.textContent=text}form.addEventListener('submit',async e=>{e.preventDefault();msg.hidden=true;const{error}=await client.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error)show('ورود انجام نشد. ایمیل و رمز عبور را بررسی کنید.');else location.href='dashboard.html'});signupBtn.onclick=async()=>{msg.hidden=true;if(password.value.length<8)return show('رمز عبور باید حداقل ۸ نویسه باشد.');const{data,error}=await client.auth.signUp({email:email.value.trim(),password:password.value});if(error)return show(error.message);show(data.session?'حساب ساخته شد؛ در حال ورود…':'حساب ساخته شد. ایمیل تأیید را باز کنید و سپس وارد شوید.');if(data.session)setTimeout(()=>location.href='dashboard.html',700)};client.auth.getSession().then(({data})=>{if(data.session)location.href='dashboard.html'});</script></body></html>
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ورود | فینورا</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/mobile.css">
+</head>
+<body>
+<main class="login">
+<section class="login-card">
+<div class="eyebrow">FINORA • ERP</div>
+<h1>فروش حرفه‌ای، از صدور تا وصول</h1>
+<p class="muted">فاز نخست فینورا؛ مدیریت امن و یکپارچه فاکتور فروش</p>
+<div class="auth-mode" role="group" aria-label="نوع دسترسی">
+<button class="auth-mode-button is-active" id="loginMode" type="button">ورود</button>
+<button class="auth-mode-button" id="signupMode" type="button">ایجاد حساب</button>
+</div>
+<div id="message" class="notice" role="status" aria-live="polite" hidden></div>
+<form id="authForm" novalidate>
+<div class="field">
+<label for="email">ایمیل</label>
+<input class="input" id="email" name="email" type="email" autocomplete="username" inputmode="email" required>
+</div>
+<div class="field" style="margin-top:14px">
+<label for="password">رمز عبور</label>
+<input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
+</div>
+<div class="field" id="confirmPasswordField" style="margin-top:14px" hidden>
+<label for="confirmPassword">تکرار رمز عبور</label>
+<input class="input" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8">
+</div>
+<button class="btn btn-primary" id="submitButton" style="width:100%;margin-top:20px" type="submit">ورود امن</button>
+<button class="btn btn-secondary" id="resendButton" style="width:100%;margin-top:10px" type="button" hidden>ارسال مجدد ایمیل تأیید</button>
+</form>
+<a class="btn btn-secondary" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="dashboard.html?demo=1">مشاهده نسخه نمایشی</a>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script>
+(()=>{'use strict';
+const cfg=window.FINORA_SUPABASE_CONFIG,client=supabase.createClient(cfg.url,cfg.publishableKey),form=document.querySelector('#authForm'),msg=document.querySelector('#message'),emailInput=document.querySelector('#email'),passwordInput=document.querySelector('#password'),confirmPasswordInput=document.querySelector('#confirmPassword'),confirmPasswordField=document.querySelector('#confirmPasswordField'),submitButton=document.querySelector('#submitButton'),resendButton=document.querySelector('#resendButton'),loginMode=document.querySelector('#loginMode'),signupMode=document.querySelector('#signupMode');let mode='login',pendingEmail='';
+const redirectUrl=()=>new URL('index.html?email-confirmed=1',location.href).href;
+function show(text,error=false){msg.hidden=false;msg.textContent=text;msg.classList.toggle('notice-error',error)}
+function setBusy(busy){submitButton.disabled=busy;loginMode.disabled=busy;signupMode.disabled=busy}
+function setMode(next){mode=next;const signup=mode==='signup';loginMode.classList.toggle('is-active',!signup);signupMode.classList.toggle('is-active',signup);confirmPasswordField.hidden=!signup;confirmPasswordInput.required=signup;passwordInput.autocomplete=signup?'new-password':'current-password';submitButton.textContent=signup?'ساخت حساب و ارسال ایمیل تأیید':'ورود امن';resendButton.hidden=true;msg.hidden=true;confirmPasswordInput.value=''}
+loginMode.onclick=()=>setMode('login');signupMode.onclick=()=>setMode('signup');
+form.addEventListener('submit',async event=>{event.preventDefault();msg.hidden=true;const email=emailInput.value.trim(),password=passwordInput.value;if(!emailInput.checkValidity())return show('یک نشانی ایمیل معتبر وارد کنید.',true);if(password.length<8)return show('رمز عبور باید حداقل ۸ نویسه باشد.',true);if(mode==='signup'&&password!==confirmPasswordInput.value)return show('رمز عبور و تکرار آن یکسان نیستند.',true);setBusy(true);try{if(mode==='signup'){const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectUrl()}});if(error)return show('ساخت حساب انجام نشد. اطلاعات را بررسی کنید یا از ارسال مجدد ایمیل استفاده کنید.',true);pendingEmail=email;if(data.session)await client.auth.signOut();passwordInput.value='';confirmPasswordInput.value='';resendButton.hidden=false;show('حساب ساخته شد. لینک تأیید به ایمیل شما ارسال شد؛ تا پیش از تأیید، ورود مجاز نیست.')}else{const{error}=await client.auth.signInWithPassword({email,password});if(error)return show(String(error.message||'').toLowerCase().includes('email not confirmed')?'ابتدا لینک تأیید ارسال‌شده به ایمیل را باز کنید.':'ورود انجام نشد. ایمیل و رمز عبور را بررسی کنید.',true);location.href='dashboard.html'}}finally{setBusy(false)}});
+resendButton.onclick=async()=>{const email=pendingEmail||emailInput.value.trim();if(!email)return show('ابتدا ایمیل ثبت‌نام را وارد کنید.',true);resendButton.disabled=true;const{error}=await client.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectUrl()}});resendButton.disabled=false;show(error?'ارسال مجدد انجام نشد؛ کمی بعد دوباره تلاش کنید.':'ایمیل تأیید دوباره ارسال شد.',Boolean(error))};
+if(new URLSearchParams(location.search).get('email-confirmed')==='1')show('ایمیل تأیید شد. اکنون می‌توانید وارد شوید.');
+client.auth.getSession().then(({data})=>{if(data.session)location.href='dashboard.html'});
+})();
+</script>
+</body>
+</html>

@@ -1,87 +1,32 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>تنظیمات فروشنده | فینورا</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="assets/css/app.css">
-<link rel="stylesheet" href="assets/css/mobile.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تنظیمات | فینورا</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css">
 </head>
 <body>
-<aside class="sidebar">
-<div class="brand">فینورا<small>مدیریت فروش تا وصول</small>
-</div>
-<a class="nav-link" href="dashboard.html">
-<span>نمای کلی</span>
-</a>
-<a class="nav-link" href="new-invoice.html">
-<span>صدور فاکتور</span>
-</a>
-<a class="nav-link" href="invoices.html">
-<span>فاکتورها</span>
-</a>
-<a class="nav-link" href="customers.html">
-<span>اشخاص</span>
-</a>
-<a class="nav-link" href="products.html">
-<span>کالا و خدمت</span>
-</a>
-<a class="nav-link active" href="settings.html">
-<span>تنظیمات فروشنده</span>
-</a>
-</aside>
+<aside class="sidebar"><div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div><a class="nav-link" href="dashboard.html"><span>نمای کلی</span></a><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a><a class="nav-link" href="invoices.html"><span>فاکتورها</span></a><a class="nav-link" href="customers.html"><span>اشخاص</span></a><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a><a class="nav-link active" href="settings.html"><span>تنظیمات</span></a></aside>
 <main class="content">
-<header class="page-head">
-<div>
-<div class="eyebrow">پیکربندی</div>
-<h1>مشخصات فروشنده</h1>
-<div class="muted">این اطلاعات در سربرگ فاکتور چاپ می‌شود.</div>
-</div>
-</header>
-<form class="card" id="form" style="max-width:900px">
-<div id="message" class="notice" hidden>
-</div>
-<div class="form-grid">
-<div class="field">
-<label>نام تجاری/شخص *</label>
-<input class="input" id="businessName" required maxlength="160">
-</div>
-<div class="field">
-<label>شناسه/کد ملی</label>
-<input class="input" id="nationalId" maxlength="30">
-</div>
-<div class="field">
-<label>شماره اقتصادی</label>
-<input class="input" id="economicCode" maxlength="30">
-</div>
-<div class="field">
-<label>تلفن</label>
-<input class="input" id="phone" maxlength="30">
-</div>
-<div class="field">
-<label>ایمیل</label>
-<input class="input" id="email" type="email">
-</div>
-<div class="field">
-<label>شماره شبا/حساب</label>
-<input class="input" id="bankAccount" maxlength="60">
-</div>
-<div class="field" style="grid-column:span 2">
-<label>نشانی</label>
-<textarea class="textarea" id="address" rows="3">
-</textarea>
-</div>
-</div>
-<button class="btn btn-primary" id="saveSettings" style="margin-top:18px" type="submit">ذخیره تنظیمات</button>
-</form>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-</script>
-<script src="assets/js/supabase-config.js">
-</script>
-<script src="assets/js/app.js">
-</script>
-<script>(()=>{'use strict';const byId=id=>document.getElementById(id),form=byId('form'),message=byId('message'),button=byId('saveSettings'),businessName=byId('businessName'),nationalId=byId('nationalId'),economicCode=byId('economicCode'),phone=byId('phone'),email=byId('email'),bankAccount=byId('bankAccount'),address=byId('address');let profile=null;function fill(x){businessName.value=x?.businessName||'';nationalId.value=x?.nationalId||'';economicCode.value=x?.economicCode||'';phone.value=x?.phone||'';email.value=x?.email||'';bankAccount.value=x?.bankAccount||'';address.value=x?.address||''}function notify(text,error=false){message.hidden=false;message.textContent=text;message.classList.toggle('notice-error',error)}form.addEventListener('submit',async event=>{event.preventDefault();if(!businessName.value.trim()){notify('نام تجاری یا نام شخص را وارد کنید.',true);businessName.focus();return}button.disabled=true;button.textContent='در حال ذخیره…';try{profile=await Finora.save('settings',{id:'seller',businessName:businessName.value.trim(),nationalId:nationalId.value.trim(),economicCode:economicCode.value.trim(),phone:phone.value.trim(),email:email.value.trim(),bankAccount:bankAccount.value.trim(),address:address.value.trim()});notify('تنظیمات فروشنده ذخیره شد.')}catch(error){notify(`ذخیره تنظیمات انجام نشد: ${error.message||'خطا'}`,true)}finally{button.disabled=false;button.textContent='ذخیره تنظیمات'}});Finora.requireAuth(async()=>{profile=await Finora.get('settings','seller');fill(profile)});})();</script>
-</body>
-</html>
+<header class="page-head"><div><div class="eyebrow">پیکربندی</div><h1>تنظیمات فروش و فاکتور</h1><div class="muted">هویت فروشنده، سیاست شماره‌گذاری و پیش‌فرض‌های صدور و چاپ</div></div></header>
+<form id="form" class="settings-stack"><div id="message" class="notice" hidden></div>
+<section class="card"><h2>هویت قانونی و تجاری فروشنده</h2><div class="form-grid">
+<div class="field"><label for="businessName">نام تجاری/شخص *</label><input class="input" id="businessName" required maxlength="160"></div><div class="field"><label for="nationalId">شناسه ملی / کد ملی</label><input class="input" id="nationalId" maxlength="30"></div>
+<div class="field"><label for="economicCode">شماره اقتصادی</label><input class="input" id="economicCode" maxlength="30"></div><div class="field"><label for="registrationNumber">شماره ثبت</label><input class="input" id="registrationNumber" maxlength="30"></div>
+<div class="field"><label for="phone">تلفن</label><input class="input" id="phone" maxlength="30"></div><div class="field"><label for="email">ایمیل</label><input class="input" id="email" type="email"></div>
+<div class="field"><label for="website">وب‌سایت</label><input class="input" id="website" inputmode="url" maxlength="160"></div><div class="field"><label for="bankAccount">شماره شبا/حساب</label><input class="input" id="bankAccount" maxlength="60"></div>
+<div class="field"><label for="province">استان</label><input class="input" id="province" maxlength="80"></div><div class="field"><label for="city">شهر</label><input class="input" id="city" maxlength="80"></div>
+<div class="field"><label for="postalCode">کد پستی</label><input class="input" id="postalCode" maxlength="20"></div><div class="field" style="grid-column:span 2"><label for="address">نشانی</label><textarea class="textarea" id="address" rows="3"></textarea></div>
+</div></section>
+<section class="card"><div class="settings-title"><div><h2>شماره‌گذاری فاکتور</h2><p class="muted">قفل شماره در پایگاه‌داده نیز اجرا می‌شود و فقط یک محدودیت ظاهری نیست.</p></div><span class="policy-badge" id="numberPolicyBadge">قفل</span></div><div class="form-grid">
+<div class="field"><label for="invoiceNumberPolicy">سیاست شماره فاکتور</label><select class="select" id="invoiceNumberPolicy"><option value="locked">خودکار و قفل‌شده</option><option value="editable">قابل ورود و اصلاح توسط کاربر</option></select></div><div class="field"><label for="invoicePrefix">پیشوند شماره خودکار</label><input class="input" id="invoicePrefix" maxlength="20" value="FI-" placeholder="FI-"><small class="muted">در حالت خودکار، نمونه: FI-000001</small></div>
+</div><div class="notice notice-warning" id="editableWarning" hidden>در حالت قابل اصلاح، کنترل یکتایی همچنان فعال است؛ مسئولیت ترتیب، اصالت و انطباق شماره‌ها با رویه قانونی بر عهده صادرکننده است.</div></section>
+<section class="card"><h2>پیش‌فرض‌های صدور فاکتور</h2><div class="form-grid">
+<div class="field"><label for="defaultInvoiceType">نوع فاکتور پیش‌فرض</label><select class="select" id="defaultInvoiceType"><option value="ordinary">معمولی</option><option value="official">رسمی</option></select></div><div class="field"><label for="defaultVatMode">ارزش افزوده پیش‌فرض</label><select class="select" id="defaultVatMode"><option value="excluded">بدون ارزش افزوده</option><option value="included">با ارزش افزوده</option></select></div>
+<div class="field"><label for="defaultPaymentMethod">روش پرداخت پیش‌فرض</label><select class="select" id="defaultPaymentMethod"><option>نقدی</option><option>کارت/انتقال بانکی</option><option>چک</option><option>اعتباری</option></select></div><div class="field"><label for="defaultOutputMode">خروجی پیش‌فرض</label><select class="select" id="defaultOutputMode"><option value="printer">چاپگر</option><option value="pdf">PDF</option></select></div>
+<div class="field" style="grid-column:span 2"><label for="invoiceFooter">متن پایین فاکتور</label><textarea class="textarea" id="invoiceFooter" rows="3" maxlength="500" placeholder="شرایط پرداخت، پیام تشکر یا توضیح حقوقی"></textarea></div>
+</div></section>
+<div class="settings-savebar"><span class="muted">پیش‌فرض‌ها روی فاکتورهای جدید اعمال می‌شوند؛ قفل شماره روی فاکتورهای موجود نیز اجرا می‌شود.</span><button class="btn btn-primary" id="saveSettings" type="submit">ذخیره همه تنظیمات</button></div>
+</form></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/app.js"></script>
+<script>(()=>{'use strict';const byId=id=>document.getElementById(id),form=byId('form'),message=byId('message'),button=byId('saveSettings');const fields=['businessName','nationalId','economicCode','registrationNumber','phone','email','website','bankAccount','province','city','postalCode','address','invoicePrefix','defaultInvoiceType','defaultVatMode','defaultPaymentMethod','defaultOutputMode','invoiceFooter'];const defaults={invoicePrefix:'FI-',defaultInvoiceType:'ordinary',defaultVatMode:'excluded',defaultPaymentMethod:'نقدی',defaultOutputMode:'printer'};function syncPolicy(){const editable=byId('invoiceNumberPolicy').value==='editable';byId('editableWarning').hidden=!editable;byId('numberPolicyBadge').textContent=editable?'قابل اصلاح':'قفل';byId('numberPolicyBadge').classList.toggle('is-editable',editable)}function fill(profile){const value={...defaults,...profile};fields.forEach(id=>{byId(id).value=value[id]??''});byId('invoiceNumberPolicy').value=value.invoiceNumberEditable?'editable':'locked';syncPolicy()}function notify(text,error=false){message.hidden=false;message.textContent=text;message.classList.toggle('notice-error',error);message.scrollIntoView({behavior:'smooth',block:'center'})}byId('invoiceNumberPolicy').addEventListener('change',syncPolicy);form.addEventListener('submit',async event=>{event.preventDefault();if(!byId('businessName').value.trim()){notify('نام تجاری یا نام شخص را وارد کنید.',true);byId('businessName').focus();return}button.disabled=true;button.textContent='در حال ذخیره…';try{const data={id:'seller',invoiceNumberEditable:byId('invoiceNumberPolicy').value==='editable'};fields.forEach(id=>data[id]=byId(id).value.trim());await Finora.save('settings',data);notify('همه تنظیمات با موفقیت ذخیره شد.')}catch(error){notify(`ذخیره تنظیمات انجام نشد: ${error.message||'خطا'}`,true)}finally{button.disabled=false;button.textContent='ذخیره همه تنظیمات'}});Finora.requireAuth(async()=>fill(await Finora.get('settings','seller')))})();</script>
+</body></html>

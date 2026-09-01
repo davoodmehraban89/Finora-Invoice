@@ -1,6 +1,7 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const core = require('../assets/js/invoice-core.js');
+const taxRules = require('../assets/js/tax-rules.js');
 
 test('calculates line, discount, tax and invoice discount', () => {
   const result = core.calculateInvoice([{ description:'A', quantity:2, unitPrice:1000, discountPercent:10, taxPercent:10 }], 10);
@@ -26,4 +27,21 @@ test('keeps balance while presenting document lifecycle', () => {
 
 test('validates required invoice fields', () => {
   assert.equal(core.validateInvoice({ items:[] }).length, 3);
+});
+
+test('applies or removes the annual VAT rate deterministically', () => {
+  const source = [{ description:'A', quantity:1, unitPrice:1000, taxPercent:3 }];
+  assert.equal(core.calculateInvoice(core.applyTaxMode(source, 'included', 10)).tax, 100);
+  assert.equal(core.calculateInvoice(core.applyTaxMode(source, 'excluded', 10)).tax, 0);
+});
+
+test('requires a positive VAT rate when VAT is enabled', () => {
+  const invoice = { customerId:'c', customerName:'C', issueDate:'1405-06-09', items:[{description:'A',quantity:1,unitPrice:1}], invoiceType:'official', vatMode:'included', vatRate:0 };
+  assert.match(core.validateInvoice(invoice).join(' '), /نرخ معتبر/);
+});
+
+test('resolves the versioned 1405 Iran VAT profile from Persian or Latin digits', () => {
+  assert.equal(taxRules.getProfile('۱۴۰۵-۰۶-۰۹').generalVatRate, 10);
+  assert.equal(taxRules.getProfile('1405-06-09').version, 'IR-VAT-1405.1');
+  assert.equal(taxRules.getProfile('1406-01-01').fallback, true);
 });
