@@ -21,14 +21,29 @@
   }
 
   function calculateInvoice(items, invoiceDiscount = 0) {
-    const lines = (items || []).map(calculateLine);
-    const subtotal = round(lines.reduce((sum, line) => sum + line.gross, 0));
-    const lineDiscount = round(lines.reduce((sum, line) => sum + line.discount, 0));
+    let sumGross = 0;
+    let sumDiscount = 0;
+
+    const lines = (items || []).map(item => {
+      const line = calculateLine(item);
+      sumGross += line.gross;
+      sumDiscount += line.discount;
+      return line;
+    });
+
+    const subtotal = round(sumGross);
+    const lineDiscount = round(sumDiscount);
     const discountPercent = clamp(invoiceDiscount, 0, 100);
     const afterLineDiscount = round(subtotal - lineDiscount);
     const invoiceDiscountAmount = round(afterLineDiscount * discountPercent / 100);
     const taxableRatio = afterLineDiscount ? (afterLineDiscount - invoiceDiscountAmount) / afterLineDiscount : 0;
-    const tax = round(lines.reduce((sum, line) => sum + line.tax * taxableRatio, 0));
+
+    let sumTax = 0;
+    for (const line of lines) {
+      sumTax += line.tax * taxableRatio;
+    }
+    const tax = round(sumTax);
+
     const total = round(afterLineDiscount - invoiceDiscountAmount + tax);
     return { lines, subtotal, lineDiscount, discountPercent, invoiceDiscountAmount, tax, total };
   }
