@@ -110,3 +110,12 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - The Cloudflare branch preview was independently opened and demonstrated the latest formal/ordinary controls and compact official template. A formal 1405 VAT-enabled demo invoice produced locked number `FI-000001`, the versioned 10% tax profile, legal party panels, line/tax totals, signatures, payment balance, and the Taxpayer System disclaimer.
 - A test Supabase Auth account was created, but authenticated UAT is blocked until the signup email is confirmed. The confirmation message was not found in the connected Gmail account.
 - Status: database migration and deployed demo flow are `VERIFIED`; authenticated data persistence and two-user isolation remain `IMPLEMENTED_UNVERIFIED`. Do not merge or call the work accepted until those gates pass or the product owner explicitly accepts the residual test limitation.
+
+## Landscape single-page print continuation — 2026-09-01
+
+- User requires every invoice output to be A4 landscape and one physical page.
+- Review branch `codex/invoice-tax-print-options` now uses an explicit `A4 landscape` page rule, 6 mm margins, a 285 × 198 mm print frame, side-by-side official party panels, and row-count density classes.
+- The supported single-page budget is 15 rows. Creation blocks row 16; legacy invoices above the budget disable output with a visible message rather than clipping content.
+- Deployed demo UAT issued both official and ordinary 15-row invoices. Both previews contained all rows, the complete legal/commercial footer, `print-density-tight`, and an enabled output action.
+- Tests: local 16/16; both inline scripts parsed; diff check passed; GitHub Actions run `33464364756` succeeded on remote commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`.
+- Remaining gate: inspect an actual Safari/Chrome exported PDF and confirm exactly one landscape page for each template. The cloud browser verified the deployed contract and DOM but does not expose native print-preview export.
