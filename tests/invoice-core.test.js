@@ -27,3 +27,11 @@ test('keeps balance while presenting document lifecycle', () => {
 test('validates required invoice fields', () => {
   assert.equal(core.validateInvoice({ items:[] }).length, 3);
 });
+
+test('handles calculateLine edge cases (NaN, extreme values, high precision)', () => {
+  const edge = core.calculateLine({ quantity: 'bad', unitPrice: -10, discountPercent: 150, taxPercent: -5 });
+  assert.deepEqual([edge.quantity, edge.unitPrice, edge.discountPercent, edge.taxPercent, edge.total], [0, 0, 100, 0, 0]);
+
+  const precise = core.calculateLine({ quantity: 3, unitPrice: 33.3333, taxPercent: 9.999 });
+  assert.deepEqual([precise.gross, precise.tax, precise.total], [100, 10, 110]);
+});
