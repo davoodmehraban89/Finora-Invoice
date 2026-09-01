@@ -1,6 +1,6 @@
 # Finora Project Status
 
-Last evidence review: 2026-08-31 UTC
+Last evidence review: 2026-09-01 UTC
 Repository: `davoodmehraban89/Finora-Invoice`  
 Canonical branch: `main`  
 Latest verified code baseline at preparation time: `62fe92eacbfd3a369432ece83e642fad46b62239`  
@@ -61,7 +61,7 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - The applied VAT rate, tax year, and rule version are persisted through an additive Supabase migration.
 - The 1405 general VAT profile is provisionally set to 10% as requested; exemptions, special rates, and enacted-source verification remain open.
 - Invoice preview distinguishes invoice/VAT type and provides explicit PDF or printer output choices.
-- Automated Node and static contract tests pass; authenticated production UAT, migration application, Cloudflare preview/deployment, and legal/accounting review remain required before acceptance.
+- Automated Node and static contract tests pass. Both additive Supabase migrations are applied, and the Cloudflare branch preview passed deployed demo UAT; authenticated production UAT and legal/accounting review remain required before acceptance.
 - The same review branch now includes expanded seller/invoice settings and a database-enforced invoice-number policy: automatic locked numbering or user-editable numbering, with per-user uniqueness retained.
 - Invoice defaults now cover ordinary/formal type, VAT mode, payment method, output preference, automatic prefix, seller registration/location/contact data, and invoice footer text.
 - Invoice preview now uses distinct ordinary and official templates. Print-specific A4 rules override mobile layout, compact party metadata and totals, and keep normal-size invoices on one page.
@@ -72,8 +72,9 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - The repository currently represents only the invoice vertical slice, not the complete ERP architecture.
 - User-level ownership is a safe initial boundary but is not yet the final multi-tenant organization model.
 - The application depends on correct Supabase Auth settings, RLS policies, and the applied migration.
-- Review-branch saves require both additive migrations `202608310001` and `202608310002`; deploying the UI before the migrations will make the new settings fail against Supabase.
+- Both additive migrations `202608310001` and `202608310002` were successfully applied to Supabase production on 2026-09-01.
 - Cloudflare branch deployment succeeded after adding `wrangler.jsonc`; review URL: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`. Production remains on the prior accepted code.
+- A Supabase Auth test account was created, but email confirmation is still required before authenticated persistence UAT can run.
 - The 260-chapter specification is broad; work must be gated by Chapter 251 and accepted by Chapter 259 to prevent scope collapse.
 
 ## Safest next action
