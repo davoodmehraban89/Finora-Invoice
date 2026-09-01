@@ -1,1 +1,44 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فاکتورها | فینورا</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css"></head><body><aside class="sidebar"><div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div><a class="nav-link" href="dashboard.html"><span>نمای کلی</span></a><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a><a class="nav-link active" href="invoices.html"><span>فاکتورها</span></a><a class="nav-link" href="customers.html"><span>اشخاص</span></a><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a><a class="nav-link" href="settings.html"><span>تنظیمات فروشنده</span></a></aside><main class="content"><header class="page-head"><div><div class="eyebrow">فروش • پیگیری</div><h1>فاکتورها و مطالبات</h1><div class="muted">جست‌وجو و کنترل وضعیت صدور و وصول</div></div><a class="btn btn-primary" href="new-invoice.html">+ فاکتور جدید</a></header><section class="card"><div class="form-grid" style="margin-bottom:16px"><div class="field"><label>جست‌وجو</label><input class="input" id="search" placeholder="شماره یا نام مشتری"></div><div class="field"><label>وضعیت سند</label><select class="select" id="status"><option value="">همه</option><option value="draft">پیش‌نویس</option><option value="issued">صادرشده</option><option value="void">باطل‌شده</option></select></div></div><div class="table-wrap"><table class="table"><thead><tr><th>شماره</th><th>مشتری</th><th>صدور/سررسید</th><th>مبلغ کل</th><th>دریافتی</th><th>مانده</th><th>وضعیت</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/invoice-core.js"></script><script src="assets/js/app.js"></script><script>let invoices=[];function render(){const q=search.value.trim(),s=status.value;const data=invoices.filter(x=>(!s||x.documentStatus===s)&&(!q||(x.invoiceNumber||'').includes(q)||(x.customerName||'').includes(q)));rows.innerHTML=data.map(x=>{const p=FinoraInvoice.documentStatus(x);return `<tr><td><a href="invoice-preview.html?id=${x.id}${Finora.demo?'&demo=1':''}">${Finora.escape(x.invoiceNumber||'بدون شماره')}</a></td><td>${Finora.escape(x.customerName)}</td><td>${Finora.escape(x.issueDate)}<br><small class="muted">${Finora.escape(x.dueDate)}</small></td><td>${Finora.money(x.total)}</td><td>${Finora.money(x.paidAmount)}</td><td>${Finora.money(p.balance)}</td><td><span class="badge badge-${p.code}">${p.label}</span></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">فاکتوری مطابق فیلتر یافت نشد.</td></tr>'}Finora.requireAuth(async()=>{invoices=await Finora.list('invoices');render();search.oninput=render;status.onchange=render});</script></body></html>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فاکتورها | فینورا</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css"></head><body><aside class="sidebar"><div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div><a class="nav-link" href="dashboard.html"><span>نمای کلی</span></a><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a><a class="nav-link active" href="invoices.html"><span>فاکتورها</span></a><a class="nav-link" href="customers.html"><span>اشخاص</span></a><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a><a class="nav-link" href="settings.html"><span>تنظیمات فروشنده</span></a></aside><main class="content"><header class="page-head"><div><div class="eyebrow">فروش • پیگیری</div><h1>فاکتورها و مطالبات</h1><div class="muted">جست‌وجو و کنترل وضعیت صدور و وصول</div></div><a class="btn btn-primary" href="new-invoice.html">+ فاکتور جدید</a></header><section class="card"><div class="form-grid" style="margin-bottom:16px"><div class="field"><label>جست‌وجو</label><input class="input" id="search" placeholder="شماره یا نام مشتری"></div><div class="field"><label>وضعیت سند</label><select class="select" id="status"><option value="">همه</option><option value="draft">پیش‌نویس</option><option value="issued">صادرشده</option><option value="void">باطل‌شده</option></select></div></div><div class="table-wrap"><table class="table"><thead><tr><th>شماره</th><th>مشتری</th><th>صدور/سررسید</th><th>مبلغ کل</th><th>دریافتی</th><th>مانده</th><th>وضعیت</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/invoice-core.js"></script><script src="assets/js/app.js"></script><script>
+  let invoices = [];
+  function render() {
+    const q = search.value.trim(),
+      s = status.value;
+    const data = invoices.filter(
+      (x) =>
+        (!s || x.documentStatus === s) &&
+        (!q ||
+          (x.invoiceNumber || "").includes(q) ||
+          (x.customerName || "").includes(q)),
+    );
+    rows.innerHTML =
+      data
+        .map((x) => {
+          const p = FinoraInvoice.documentStatus(x);
+          return `<tr><td><a href="invoice-preview.html?id=${x.id}${
+            Finora.demo ? "&demo=1" : ""
+          }">${Finora.escape(
+            x.invoiceNumber || "بدون شماره",
+          )}</a></td><td>${Finora.escape(
+            x.customerName,
+          )}</td><td>${Finora.escape(
+            x.issueDate,
+          )}<br><small class="muted">${Finora.escape(
+            x.dueDate,
+          )}</small></td><td>${Finora.money(x.total)}</td><td>${Finora.money(
+            x.paidAmount,
+          )}</td><td>${Finora.money(
+            p.balance,
+          )}</td><td><span class="badge badge-${p.code}">${
+            p.label
+          }</span></td></tr>`;
+        })
+        .join("") ||
+      '<tr><td colspan="7" class="empty">فاکتوری مطابق فیلتر یافت نشد.</td></tr>';
+  }
+  Finora.requireAuth(async () => {
+    invoices = await Finora.list("invoices");
+    render();
+    search.oninput = render;
+    status.onchange = render;
+  });
+</script></body></html>
