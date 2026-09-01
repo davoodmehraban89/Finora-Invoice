@@ -30,89 +30,185 @@
 </script>
 <script src="assets/js/app.js">
 </script>
-<script>Finora.requireAuth(async()=>{const byId=id=>document.getElementById(id),back=byId('back'),editLink=byId('editLink'),paymentButton=byId('paymentBtn'),voidButton=byId('voidBtn'),paymentInput=byId('paymentInput'),paper=byId('paper');if(Finora.demo)back.href='invoices.html?demo=1';const id=new URLSearchParams(location.search).get('id'),x=await Finora.get('invoices',id);if(!x){paper.innerHTML='<div class="empty">فاکتور یافت نشد.</div>';paymentButton.disabled=true;voidButton.disabled=true;return}const seller=await Finora.get('settings','seller');editLink.href=`new-invoice.html?id=${id}${Finora.demo?'&demo=1':''}`;paymentButton.onclick=async()=>{const amount=Number(paymentInput.value)||0;if(amount<=0){alert('مبلغ دریافت را وارد کنید.');paymentInput.focus();return}paymentButton.disabled=true;paymentButton.textContent='در حال ثبت…';try{await Finora.saveInvoice({...x,paidAmount:(Number(x.paidAmount)||0)+amount});location.reload()}catch(error){alert(`ثبت دریافت انجام نشد: ${error.message||'خطا'}`);paymentButton.disabled=false;paymentButton.textContent='ثبت دریافت'}};voidButton.onclick=async()=>{if(!confirm('فاکتور ابطال شود؟'))return;voidButton.disabled=true;try{await Finora.saveInvoice({...x,documentStatus:'void',voidedAt:new Date().toISOString()});location.reload()}catch(error){alert(`ابطال فاکتور انجام نشد: ${error.message||'خطا'}`);voidButton.disabled=false}};const payment=FinoraInvoice.paymentStatus(x.total,x.paidAmount),pay=FinoraInvoice.documentStatus(x);paper.innerHTML=`<header>
-<div>
-<div class="eyebrow">FINORA</div>
-<h1>فاکتور فروش</h1>
-<div class="muted">سند فروش و مطالبه</div>
-</div>
-<div>
-<strong>${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong>
-<br>
-<span class="badge badge-${pay.code}">${pay.label}</span>
-</div>
-</header>
-<section class="invoice-meta">
-<div>
-<small class="muted">فروشنده</small>
-<br>
-<strong>${Finora.escape(seller?.businessName||'فروشنده')}</strong>
-<br>
-<small>${Finora.escape(seller?.nationalId||'')}</small>
-<br>
-<small>${Finora.escape(seller?.phone||'')}</small>
-</div>
-<div>
-<small class="muted">خریدار</small>
-<br>
-<strong>${Finora.escape(x.customerName)}</strong>
-<br>
-<small>${Finora.escape(x.customerNationalId||'')}</small>
-</div>
-<div>
-<small class="muted">تاریخ صدور / سررسید</small>
-<br>${Finora.escape(x.issueDate)}<br>${Finora.escape(x.dueDate||'—')}</div>
-</section>
-<table class="table">
-<thead>
-<tr>
-<th>ردیف</th>
-<th>شرح</th>
-<th>تعداد</th>
-<th>فی</th>
-<th>تخفیف</th>
-<th>مالیات</th>
-<th>جمع</th>
-</tr>
-</thead>
-<tbody>${(x.items||[]).map((i,n)=>`<tr>
-<td>${n+1}</td>
-<td>${Finora.escape(i.description)}</td>
-<td>${i.quantity}</td>
-<td>${Finora.money(i.unitPrice)}</td>
-<td>${Finora.money(i.discount)}</td>
-<td>${Finora.money(i.tax)}</td>
-<td>${Finora.money(i.total)}</td>
-</tr>`).join('')}</tbody>
-</table>
-<section style="width:min(100%,420px);margin:24px 0 0 auto">
-<div class="summary-row">
-<span>جمع ناخالص</span>
-<strong>${Finora.money(x.subtotal)}</strong>
-</div>
-<div class="summary-row">
-<span>تخفیف</span>
-<strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong>
-</div>
-<div class="summary-row">
-<span>مالیات</span>
-<strong>${Finora.money(x.tax)}</strong>
-</div>
-<div class="summary-row total">
-<span>مبلغ نهایی</span>
-<strong>${Finora.money(x.total)}</strong>
-</div>
-<div class="summary-row">
-<span>دریافتی</span>
-<strong>${Finora.money(x.paidAmount)}</strong>
-</div>
-<div class="summary-row">
-<span>مانده</span>
-<strong>${Finora.money(payment.balance)}</strong>
-</div>
-</section>${x.notes?`<section>
-<h3>توضیحات</h3>
-<p>${Finora.escape(x.notes)}</p>
-</section>`:''}<footer style="margin-top:60px;border-top:1px solid #dfe7e4;padding-top:14px" class="muted">این سند توسط سامانه فینورا ایجاد شده است.</footer>`});</script>
+<script>
+Finora.requireAuth(async () => {
+  const byId = id => document.getElementById(id);
+  const back = byId('back');
+  const editLink = byId('editLink');
+  const paymentButton = byId('paymentBtn');
+  const voidButton = byId('voidBtn');
+  const paymentInput = byId('paymentInput');
+  const paper = byId('paper');
+
+  if (Finora.demo) back.href = 'invoices.html?demo=1';
+
+  const id = new URLSearchParams(location.search).get('id');
+  const x = await Finora.get('invoices', id);
+
+  if (!x) {
+    paper.innerHTML = '<div class="empty">فاکتور یافت نشد.</div>';
+    paymentButton.disabled = true;
+    voidButton.disabled = true;
+    return;
+  }
+
+  const seller = await Finora.get('settings', 'seller');
+  editLink.href = `new-invoice.html?id=${id}${Finora.demo ? '&demo=1' : ''}`;
+
+  paymentButton.onclick = async () => {
+    const amount = Number(paymentInput.value) || 0;
+    if (amount <= 0) {
+      alert('مبلغ دریافت را وارد کنید.');
+      paymentInput.focus();
+      return;
+    }
+    paymentButton.disabled = true;
+    paymentButton.textContent = 'در حال ثبت…';
+    try {
+      await Finora.saveInvoice({ ...x, paidAmount: (Number(x.paidAmount) || 0) + amount });
+      location.reload();
+    } catch (error) {
+      alert(`ثبت دریافت انجام نشد: ${error.message || 'خطا'}`);
+      paymentButton.disabled = false;
+      paymentButton.textContent = 'ثبت دریافت';
+    }
+  };
+
+  voidButton.onclick = async () => {
+    if (!confirm('فاکتور ابطال شود؟')) return;
+    voidButton.disabled = true;
+    try {
+      await Finora.saveInvoice({ ...x, documentStatus: 'void', voidedAt: new Date().toISOString() });
+      location.reload();
+    } catch (error) {
+      alert(`ابطال فاکتور انجام نشد: ${error.message || 'خطا'}`);
+      voidButton.disabled = false;
+    }
+  };
+
+  const payment = FinoraInvoice.paymentStatus(x.total, x.paidAmount);
+  const pay = FinoraInvoice.documentStatus(x);
+
+  const renderHeader = () => `
+    <header>
+      <div>
+        <div class="eyebrow">FINORA</div>
+        <h1>فاکتور فروش</h1>
+        <div class="muted">سند فروش و مطالبه</div>
+      </div>
+      <div>
+        <strong>${Finora.escape(x.invoiceNumber || 'پیش‌نویس')}</strong>
+        <br>
+        <span class="badge badge-${pay.code}">${pay.label}</span>
+      </div>
+    </header>
+  `;
+
+  const renderMeta = () => `
+    <section class="invoice-meta">
+      <div>
+        <small class="muted">فروشنده</small>
+        <br>
+        <strong>${Finora.escape(seller?.businessName || 'فروشنده')}</strong>
+        <br>
+        <small>${Finora.escape(seller?.nationalId || '')}</small>
+        <br>
+        <small>${Finora.escape(seller?.phone || '')}</small>
+      </div>
+      <div>
+        <small class="muted">خریدار</small>
+        <br>
+        <strong>${Finora.escape(x.customerName)}</strong>
+        <br>
+        <small>${Finora.escape(x.customerNationalId || '')}</small>
+      </div>
+      <div>
+        <small class="muted">تاریخ صدور / سررسید</small>
+        <br>${Finora.escape(x.issueDate)}<br>${Finora.escape(x.dueDate || '—')}
+      </div>
+    </section>
+  `;
+
+  const renderItemsTable = () => `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ردیف</th>
+          <th>شرح</th>
+          <th>تعداد</th>
+          <th>فی</th>
+          <th>تخفیف</th>
+          <th>مالیات</th>
+          <th>جمع</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${(x.items || []).map((i, n) => `
+          <tr>
+            <td>${n + 1}</td>
+            <td>${Finora.escape(i.description)}</td>
+            <td>${i.quantity}</td>
+            <td>${Finora.money(i.unitPrice)}</td>
+            <td>${Finora.money(i.discount)}</td>
+            <td>${Finora.money(i.tax)}</td>
+            <td>${Finora.money(i.total)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  const renderSummary = () => `
+    <section style="width:min(100%,420px);margin:24px 0 0 auto">
+      <div class="summary-row">
+        <span>جمع ناخالص</span>
+        <strong>${Finora.money(x.subtotal)}</strong>
+      </div>
+      <div class="summary-row">
+        <span>تخفیف</span>
+        <strong>${Finora.money((x.lineDiscount || 0) + (x.invoiceDiscountAmount || 0))}</strong>
+      </div>
+      <div class="summary-row">
+        <span>مالیات</span>
+        <strong>${Finora.money(x.tax)}</strong>
+      </div>
+      <div class="summary-row total">
+        <span>مبلغ نهایی</span>
+        <strong>${Finora.money(x.total)}</strong>
+      </div>
+      <div class="summary-row">
+        <span>دریافتی</span>
+        <strong>${Finora.money(x.paidAmount)}</strong>
+      </div>
+      <div class="summary-row">
+        <span>مانده</span>
+        <strong>${Finora.money(payment.balance)}</strong>
+      </div>
+    </section>
+  `;
+
+  const renderNotes = () => x.notes ? `
+    <section>
+      <h3>توضیحات</h3>
+      <p>${Finora.escape(x.notes)}</p>
+    </section>
+  ` : '';
+
+  const renderFooter = () => `
+    <footer style="margin-top:60px;border-top:1px solid #dfe7e4;padding-top:14px" class="muted">
+      این سند توسط سامانه فینورا ایجاد شده است.
+    </footer>
+  `;
+
+  paper.innerHTML = [
+    renderHeader(),
+    renderMeta(),
+    renderItemsTable(),
+    renderSummary(),
+    renderNotes(),
+    renderFooter()
+  ].join('');
+});
+</script>
 </body>
 </html>
