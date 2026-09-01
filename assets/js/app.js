@@ -23,5 +23,5 @@ async function signOut(){if(!demo&&client)await client.auth.signOut();location.r
 function money(value){return`${new Intl.NumberFormat('fa-IR').format(Math.round(Number(value)||0))} ریال`;}
 function escape(value){const el=document.createElement('div');el.textContent=value==null?'':String(value);return el.innerHTML;}
 function today(){return new Intl.DateTimeFormat('fa-IR-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('/','-');}
-window.Finora={demo,sdk:client,state,requireAuth,list,get,save,archive,saveInvoice,signOut,money,escape,today};
+window.Finora={demo,sdk:client,state,requireAuth,list,get,save,archive,saveInvoice,signOut,money,escape,today,fromDb,toDb};
 })();
