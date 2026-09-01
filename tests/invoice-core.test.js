@@ -25,5 +25,34 @@ test('keeps balance while presenting document lifecycle', () => {
 });
 
 test('validates required invoice fields', () => {
-  assert.equal(core.validateInvoice({ items:[] }).length, 3);
+  const emptyInvoice = { items: [] };
+  const emptyErrors = core.validateInvoice(emptyInvoice);
+  assert.equal(emptyErrors.length, 3);
+  assert.ok(emptyErrors.includes('انتخاب مشتری الزامی است.'));
+  assert.ok(emptyErrors.includes('تاریخ صدور الزامی است.'));
+  assert.ok(emptyErrors.includes('حداقل یک قلم فاکتور لازم است.'));
+
+  const validInvoice = {
+    customerId: '123',
+    customerName: 'Test Customer',
+    issueDate: '2023-10-10',
+    items: [
+      { description: 'Item 1', quantity: 1, unitPrice: 100 }
+    ]
+  };
+  assert.equal(core.validateInvoice(validInvoice).length, 0);
+
+  const invalidItemsInvoice = {
+    customerId: '123',
+    customerName: 'Test Customer',
+    issueDate: '2023-10-10',
+    items: [
+      { quantity: 0, unitPrice: -10 }
+    ]
+  };
+  const itemErrors = core.validateInvoice(invalidItemsInvoice);
+  assert.equal(itemErrors.length, 3);
+  assert.ok(itemErrors.includes('شرح قلم 1 الزامی است.'));
+  assert.ok(itemErrors.includes('تعداد قلم 1 باید بیشتر از صفر باشد.'));
+  assert.ok(itemErrors.includes('مبلغ قلم 1 معتبر نیست.'));
 });
