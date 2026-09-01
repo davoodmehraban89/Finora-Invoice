@@ -88,6 +88,17 @@ test('invoice-number editing is controlled by settings and the database', () => 
   assert.match(migration, /raise exception 'Invoice number editing is locked/);
 });
 
+test('registration requires password confirmation and verified email access', () => {
+  const login = read('index.html');
+  for (const token of ['id="signupMode"', 'id="confirmPassword"', 'id="resendButton"', 'emailRedirectTo', "client.auth.resend({type:'signup'"]) {
+    assert.ok(login.includes(token), `missing authentication contract ${token}`);
+  }
+  assert.match(login, /password!==confirmPasswordInput\.value/);
+  assert.match(login, /if\(data\.session\)await client\.auth\.signOut\(\)/);
+  assert.match(login, /email not confirmed/);
+  assert.doesNotMatch(login, /if\(data\.session\)setTimeout/);
+});
+
 test('Cloudflare Worker is configured as an assets-only static deployment', () => {
   const config = JSON.parse(read('wrangler.jsonc'));
   assert.equal(config.name, 'finora-invoice');
