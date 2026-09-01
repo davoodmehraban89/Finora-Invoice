@@ -2,6 +2,16 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-09-01 — Production database migration and deployed template UAT
+
+- Status: `VERIFIED` for migration application and deployed demo flow; authenticated data UAT is waiting for email confirmation of the newly created test account.
+- Production database: Supabase project `npqeyfghtewymiqyxuce` was opened through the authorized dashboard. Pre-migration inspection confirmed the five operational tables and five `owner_all` RLS policies scoped to `auth.uid()`.
+- Applied migrations, in order: `supabase/migrations/202608310001_invoice_tax_context.sql` and `supabase/migrations/202608310002_invoice_settings_numbering.sql`. The SQL editor returned `Success. No rows returned`; both files are additive and completed inside explicit transactions.
+- Deployed UAT: the Cloudflare branch preview loaded successfully. A formal VAT-enabled 1405 invoice was created in demo mode with an automatically locked `FI-000001` number, one catalog line, 10% versioned VAT, official seller/buyer panels, signatures, totals, balance, and tax-profile evidence.
+- Automated verification: `node --test tests/*.test.js` passed 16/16; JavaScript syntax and `git diff --check` passed on branch HEAD `6d61d5214ecb91749e0bcf6e05faa7c4036d07af`.
+- Auth: a Supabase Auth test account was created successfully. Supabase requires email confirmation before authenticated UAT can continue; no matching confirmation message was found in the connected Gmail account, so the account may use another email address or delivery may be delayed.
+- Remaining acceptance gates: confirm the test-account email, run authenticated create/update/archive/payment/settings flows, run an independent second-user isolation test, and verify the production deployment after merge.
+
 ## 2026-08-31 — One-page professional invoice print templates
 
 - Status: `PLANNED` on PR #2 from the product-owner PDF evidence `فاکتور | فینورا-4.pdf`.
