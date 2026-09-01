@@ -64,8 +64,9 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - Automated Node and static contract tests pass. Both additive Supabase migrations are applied, and the Cloudflare branch preview passed deployed demo UAT; authenticated production UAT and legal/accounting review remain required before acceptance.
 - The same review branch now includes expanded seller/invoice settings and a database-enforced invoice-number policy: automatic locked numbering or user-editable numbering, with per-user uniqueness retained.
 - Invoice defaults now cover ordinary/formal type, VAT mode, payment method, output preference, automatic prefix, seller registration/location/contact data, and invoice footer text.
-- Invoice preview now uses distinct ordinary and official templates. Print-specific A4 rules override mobile layout, compact party metadata and totals, and keep normal-size invoices on one page.
-- Evidence: all inline scripts parse, `git diff --check` passes, `node --test tests/*.test.js` passes 16/16, and GitHub Actions run `33409656301` succeeded on review commit `0486750`.
+- Invoice preview now uses distinct ordinary and official templates. Print-specific rules use A4 landscape with a 285 × 198 mm printable frame, three density levels, and a 15-row single-page budget.
+- New invoices cannot exceed 15 rows; older oversized invoices are blocked from output with a clear correction message so content is never silently clipped.
+- Evidence: both deployed demo templates rendered all 15 rows with the tight print class and visible footer; all inline scripts parse, `git diff --check` passes, `node --test tests/*.test.js` passes 16/16, and GitHub Actions run `33464364756` succeeded on review commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`.
 
 ## Current blockers and risks
 
@@ -75,8 +76,9 @@ Finora is not limited to invoicing. The complete scope is governed by `Finora_Ma
 - Both additive migrations `202608310001` and `202608310002` were successfully applied to Supabase production on 2026-09-01.
 - Cloudflare branch deployment succeeded after adding `wrangler.jsonc`; review URL: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`. Production remains on the prior accepted code.
 - A Supabase Auth test account was created, but email confirmation is still required before authenticated persistence UAT can run.
+- Native Safari/Chrome PDF page-count inspection of the new landscape contract is still required because the cloud browser cannot export its print preview.
 - The 260-chapter specification is broad; work must be gated by Chapter 251 and accepted by Chapter 259 to prevent scope collapse.
 
 ## Safest next action
 
-Run an authenticated mobile UAT of customer, product, invoice, payment, archive, and isolation paths; record evidence before expanding the invoice workstream.
+Confirm the test-account email, then run authenticated UAT and a native Safari/Chrome one-page PDF check before merging the review branch.
