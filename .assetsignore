@@ -12,3 +12,10 @@ firebase.json
 firestore.rules
 firestore.indexes.json
 README.md
+AGENTS.md
+PROJECT_STATUS.md
+FINORA_CHATGPT_BOOTSTRAP_PROMPT.txt
+.assetsignore
+wrangler.jsonc
+package.json
+package-lock.json
