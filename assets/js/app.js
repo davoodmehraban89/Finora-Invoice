@@ -12,7 +12,42 @@ window.addEventListener('unhandledrejection',event=>{event.preventDefault();show
 window.addEventListener('error',event=>{if(event.error)showFatal(event.error);});
 function enhanceMobileNav(){const sidebar=document.querySelector('.sidebar');if(!sidebar)return;const button=document.createElement('button');button.className='mobile-nav-toggle screen-only';button.type='button';button.setAttribute('aria-label','باز کردن منو');button.textContent='☰';button.onclick=()=>sidebar.classList.toggle('open');document.body.appendChild(button);sidebar.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>sidebar.classList.remove('open')));}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',enhanceMobileNav):enhanceMobileNav();
-async function requireAuth(callback){if(demo){document.querySelectorAll('a[href$=".html"],a[href*=".html?"]').forEach(link=>{const url=new URL(link.getAttribute('href'),location.href);if(url.origin===location.origin){url.searchParams.set('demo','1');link.href=url.pathname.split('/').pop()+url.search;}});return callback(state.user);}if(!client)return location.replace('index.html?error=config');const{data,error}=await client.auth.getSession();if(error)return showFatal(error);if(!data.session?.user)return location.replace('index.html');state.user={...data.session.user,uid:data.session.user.id};try{await callback(state.user);}catch(err){showFatal(err);}}
+async function requireAuth(callback) {
+  if (demo) {
+    document.querySelectorAll('a[href$=".html"],a[href*=".html?"]').forEach(link => {
+      const url = new URL(link.getAttribute('href'), location.href);
+      if (url.origin === location.origin) {
+        url.searchParams.set('demo', '1');
+        link.href = url.pathname.split('/').pop() + url.search;
+      }
+    });
+    return callback(state.user);
+  }
+
+  if (!client) {
+    return location.replace('index.html?error=config');
+  }
+
+  const { data, error } = await client.auth.getSession();
+  if (error) {
+    return showFatal(error);
+  }
+
+  if (!data.session?.user) {
+    return location.replace('index.html');
+  }
+
+  state.user = {
+    ...data.session.user,
+    uid: data.session.user.id
+  };
+
+  try {
+    await callback(state.user);
+  } catch (err) {
+    showFatal(err);
+  }
+}
 async function queryResult(promise){const{data,error}=await promise;if(error)throw error;return data;}
 async function list(name,orderField='createdAt'){if(demo){const stored=localRead(name);return stored.length?stored:(demoData[name]||[]);}let query=client.from(tableName(name)).select('*');if(orderField)query=query.order(snake(orderField),{ascending:false});return(await queryResult(query)).map(fromDb);}
 async function get(name,id){if(demo)return(await list(name,null)).find(x=>x.id===id)||null;const key=name==='settings'?'user_id':'id',value=name==='settings'?state.user.id:id;const data=await queryResult(client.from(tableName(name)).select('*').eq(key,value).maybeSingle());const result=fromDb(data);return name==='settings'&&result?{...result,id:'seller'}:result;}
