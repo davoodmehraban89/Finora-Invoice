@@ -13,10 +13,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node --test tests/invoice-core.test.js
+      - run: node --test tests/*.test.js
       - name: Validate required application files
         run: |
           test -s index.html
-          test -s firestore.rules
+          test -s supabase/migrations/202608280001_invoice_phase.sql
+          test -s supabase/migrations/202608310001_invoice_tax_context.sql
+          test -s supabase/migrations/202608310002_invoice_settings_numbering.sql
           test -s assets/js/app.js
           test -s assets/js/invoice-core.js
+          test -s assets/js/tax-rules.js
+          test -s wrangler.jsonc

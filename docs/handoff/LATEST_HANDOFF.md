@@ -62,3 +62,60 @@ Evidence: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`.
 ## Safest next action
 
 Execute and record authenticated mobile UAT and a two-user isolation test for the invoice workstream before expanding scope.
+
+## Review branch update — 2026-08-31
+
+- Branch: `codex/invoice-tax-print-options`.
+- Status: `IMPLEMENTED_UNVERIFIED`; not merged, deployed, or accepted.
+- Added: formal/ordinary invoice type, VAT on/off, provisional versioned 1405 general rate (10%), stored tax context, PDF/printer output choice, additive migration, compliance register, and automated tests.
+- Test evidence: `node --test tests/*.test.js` passed 13/13; JavaScript syntax and diff checks passed.
+- Required before merge/deployment: review the PR, verify the enacted 1405 VAT source and applicability with a qualified accountant/legal reviewer, apply `202608310001_invoice_tax_context.sql`, then run authenticated and demo UAT on the Cloudflare deployment.
+- This change does not submit invoices to the Taxpayer System and must not be represented as complete Iranian legal compliance.
+
+## Invoice-number and settings continuation — 2026-08-31
+
+- Same branch and PR: `codex/invoice-tax-print-options`, PR #2.
+- Added an invoice number field governed by seller settings. `automatic locked` assigns the configured prefix plus a per-user counter and prevents later edits; `editable` permits a user-defined unique value and falls back to automatic numbering when empty.
+- Enforcement exists in PostgreSQL through `assign_invoice_number` and `guard_invoice_number_update`, not only in the browser.
+- Expanded settings include seller registration, website, province, city, postal code, invoice prefix, invoice/tax/payment/output defaults, and footer text.
+- New required migration: `supabase/migrations/202608310002_invoice_settings_numbering.sql`, applied after `202608310001_invoice_tax_context.sql`.
+- Local verification: 14/14 Node tests, all affected inline scripts parsed, JavaScript syntax passed, and `git diff --check` passed.
+- Remote evidence: PR #2 is mergeable and Draft. GitHub Actions run `33402769849` succeeded on `2a3c9f3bd564ea7b525622210921bb1cd6a98a10`.
+- Status remains `IMPLEMENTED_UNVERIFIED`: Cloudflare preview, migration application, and authenticated UAT are still required. Production was not changed.
+
+## Cloudflare repair continuation — 2026-08-31
+
+- Product-owner screenshots confirmed that `npx wrangler versions upload` failed because no assets directory or Wrangler configuration existed.
+- Added `wrangler.jsonc` for an assets-only static Worker and expanded `.assetsignore` to keep non-runtime repository files private.
+- GitHub CI run `33406241542` passed on `0064cdd4b032d7297aeb077ac70588038e1e4179` with 15/15 tests.
+- Cloudflare has not yet reported a build for the repair commit; the last visible report remains the failed `2fcd34d` build. Do not claim a preview until a later Cloudflare report supplies a successful URL.
+- Cloudflare subsequently reported a successful deployment for `0064cdd4`. Stable branch preview: `https://codex-invoice-tax-print-options-finora-invoice.davoodmehraban89.workers.dev`; commit preview: `https://64eed8bd-finora-invoice.davoodmehraban89.workers.dev`.
+- GitHub CI run `33406506407` also passed after the evidence-lock update. Production remains unchanged; Supabase migrations and authenticated UAT are still required before merge.
+
+## Invoice A4 template repair — 2026-08-31
+
+- Product-owner PDF evidence showed a one-line invoice spanning two A4 pages because Safari print activated mobile single-column rules.
+- Ordinary and official invoices now have different DOM/template structures; official uses legal identification panels and ordinary uses a compact commercial layout.
+- Print CSS explicitly restores multi-column metadata, uses 6 mm A4 margins, compacts totals and signatures, and controls internal page breaks.
+- GitHub Actions run `33409656301` succeeded on `0486750a20e6b7dfe80687c8c0727f866c502330`; deployed PDF visual verification remains the acceptance gate.
+- Local PDF visual QA passed: one combined fixture rendered as two A4 pages total, with the complete ordinary template on page 1 and the complete official template on page 2; neither invoice overflowed, clipped, or overlapped.
+- Latest GitHub CI run `33410529987` passed on evidence commit `775447d4a3ab198f9197b07665c94c65608a5a03` with 16/16 tests.
+- Cloudflare's PR report still points to the older successful `47335538` deployment and has not rebuilt the newer A4-template commits. The branch preview must be rebuilt at `775447d` or later before product-owner browser acceptance.
+
+## Production database and deployed UAT continuation — 2026-09-01
+
+- Authorized Supabase dashboard access succeeded for production project `npqeyfghtewymiqyxuce`.
+- Pre-migration evidence confirmed all five operational tables and five per-user `owner_all` RLS policies using `auth.uid()`.
+- Both additive migrations were applied in order: `202608310001_invoice_tax_context.sql`, then `202608310002_invoice_settings_numbering.sql`. Supabase reported successful completion.
+- The Cloudflare branch preview was independently opened and demonstrated the latest formal/ordinary controls and compact official template. A formal 1405 VAT-enabled demo invoice produced locked number `FI-000001`, the versioned 10% tax profile, legal party panels, line/tax totals, signatures, payment balance, and the Taxpayer System disclaimer.
+- A test Supabase Auth account was created, but authenticated UAT is blocked until the signup email is confirmed. The confirmation message was not found in the connected Gmail account.
+- Status: database migration and deployed demo flow are `VERIFIED`; authenticated data persistence and two-user isolation remain `IMPLEMENTED_UNVERIFIED`. Do not merge or call the work accepted until those gates pass or the product owner explicitly accepts the residual test limitation.
+
+## Landscape single-page print continuation — 2026-09-01
+
+- User requires every invoice output to be A4 landscape and one physical page.
+- Review branch `codex/invoice-tax-print-options` now uses an explicit `A4 landscape` page rule, 6 mm margins, a 285 × 198 mm print frame, side-by-side official party panels, and row-count density classes.
+- The supported single-page budget is 15 rows. Creation blocks row 16; legacy invoices above the budget disable output with a visible message rather than clipping content.
+- Deployed demo UAT issued both official and ordinary 15-row invoices. Both previews contained all rows, the complete legal/commercial footer, `print-density-tight`, and an enabled output action.
+- Tests: local 16/16; both inline scripts parsed; diff check passed; GitHub Actions run `33464364756` succeeded on remote commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`.
+- Remaining gate: inspect an actual Safari/Chrome exported PDF and confirm exactly one landscape page for each template. The cloud browser verified the deployed contract and DOM but does not expose native print-preview export.
