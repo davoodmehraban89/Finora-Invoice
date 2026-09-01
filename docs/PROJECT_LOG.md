@@ -2,6 +2,16 @@
 
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
+## 2026-09-01 — Registration and email-verification hardening
+
+- Status: `PLANNED` on `codex/invoice-tax-print-options` after product-owner UAT showed immediate account access without email confirmation.
+- User outcome: registration requires the password twice, rejects mismatches before any network request, sends a verification email, and does not grant application access until the email link is confirmed.
+- In scope: explicit login/register modes, confirm-password validation, defensive sign-out if signup unexpectedly returns a session, confirmation redirect/status messaging, automated UI contracts, deployed UAT, and enabling Supabase Confirm email.
+- Security boundary: client validation improves UX but is not the authorization boundary; Supabase Auth must enforce email confirmation server-side.
+- External change: enabling Confirm email changes production authentication behavior and requires action-time approval in the authorized Supabase dashboard.
+- Tests: inline-script parse, static authentication contracts, signup mismatch/no-session behavior where testable, full Node suite, CI, and two-address browser UAT after deployment.
+- Rollback: revert the UI commit and restore the prior Supabase email-confirmation setting only through a separately approved security decision.
+
 ## 2026-09-01 — Production database migration and deployed template UAT
 
 - Status: `VERIFIED` for migration application and deployed demo flow; authenticated data UAT is waiting for email confirmation of the newly created test account.
