@@ -126,9 +126,10 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Legal limitation: this is compliance infrastructure, not certification or complete implementation of Iranian tax, commercial, direct-tax, or Taxpayer System law.
 - Verification gap: the cloud browser could not reach the isolated local preview; authenticated Supabase UAT and deployed Cloudflare verification remain open.
 - Rollback: revert the branch before merge; after migration/data use, retain populated additive columns unless a separately approved data migration removes them.
+
 ## 2026-09-01 — Landscape single-page invoice printing
 
-- Status: `PLANNED` on `codex/invoice-landscape-single-page`.
+- Status: `PLANNED` on the existing review branch `codex/invoice-tax-print-options`.
 - Roadmap chapters: 14, 29, 247, 251, 259, and 260; scope class `IN_V1`.
 - User outcome: every formal and ordinary invoice print/PDF uses A4 landscape and stays on one physical page for the supported invoice line budget.
 - In scope: explicit landscape page contract, compact official/ordinary layouts, print-density classes based on item count, single-page overflow protection, automated contract tests, and rendered PDF inspection.
@@ -137,3 +138,12 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Risks: browser print engines can apply different header/footer and scaling defaults; unbounded item counts cannot remain readable on a fixed A4 sheet. The application will enforce its supported single-page row budget rather than silently clipping rows.
 - Security/data/migration impact: none; presentation-only change with no database, RLS, credential, or invoice-calculation change.
 - Rollback: revert the print CSS, density marker, row-budget validation, and related tests.
+
+### Implementation evidence
+
+- Status: `IMPLEMENTED_UNVERIFIED` on the deployed review branch; not accepted on `main`.
+- Print contract: `@page` is explicitly `A4 landscape` with 6 mm margins; the printable frame is fixed at 285 × 198 mm and uses standard, compact, or tight density according to item count.
+- Single-page guard: invoice creation stops at 15 rows. Legacy invoices above 15 rows disable output and show an explicit correction message instead of clipping an unknown number of rows.
+- Deployed demo UAT: both a formal VAT-enabled invoice and an ordinary invoice were issued with 15 rows. Each preview rendered all 15 rows, selected `print-density-tight`, displayed its footer, and kept output enabled.
+- Automated evidence: 16/16 Node tests passed locally and GitHub Actions run `33464364756` succeeded on review commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`; both affected inline scripts parsed and `git diff --check` passed.
+- Remaining visual gate: the deployed Cloudflare stylesheet and complete 15-row DOMs were verified, but this cloud browser cannot export the native print preview to a file. Final Safari/Chrome PDF page-count inspection remains required before acceptance or merge.
