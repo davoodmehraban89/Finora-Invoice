@@ -1,5 +1,17 @@
 # Finora Project Log
 
+## 2026-09-01 — Invoice product-completion and evidence loop
+
+- Status: `PLANNED` on `codex/finora-invoice-uat-completion`, based on remote `main` SHA `111d46f6d8946f89eb1de4ac3a08b30e4f56b203`.
+- Roadmap chapters: 10, 11, 14, 16, 29, 31, 77, 231, 247, 251, 259, and 260; scope class `IN_V1` for the invoice vertical slice.
+- User outcome: finish the currently identified invoice/authentication/UI gaps, repeat implementation and verification until the deployed test version has independently inspected evidence, and deliver a test link rather than an agent-only completion claim.
+- In scope: customer legal/contact fields; seller and currency defaults; professional customer/product dialogs; distinct official A4 and unofficial A5 landscape templates; fixed 15-row official paper; tax-column-free unofficial paper; complete party-field mapping with excluded email/type/bank fields; immutable invoice party snapshots; registration confirmation contracts; documentation synchronization; automated, browser, PDF, migration, and deployed smoke evidence.
+- Intended files: `customers.html`, `products.html`, `settings.html`, `new-invoice.html`, `invoice-preview.html`, `assets/js/app.js`, `assets/js/invoice-core.js`, print CSS, a new additive Supabase migration, tests, and the mandatory project-control documents.
+- Security/data impact: existing per-user RLS remains mandatory. New customer fields and invoice snapshots are additive; no service credential is stored or exposed. Issued historical invoices must print from snapshots and must not silently change when master data changes.
+- Tests: full Node suite; inline-script parsing; syntax/diff checks; database contract and RLS static checks; Playwright demo workflows and negative cases; Chromium-generated A4/A5 PDFs with exact page-count and rendered-image inspection; deployed-source hash and browser smoke verification.
+- Risks: native print engines differ; production migration may require an authorized Supabase action; legal tax rates remain provisional and cannot be certified by UI tests; authenticated two-user isolation requires two verified accounts.
+- Rollback: revert the application commit and deployment branch; retain populated additive columns/snapshots unless a separately reviewed data migration proves safe removal. Do not rewrite or delete issued invoices.
+
 This is an append-oriented evidence log. Do not erase historical entries. Correct mistakes with a new dated entry.
 
 ## 2026-09-01 — Release integration and delivery-pipeline audit

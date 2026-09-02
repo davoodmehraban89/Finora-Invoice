@@ -44,7 +44,7 @@
     const vatMode = invoice.vatMode === 'included' ? 'included' : 'excluded';
     return {
       invoiceType,
-      invoiceTypeLabel: invoiceType === 'official' ? 'فاکتور رسمی' : 'فاکتور معمولی',
+      invoiceTypeLabel: invoiceType === 'official' ? 'فاکتور رسمی' : 'فاکتور غیررسمی',
       vatMode,
       vatModeLabel: vatMode === 'included' ? 'با ارزش افزوده' : 'بدون ارزش افزوده',
       vatRate: vatMode === 'included' ? clamp(invoice.vatRate, 0, 100) : 0
@@ -81,5 +81,28 @@
     return errors;
   }
 
-  return { calculateLine, calculateInvoice, applyTaxMode, taxContext, paymentStatus, documentStatus, validateInvoice, round };
+  function amountToWords(value) {
+    const ones = ['', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'شش', 'هفت', 'هشت', 'نه', 'ده', 'یازده', 'دوازده', 'سیزده', 'چهارده', 'پانزده', 'شانزده', 'هفده', 'هجده', 'نوزده'];
+    const tens = ['', '', 'بیست', 'سی', 'چهل', 'پنجاه', 'شصت', 'هفتاد', 'هشتاد', 'نود'];
+    const hundreds = ['', 'صد', 'دویست', 'سیصد', 'چهارصد', 'پانصد', 'ششصد', 'هفتصد', 'هشتصد', 'نهصد'];
+    const scales = ['', 'هزار', 'میلیون', 'میلیارد', 'تریلیون', 'کوادریلیون'];
+    const join = parts => parts.filter(Boolean).join(' و ');
+    const underThousand = number => join([
+      hundreds[Math.floor(number / 100)],
+      number % 100 < 20 ? ones[number % 100] : join([tens[Math.floor((number % 100) / 10)], ones[number % 10]])
+    ]);
+    const number = Math.round(Math.abs(Number(value) || 0));
+    if (number === 0) return 'صفر';
+    if (!Number.isSafeInteger(number)) return 'مبلغ خارج از محدوده قابل تبدیل';
+    const groups = [];
+    let remaining = number;
+    for (let index = 0; remaining > 0; index += 1) {
+      const group = remaining % 1000;
+      if (group) groups.unshift(`${underThousand(group)}${scales[index] ? ` ${scales[index]}` : ''}`);
+      remaining = Math.floor(remaining / 1000);
+    }
+    return groups.join(' و ');
+  }
+
+  return { calculateLine, calculateInvoice, applyTaxMode, taxContext, paymentStatus, documentStatus, validateInvoice, amountToWords, round };
 });
