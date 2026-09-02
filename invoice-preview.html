@@ -37,62 +37,69 @@ paper.className = 'invoice-paper ' + (isOfficial ? 'official' : 'unofficial');
 
 
 function renderOfficial() {
-  let rowsHtml = (x.items||[]).map((i,n)=>`<tr>
-  <td>${n+1}</td>
-  <td>${Finora.escape(i.description)}</td>
-  <td>${i.quantity}</td>
-  <td>${Finora.money(i.unitPrice)}</td>
-  <td>${Finora.money(i.discount)}</td>
-  <td>${Finora.money(i.tax)}</td>
-  <td>${Finora.money(i.total)}</td>
+  let rowsHtml = (x.items||[]).map((i,n)=>`<tr style="height: 38px;">
+  <td style="font-size: 14px;">${n+1}</td>
+  <td style="font-size: 14px;">${Finora.escape(i.description)}</td>
+  <td style="font-size: 14px;">${i.quantity}</td>
+  <td style="font-size: 14px;">${Finora.money(i.unitPrice)}</td>
+  <td style="font-size: 14px;">${Finora.money(i.discount)}</td>
+  <td style="font-size: 14px;">${Finora.money(i.tax)}</td>
+  <td style="font-size: 14px;">${Finora.money(i.total)}</td>
   </tr>`).join('');
   const currentLength = (x.items||[]).length;
-  for (let i = currentLength; i < 15; i++) {
-    rowsHtml += `<tr><td>${i+1}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
+  for (let i = currentLength; i < 10; i++) {
+    rowsHtml += `<tr style="height: 38px;"><td>${i+1}</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`;
   }
-  return `<header>
-  <div>
-  <div class="eyebrow">FINORA ERP</div>
-  <h1>صورتحساب فروش کالا و خدمات (رسمی)</h1>
-  </div>
-  <div class="text-right">
-  <strong>شماره: ${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong>
-  <br>تاریخ صدور: ${Finora.escape(x.issueDate)}
+  return `<header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 12px;">
+  <div style="font-size: 10px; color: #666; writing-mode: vertical-rl; text-orientation: mixed;">FINORA</div>
+  <h1 style="margin: 0; font-size: 28px; text-align: center; flex: 1;">فاکتور فروش کالا و خدمات</h1>
+  <div style="text-align: left; font-size: 14px; min-width: 200px;">
+  <div>شماره فاکتور: <strong>${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong></div>
+  <div style="margin-top: 4px;">تاریخ صدور: <strong>${Finora.escape(x.issueDate)}</strong></div>
   </div>
   </header>
-  <section class="invoice-meta" style="grid-template-columns:1fr; gap:8px;">
-  <div style="border: 1px solid #000; padding: 8px;">
+
+  <section style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+  <div style="border: 1px solid #000; padding: 10px; font-size: 14px; line-height: 1.8;">
   <strong>فروشنده: ${Finora.escape(seller?.businessName||'')}</strong> |
   شناسه ملی: ${Finora.escape(seller?.nationalId||'')} |
-  کد اقتصادی: ${Finora.escape(seller?.economicCode||'')} |
   شماره ثبت: ${Finora.escape(seller?.registrationNumber||'')} |
+  کد اقتصادی: ${Finora.escape(seller?.economicCode||'')} |
   کد پستی: ${Finora.escape(seller?.postalCode||'')} |
   تلفن: ${Finora.escape(seller?.phone||'')} |
   نشانی: ${Finora.escape(seller?.address||'')}
   </div>
-  <div style="border: 1px solid #000; padding: 8px;">
+  <div style="border: 1px solid #000; padding: 10px; font-size: 14px; line-height: 1.8;">
   <strong>خریدار: ${Finora.escape(x.customerName)}</strong> |
   شناسه ملی: ${Finora.escape(x.customerNationalId||'')} |
-  کد اقتصادی: ${Finora.escape(customer?.economicCode||'')} |
   شماره ثبت: ${Finora.escape(customer?.registrationNumber||'')} |
+  کد اقتصادی: ${Finora.escape(customer?.economicCode||'')} |
   کد پستی: ${Finora.escape(customer?.postalCode||'')} |
   تلفن: ${Finora.escape(customer?.phone||'')} |
   نشانی: ${Finora.escape(customer?.address||'')}
   </div>
   </section>
-  <table class="table">
-  <thead><tr><th>ردیف</th><th>شرح کالا یا خدمات</th><th>تعداد</th><th>مبلغ واحد (ریال)</th><th>تخفیف (ریال)</th><th>مالیات و عوارض (ریال)</th><th>مبلغ کل پس از تخفیف و مالیات (ریال)</th></tr></thead>
+
+  <table class="table" style="margin-bottom: 16px; border: 1px solid #000;">
+  <thead><tr style="background: #f0f0f0;"><th style="font-size: 13px;">ردیف</th><th style="font-size: 13px;">شرح کالا یا خدمات</th><th style="font-size: 13px;">تعداد</th><th style="font-size: 13px;">مبلغ واحد (ریال)</th><th style="font-size: 13px;">تخفیف (ریال)</th><th style="font-size: 13px;">مالیات و عوارض (ریال)</th><th style="font-size: 13px;">مبلغ کل پس از تخفیف و مالیات (ریال)</th></tr></thead>
   <tbody>${rowsHtml}</tbody>
   </table>
-  <section style="display:flex; justify-content:space-between; margin-top:16px;">
-  <div style="flex:1;">${x.notes?`<div style="border:1px solid #000; padding:8px; height:100%;">توضیحات: ${Finora.escape(x.notes)}</div>`:'<div style="border:1px solid #000; padding:8px; height:100%;">توضیحات: ندارد</div>'}</div>
-  <div style="width: 300px; margin-right: 16px;">
-  <div class="summary-row"><span>جمع کل تخفیف:</span><strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong></div>
-  <div class="summary-row"><span>جمع کل مالیات و عوارض:</span><strong>${Finora.money(x.tax)}</strong></div>
-  <div class="summary-row total" style="border-top:1px solid #000;"><span>جمع مبلغ قابل پرداخت:</span><strong>${Finora.money(x.total)}</strong></div>
+
+  <section style="display:flex; justify-content:space-between; gap: 16px;">
+  <div style="flex:1;">
+    <div style="border:1px solid #000; padding:10px; height:100%; font-size: 14px;">
+      <strong>توضیحات:</strong>
+      <p style="margin: 8px 0 0 0; white-space: pre-wrap;">${x.notes?Finora.escape(x.notes):'ندارد'}</p>
+    </div>
+  </div>
+  <div style="width: 350px; font-size: 15px;">
+  <div style="display: flex; justify-content: space-between; padding: 6px 0;"><span>جمع کل تخفیف:</span><strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong></div>
+  <div style="display: flex; justify-content: space-between; padding: 6px 0;"><span>جمع کل مالیات و عوارض:</span><strong>${Finora.money(x.tax)}</strong></div>
+  <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 2px solid #000; font-size: 18px; margin-top: 4px;"><span>جمع مبلغ قابل پرداخت:</span><strong>${Finora.money(x.total)}</strong></div>
   </div>
   </section>
-  <div style="display:flex; justify-content:space-between; margin-top:32px; padding: 0 40px;">
+
+  <div style="display:flex; justify-content:space-between; margin-top:40px; padding: 0 60px; font-size: 16px;">
   <div>مهر و امضای فروشنده</div><div>مهر و امضای خریدار</div>
   </div>`;
 }
@@ -106,45 +113,49 @@ function renderUnofficial() {
   <td>${Finora.money(i.unitPrice)}</td>
   <td>${Finora.money(i.total)}</td>
   </tr>`).join('');
-  return `<header>
-  <div>
-  <div class="eyebrow">${Finora.escape(seller?.businessName||'FINORA')}</div>
-  <h1>فاکتور فروش کالا و خدمات</h1>
-  </div>
-  <div class="text-right">
-  <strong>شماره فاکتور: ${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong>
-  <br>تاریخ صدور: ${Finora.escape(x.issueDate)}
+  return `<header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--line); padding-bottom: 12px; margin-bottom: 16px;">
+  <div style="font-size: 10px; color: #666; writing-mode: vertical-rl; text-orientation: mixed;">${Finora.escape(seller?.businessName||'FINORA')}</div>
+  <h1 style="margin: 0; font-size: 24px; text-align: center; flex: 1;">فاکتور فروش کالا و خدمات</h1>
+  <div style="text-align: left; font-size: 14px; min-width: 200px;">
+  <div>شماره فاکتور: <strong>${Finora.escape(x.invoiceNumber||'پیش‌نویس')}</strong></div>
+  <div style="margin-top: 4px;">تاریخ صدور: <strong>${Finora.escape(x.issueDate)}</strong></div>
   </div>
   </header>
-  <section class="invoice-meta" style="grid-template-columns:1fr; gap:8px;">
-  <div style="border: 1px solid var(--line); padding: 12px; border-radius: 8px;">
-  <small class="muted">فروشنده:</small> <strong>${Finora.escape(seller?.businessName||'')}</strong> —
-  تلفن: ${Finora.escape(seller?.phone||'')} —
-  نشانی: ${Finora.escape(seller?.address||'')}
+
+  <section style="display: flex; gap: 16px; margin-bottom: 16px;">
+  <div style="flex: 1; border: 1px solid var(--line); padding: 12px; border-radius: 8px; font-size: 13px; line-height: 1.8;">
+  <div style="margin-bottom: 4px;"><small class="muted">فروشنده:</small> <strong>${Finora.escape(seller?.businessName||'')}</strong></div>
+  <div>شناسه ملی: ${Finora.escape(seller?.nationalId||'')} | کد اقتصادی: ${Finora.escape(seller?.economicCode||'')} | شماره ثبت: ${Finora.escape(seller?.registrationNumber||'')} | کد پستی: ${Finora.escape(seller?.postalCode||'')}</div>
+  <div>تلفن: ${Finora.escape(seller?.phone||'')} | نشانی: ${Finora.escape(seller?.address||'')}</div>
   </div>
-  <div style="border: 1px solid var(--line); padding: 12px; border-radius: 8px;">
-  <small class="muted">خریدار:</small> <strong>${Finora.escape(x.customerName)}</strong> —
-  تلفن: ${Finora.escape(customer?.phone||'')} —
-  شناسه/کد ملی: ${Finora.escape(x.customerNationalId||'')} —
-  کد پستی: ${Finora.escape(customer?.postalCode||'')} —
-  نشانی: ${Finora.escape(customer?.address||'')}
+  <div style="flex: 1; border: 1px solid var(--line); padding: 12px; border-radius: 8px; font-size: 13px; line-height: 1.8;">
+  <div style="margin-bottom: 4px;"><small class="muted">خریدار:</small> <strong>${Finora.escape(x.customerName)}</strong></div>
+  <div>شناسه ملی: ${Finora.escape(x.customerNationalId||'')} | کد اقتصادی: ${Finora.escape(customer?.economicCode||'')} | شماره ثبت: ${Finora.escape(customer?.registrationNumber||'')} | کد پستی: ${Finora.escape(customer?.postalCode||'')}</div>
+  <div>تلفن: ${Finora.escape(customer?.phone||'')} | نشانی: ${Finora.escape(customer?.address||'')}</div>
   </div>
   </section>
-  <table class="table">
+
+  <table class="table" style="margin-bottom: 16px;">
   <thead><tr><th>ردیف</th><th>شرح کالا / خدمات</th><th>واحد</th><th>تعداد</th><th>مبلغ واحد (ریال)</th><th>مبلغ کل (ریال)</th></tr></thead>
   <tbody>${rowsHtml}</tbody>
   </table>
-  <section style="display:flex; justify-content:space-between; margin-top:16px;">
-  <div style="flex:1;">${x.notes?`<div style="padding:8px;"><strong>یادداشت:</strong><br>${Finora.escape(x.notes)}</div>`:'<div style="padding:8px;"></div>'}</div>
-  <div style="width: 250px;">
-  <div class="summary-row"><span>جمع فاکتور:</span><strong>${Finora.money(x.subtotal)}</strong></div>
-  ${x.discountPercent > 0 || x.lineDiscount > 0 ? `<div class="summary-row"><span>تخفیف:</span><strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong></div>` : ''}
-  ${x.tax > 0 ? `<div class="summary-row"><span>مالیات:</span><strong>${Finora.money(x.tax)}</strong></div>` : ''}
-  <div class="summary-row total"><span>مبلغ نهایی:</span><strong>${Finora.money(x.total)}</strong></div>
-  <div style="font-size: 11px; margin-top: 8px;" class="muted">مبلغ به حروف: .............................. ریال</div>
+
+  <section style="display:flex; justify-content:space-between; gap: 16px;">
+  <div style="flex:1;">
+    <div style="padding:10px; font-size: 13px;">
+      <strong>توضیحات:</strong>
+      <p style="margin: 8px 0 0 0; white-space: pre-wrap;">${x.notes?Finora.escape(x.notes):'ندارد'}</p>
+    </div>
+  </div>
+  <div style="width: 280px; font-size: 14px;">
+  <div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>جمع فاکتور:</span><strong>${Finora.money(x.subtotal)}</strong></div>
+  ${x.discountPercent > 0 || x.lineDiscount > 0 ? `<div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>تخفیف:</span><strong>${Finora.money((x.lineDiscount||0)+(x.invoiceDiscountAmount||0))}</strong></div>` : ''}
+  ${x.tax > 0 ? `<div style="display: flex; justify-content: space-between; padding: 4px 0;"><span>مالیات:</span><strong>${Finora.money(x.tax)}</strong></div>` : ''}
+  <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--ink); font-size: 16px; margin-top: 4px;"><span>مبلغ نهایی:</span><strong>${Finora.money(x.total)}</strong></div>
   </div>
   </section>
-  <div style="display:flex; justify-content:space-between; margin-top:48px; padding: 0 40px;" class="muted">
+
+  <div style="display:flex; justify-content:space-between; margin-top:48px; padding: 0 60px;" class="muted">
   <div>امضای فروشنده</div><div>امضای خریدار</div>
   </div>`;
 }
