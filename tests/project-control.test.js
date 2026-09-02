@@ -109,22 +109,39 @@ test('Cloudflare Worker is configured as an assets-only static deployment', () =
   }
 });
 
-test('ordinary and official invoices use distinct single-page landscape A4 print contracts', () => {
+test('official A4 and unofficial A5 invoices use distinct single-page landscape contracts', () => {
   const preview = read('invoice-preview.html');
   const mobileCss = read('assets/css/mobile.css');
-  for (const token of ['invoice-official', 'invoice-ordinary', 'صورتحساب رسمی فروش کالا و خدمات', 'فاکتور فروش', 'official-parties', 'ordinary-parties']) {
+  for (const token of ['invoice-official', 'invoice-unofficial', 'صورتحساب رسمی فروش کالا و خدمات', 'فاکتور فروش کالا و خدمات', 'officialRows', 'unofficialRows']) {
     assert.match(preview, new RegExp(token), `missing print contract ${token}`);
   }
   assert.match(mobileCss, /@media print/);
   assert.match(mobileCss, /grid-template-columns:repeat\(4,1fr\)!important/);
-  assert.match(mobileCss, /@page\{size:A4 landscape;margin:6mm\}/);
-  assert.match(mobileCss, /width:297mm;height:210mm/);
+  assert.match(mobileCss, /@page finoraA4\{size:A4 landscape;margin:6mm\}/);
+  assert.match(mobileCss, /@page finoraA5\{size:A5 landscape;margin:5mm\}/);
   assert.match(mobileCss, /width:285mm!important;height:198mm!important/);
+  assert.match(mobileCss, /width:200mm!important;height:138mm!important/);
   assert.match(mobileCss, /print-density-tight/);
   assert.match(mobileCss, /break-inside:avoid/);
-  assert.match(preview, /maxSinglePageLines=15/);
-  assert.match(preview, /lineCount>12\?'print-density-tight'/);
-  assert.match(read('new-invoice.html'), /items\.length>=15/);
+  assert.match(preview, /Array\.from\(\{length:15\}/);
+  assert.match(preview, /official\?15:10/);
+  assert.doesNotMatch(preview.match(/function renderUnofficial\(\).*?(?=function|paper\.innerHTML)/s)?.[0] || '', /مالیات و عوارض/);
+  assert.match(read('new-invoice.html'), /invoiceTypeInput\.value==='official'\?15:10/);
+});
+
+test('invoice completion migration preserves RLS tables and captures immutable party snapshots', () => {
+  const migration = read('supabase/migrations/202609010003_invoice_completion_snapshots.sql');
+  for (const token of ['postal_code', 'economic_code', 'registration_number', 'currency_unit', 'seller_snapshot', 'customer_snapshot', 'capture_invoice_party_snapshots']) assert.match(migration, new RegExp(token));
+  assert.match(migration, /old\.document_status in \('issued', 'void'\)/);
+  assert.match(migration, /where id = new\.customer_id and user_id = new\.user_id/);
+  assert.doesNotMatch(migration, /disable row level security/i);
+});
+
+test('party forms collect legal fields and invoice output excludes email and person type', () => {
+  const customers = read('customers.html'), preview = read('invoice-preview.html');
+  for (const token of ['customerPostalCode', 'customerEconomicCode', 'customerRegistrationNumber', 'customerDialog']) assert.match(customers, new RegExp(token));
+  const partyRenderer = preview.match(/const val=.*?function officialRows/s)?.[0] || '';
+  assert.doesNotMatch(partyRenderer, /email|نوع شخص|bankAccount/);
 });
 
 test('dynamic invoice URLs are encoded before DOM insertion', () => {

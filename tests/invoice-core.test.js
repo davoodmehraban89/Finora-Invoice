@@ -45,3 +45,10 @@ test('resolves the versioned 1405 Iran VAT profile from Persian or Latin digits'
   assert.equal(taxRules.getProfile('1405-06-09').version, 'IR-VAT-1405.1');
   assert.equal(taxRules.getProfile('1406-01-01').fallback, true);
 });
+
+test('converts invoice amounts to deterministic Persian words', () => {
+  assert.equal(core.amountToWords(0), 'صفر');
+  assert.equal(core.amountToWords(19), 'نوزده');
+  assert.equal(core.amountToWords(1250), 'یک هزار و دویست و پنجاه');
+  assert.equal(core.amountToWords(1000001), 'یک میلیون و یک');
+});
