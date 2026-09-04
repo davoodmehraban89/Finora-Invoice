@@ -1,0 +1,4 @@
+## 2026-09-04 - Fix XSS in Finora.escape()
+**Vulnerability:** XSS vulnerability in `Finora.escape()`. The function uses `el.innerHTML` to escape values, which properly escapes `<` and `>` but leaves quotes (`"` and `'`) unescaped when returning the innerHTML value (unless they are inside an attribute in the original string, which they aren't here).
+**Learning:** `document.createElement('div'); el.textContent = value; el.innerHTML` does not escape single or double quotes, meaning any value injected into an HTML attribute could break out and execute arbitrary JS (e.g. `value="<escaped_value>"` -> `value="" onload=alert(1) ""`). This is also a severe performance drain due to DOM thrashing.
+**Prevention:** Use a simple native string `.replace()` with regex to escape all HTML entities (including single and double quotes), preventing DOM-based injection and performance overhead.
