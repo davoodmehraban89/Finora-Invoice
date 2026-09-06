@@ -1,0 +1,4 @@
+## 2026-09-06 - Fixing Attribute-Based XSS in Finora.escape
+**Vulnerability:** The `Finora.escape` utility function was using DOM manipulation (`document.createElement('div').innerHTML`) to escape HTML. While this escapes `<` and `>`, it crucially fails to escape quotes (`"` and `'`), leading to attribute-based XSS when user input is interpolated into HTML attributes. It also caused severe DOM thrashing.
+**Learning:** Browser native DOM properties like `textContent` and `innerHTML` should not be used for generic string sanitization when generating HTML manually, because they don't cover all context-specific characters (like quotes in attributes).
+**Prevention:** Always use a native JavaScript regex-based string manipulation approach to escape all sensitive HTML characters (`&`, `<`, `>`, `"`, `'`) before interpolating dynamic data into HTML templates.
