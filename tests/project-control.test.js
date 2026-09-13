@@ -137,6 +137,18 @@ test('invoice completion migration preserves RLS tables and captures immutable p
   assert.doesNotMatch(migration, /disable row level security/i);
 });
 
+test('privileged trigger functions are removed from the exposed schema and direct RPC access', () => {
+  const migration = read('supabase/migrations/20260913212458_harden_invoice_snapshot_trigger.sql');
+  for (const functionName of ['assign_invoice_number', 'guard_invoice_number_update', 'capture_invoice_party_snapshots']) {
+    assert.match(migration, new RegExp(`alter function public\\.${functionName}\\(\\) set schema private`));
+    assert.match(migration, new RegExp(`revoke all on function private\\.${functionName}\\(\\) from public, anon, authenticated`));
+  }
+  assert.match(migration, /alter function private\.guard_invoice_number_update\(\) security invoker/);
+  assert.match(migration, /alter function private\.capture_invoice_party_snapshots\(\) security invoker/);
+  assert.match(migration, /revoke all on schema private from public, anon, authenticated/);
+  assert.doesNotMatch(migration, /disable row level security/i);
+});
+
 test('party forms collect legal fields and invoice output excludes email and person type', () => {
   const customers = read('customers.html'), preview = read('invoice-preview.html');
   for (const token of ['customerPostalCode', 'customerEconomicCode', 'customerRegistrationNumber', 'customerDialog']) assert.match(customers, new RegExp(token));

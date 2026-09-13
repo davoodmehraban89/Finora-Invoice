@@ -1,5 +1,26 @@
 # Finora Project Log
 
+## 2026-09-13 — Production security and acceptance evidence closeout
+
+- Status: `PLANNED` on `codex/finora-security-evidence-closeout`, based on remote `main` SHA `2e73cbbe2fa918b2bb909cd5b26130d35fd92a85`.
+- Roadmap chapters: 10, 11, 14, 16, 29, 31, 77, 231, 247, 251, 259, and 260; scope class `IN_V1` for the invoice vertical slice.
+- User outcome: audit the accepted invoice release against the latest product-owner requirements, close security and evidence gaps, keep official output A4 landscape and unofficial output A5 landscape on one supported page, and publish only after tests and deployed verification pass.
+- In scope: harden the invoice snapshot trigger so it cannot bypass RLS; verify table policies, function privileges, migration state, authentication contracts, print contracts, and deployment freshness; remove source defects found by the audit; synchronize project-control evidence.
+- Intended files: a new additive Supabase migration, invoice/auth/static contract tests, any directly affected HTML/CSS/JavaScript, `PROJECT_STATUS.md`, `docs/DECISION_LOG.md`, `docs/PROJECT_LOG.md`, and `docs/handoff/LATEST_HANDOFF.md`.
+- Security/data impact: change the snapshot trigger function to caller privileges, preserve the empty `search_path`, revoke direct RPC execution, and retain all existing invoice/customer/settings data. No credential or service-role material may enter the repository.
+- Tests: full Node suite; all inline-script parses; JavaScript syntax; migration static contracts; live Supabase catalog and advisor checks; browser UAT for official/unofficial row limits and immutable snapshots; deployed source and commit verification.
+- Risks: the currently connected Supabase account may not expose the production project; exact native browser PDF export may remain unavailable in the controlled browser; email delivery depends on production Auth/SMTP configuration.
+- Rollback: restore the prior function security mode only through a separately reviewed migration; revert application/doc commits through Git; never remove issued snapshots or destructively rewrite posted invoices.
+
+### Implementation and verification evidence
+
+- Status: `IMPLEMENTED_UNVERIFIED` pending production Supabase access, migration application, and final authenticated acceptance.
+- Added migration `20260913212458_harden_invoice_snapshot_trigger.sql`: all three invoice trigger functions move from exposed `public` to unexposed `private`; direct execution is revoked; snapshot capture and number guarding use invoker privileges; only atomic counter assignment retains definer privileges.
+- Local evidence: 23/23 Node tests passed; all application JavaScript files passed `node --check`; every inline script parsed; `git diff --check` passed; all five SQL migrations parsed with PostgreSQL 17 grammar.
+- Deployed demo evidence: official output accepted 15 rows and rejected row 16; unofficial output accepted 10 rows and rejected row 11. Both previews had the correct A4/A5 markers, paper-specific columns, all supported rows, amount in words, signatures, legal footer, enabled output, and no visible clipping or horizontal overflow.
+- Production blocker: the connected Supabase account exposes only `lzvkobokpdmlfckyjxzt` (`AvanTech`), not Finora project `npqeyfghtewymiqyxuce`; no unrelated database was modified.
+- Native PDF evidence: Chromium was downloaded for a direct page-count test, but it exited with `SIGTRAP` under the managed execution sandbox. The managed browser also lacks print export. Exact physical PDF page count remains unverified.
+
 ## 2026-09-01 — Invoice product-completion and evidence loop
 
 - Status: `PLANNED` on `codex/finora-invoice-uat-completion`, based on remote `main` SHA `111d46f6d8946f89eb1de4ac3a08b30e4f56b203`.

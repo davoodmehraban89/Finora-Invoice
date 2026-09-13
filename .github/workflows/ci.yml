@@ -24,4 +24,6 @@ jobs:
           test -s supabase/migrations/202608280001_invoice_phase.sql
           test -s supabase/migrations/202608310001_invoice_tax_context.sql
           test -s supabase/migrations/202608310002_invoice_settings_numbering.sql
+          test -s supabase/migrations/202609010003_invoice_completion_snapshots.sql
+          test -s supabase/migrations/20260913212458_harden_invoice_snapshot_trigger.sql
           test -s wrangler.jsonc
