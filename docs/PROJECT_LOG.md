@@ -20,6 +20,8 @@
 - Deployed demo evidence: official output accepted 15 rows and rejected row 16; unofficial output accepted 10 rows and rejected row 11. Both previews had the correct A4/A5 markers, paper-specific columns, all supported rows, amount in words, signatures, legal footer, enabled output, and no visible clipping or horizontal overflow.
 - Production blocker: the connected Supabase account exposes only `lzvkobokpdmlfckyjxzt` (`AvanTech`), not Finora project `npqeyfghtewymiqyxuce`; no unrelated database was modified.
 - Native PDF evidence: Chromium was downloaded for a direct page-count test, but it exited with `SIGTRAP` under the managed execution sandbox. The managed browser also lacks print export. Exact physical PDF page count remains unverified.
+- Release evidence: PR #55 passed CI run 142, received a successful Cloudflare branch build, and merged to `main` as `e2e881ef488d759aa31548e8504d4e697daf58ad`. Main CI run 143 and Cloudflare production build `1300cc55-800d-407c-a837-36d5d85c2a79` both passed. The production URL reloaded successfully after deployment.
+- Delivery state: repository and Cloudflare release are complete. Production database acceptance remains blocked until the Finora Supabase project is connected and the new migration is applied and verified.
 
 ## 2026-09-01 — Invoice product-completion and evidence loop
 

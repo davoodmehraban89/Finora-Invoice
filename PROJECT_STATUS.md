@@ -6,9 +6,9 @@ Repository: `davoodmehraban89/Finora-Invoice`
 
 Canonical branch: `main`
 
-Verified main baseline: `2e73cbbe2fa918b2bb909cd5b26130d35fd92a85`
+Verified main baseline: `e2e881ef488d759aa31548e8504d4e697daf58ad`
 
-Current review branch: `codex/finora-security-evidence-closeout`
+Release integration: PR #55, merged
 
 Live deployment: <https://finora-invoice.davoodmehraban89.workers.dev>
 
@@ -36,6 +36,8 @@ The current delivery slice is **صدور فاکتور**. The permanent product s
 ## Verified evidence
 
 - Remote `main` and local baseline both resolved to `2e73cbbe2fa918b2bb909cd5b26130d35fd92a85` before this review.
+- PR #55 merged as `e2e881ef488d759aa31548e8504d4e697daf58ad`; GitHub Actions run 143 and Cloudflare Workers build `1300cc55-800d-407c-a837-36d5d85c2a79` both completed successfully.
+- The live production URL was reloaded after that deployment; the retained unofficial A5 fixture rendered 10 rows with output enabled.
 - `node --test tests/*.test.js`: 23/23 passed after adding the security migration contract.
 - Every application JavaScript file passed `node --check`; every inline application script parsed; `git diff --check` passed.
 - All five migration files parsed successfully with PostgreSQL 17 grammar through `pgsql-parser`.
@@ -45,7 +47,7 @@ The current delivery slice is **صدور فاکتور**. The permanent product s
 - Full-page screenshots of both deployed previews were inspected: headers, party panels, all rows, totals, amount in words, signatures, and legal footer were visible without clipping or overlap.
 - The master roadmap hash remains `f445ec30b395319aece8bd7eb7d98e80bd4655eff6cc81b0253688b551bbc29b`; Chapters 10, 11, 14, 16, 29, 31, 77, 231, 247, 251, 259, and 260 were reviewed for this work.
 
-## Current review change
+## Pending production database change
 
 - Migration `20260913212458_harden_invoice_snapshot_trigger.sql` moves all invoice trigger functions from exposed `public` to unexposed `private`.
 - Direct function execution is revoked from `PUBLIC`, `anon`, and `authenticated`.

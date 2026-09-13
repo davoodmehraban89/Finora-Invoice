@@ -4,7 +4,7 @@ Prepared: 2026-09-13 UTC
 
 Authoritative HEAD: always resolve from GitHub at recovery time
 
-Latest verified main baseline: `2e73cbbe2fa918b2bb909cd5b26130d35fd92a85`
+Latest verified main baseline: `e2e881ef488d759aa31548e8504d4e697daf58ad`
 
 Durable control foundation: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`
 
@@ -131,6 +131,7 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Production application is blocked by account scope: the connected Supabase account lists only `lzvkobokpdmlfckyjxzt` (`AvanTech`), not the Finora project `npqeyfghtewymiqyxuce`. No SQL was run against the unrelated project.
 - Production Auth confirmation, authenticated persistence, and two-user isolation remain unverified until the correct Supabase project is connected.
 - Native PDF export remains an evidence gap. The managed browser cannot export print preview, and a locally downloaded Chromium build exited with `SIGTRAP`; do not claim exact one-page PDF count from the visual screenshot alone.
+- PR #55 passed CI run 142 and merged as `e2e881ef488d759aa31548e8504d4e697daf58ad`. Main CI run 143 and Cloudflare production build `1300cc55-800d-407c-a837-36d5d85c2a79` passed; the live URL was reloaded successfully after deployment.
 
 ## Safest continuation
 
