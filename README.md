@@ -1,6 +1,6 @@
 # Finora — نرم‌افزار جامع ERP سازمانی
 
-این مخزن اجرای تدریجی **Finora — Comprehensive Enterprise ERP Software** است. نقشه راه دائمی محصول در سند مادر ۲۶۰‌فصلی نگهداری می‌شود. برش اجرایی فعلی با عنوان **صدور فاکتور** شامل صدور، پیش‌نویس، وصول، مانده، ابطال، مشتری، کالا/خدمت و چاپ A4 است.
+این مخزن اجرای تدریجی **Finora — Comprehensive Enterprise ERP Software** است. نقشه راه دائمی محصول در سند مادر ۲۶۰‌فصلی نگهداری می‌شود. برش اجرایی فعلی با عنوان **صدور فاکتور** شامل صدور، پیش‌نویس، وصول، مانده، ابطال، مشتری، کالا/خدمت، چاپ رسمی A4 افقی و چاپ غیررسمی A5 افقی است.
 
 ## بازیابی پروژه در هر چت جدید
 
@@ -37,11 +37,13 @@ https://finora-invoice.davoodmehraban89.workers.dev
 1. `supabase/migrations/202608280001_invoice_phase.sql` برای جداول، ایندکس‌ها، شماره‌گذاری و RLS.
 2. `supabase/migrations/202608310001_invoice_tax_context.sql` برای نوع فاکتور و زمینه نسخه‌دار ارزش افزوده.
 3. `supabase/migrations/202608310002_invoice_settings_numbering.sql` برای تنظیمات تکمیلی فروشنده، پیش‌فرض‌های صدور و قفل شماره فاکتور.
+4. `supabase/migrations/202609010003_invoice_completion_snapshots.sql` برای اطلاعات حقوقی کامل، واحد پول نمایشی و snapshot تغییرناپذیر طرفین فاکتور.
+5. `supabase/migrations/20260913212458_harden_invoice_snapshot_trigger.sql` برای خارج‌کردن توابع trigger از API عمومی، لغو اجرای مستقیم و اجرای snapshot با RLS کاربر.
 
 ## آزمون
 
 ```bash
-node --test tests/invoice-core.test.js
+node --test tests/*.test.js
 ```
 
 ## انتشار Cloudflare

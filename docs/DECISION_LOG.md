@@ -59,3 +59,11 @@
 - Decision: Each seller chooses either automatic locked numbering or user-editable numbering. The UI reflects the policy, while PostgreSQL assigns locked numbers and rejects later edits when the policy is locked.
 - Reason: A UI-only lock can be bypassed and cannot protect accounting document identity across clients or integrations.
 - Consequence: Invoice numbers remain unique per user. Manual mode permits any non-empty value up to 80 characters, but does not itself certify statutory sequence compliance. Policy changes and manual renumbering require audit logging in a later accounting-control workstream.
+
+## ADR-009 — Trigger-only privileged functions are outside exposed schemas
+
+- Date: 2026-09-13
+- Status: Accepted for architecture; production application pending
+- Decision: Invoice trigger functions live in the unexposed `private` schema and have no direct `EXECUTE` grant for `PUBLIC`, `anon`, or `authenticated`. Snapshot capture and invoice-number guarding use caller privileges. Only atomic counter assignment retains definer privileges because the counter table intentionally has no client access.
+- Reason: A definer function in `public` can bypass RLS and may be exposed as an RPC surface through default function privileges. Trigger attachment does not require a client-callable function.
+- Consequence: The browser API shape is unchanged. Existing table triggers remain attached by object identity when their functions move schemas. Any future privileged function requires an explicit threat model, unexposed schema, minimal grants, fixed search path, migration, rollback notes, and advisor evidence.

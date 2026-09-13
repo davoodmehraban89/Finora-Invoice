@@ -1,8 +1,10 @@
 # Finora Latest Handoff
 
-Prepared: 2026-08-28 UTC  
-Authoritative HEAD: always resolve from GitHub at recovery time  
-Latest verified code baseline: `62fe92eacbfd3a369432ece83e642fad46b62239`
+Prepared: 2026-09-13 UTC
+
+Authoritative HEAD: always resolve from GitHub at recovery time
+
+Latest verified main baseline: `2e73cbbe2fa918b2bb909cd5b26130d35fd92a85`
 
 Durable control foundation: `c58c3356dbfe04d74589e897d7f90aaa21d8564e`
 
@@ -119,3 +121,17 @@ Execute and record authenticated mobile UAT and a two-user isolation test for th
 - Deployed demo UAT issued both official and ordinary 15-row invoices. Both previews contained all rows, the complete legal/commercial footer, `print-density-tight`, and an enabled output action.
 - Tests: local 16/16; both inline scripts parsed; diff check passed; GitHub Actions run `33464364756` succeeded on remote commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`.
 - Remaining gate: inspect an actual Safari/Chrome exported PDF and confirm exactly one landscape page for each template. The cloud browser verified the deployed contract and DOM but does not expose native print-preview export.
+
+## Invoice completion and production security review — 2026-09-13
+
+- `main` already contains the customer/seller legal fields, rial/toman presentation setting, official A4 and unofficial A5 landscape templates, 15/10 row limits, Persian amount in words, payment-only bank display, and immutable issued/void party snapshots from merged baseline `2e73cbb`.
+- Live Cloudflare demo UAT created an official 15-row invoice and an unofficial 10-row invoice. The next row was rejected in each flow; deployed previews had the expected paper markers, rows, excluded fields, totals, signatures, footers, enabled output action, and no visible clipping or horizontal overflow.
+- Local verification after the new hardening work: 23/23 Node tests passed; JavaScript syntax, all inline-script parsing, `git diff --check`, and PostgreSQL 17 grammar parsing for every migration passed.
+- A security audit found three trigger functions in the exposed `public` schema. `20260913212458_harden_invoice_snapshot_trigger.sql` moves them to `private`, revokes direct execution, converts snapshot capture and number guarding to invoker privileges, and retains definer privileges only for the inaccessible atomic counter.
+- Production application is blocked by account scope: the connected Supabase account lists only `lzvkobokpdmlfckyjxzt` (`AvanTech`), not the Finora project `npqeyfghtewymiqyxuce`. No SQL was run against the unrelated project.
+- Production Auth confirmation, authenticated persistence, and two-user isolation remain unverified until the correct Supabase project is connected.
+- Native PDF export remains an evidence gap. The managed browser cannot export print preview, and a locally downloaded Chromium build exited with `SIGTRAP`; do not claim exact one-page PDF count from the visual screenshot alone.
+
+## Safest continuation
+
+Connect the Supabase account that owns `npqeyfghtewymiqyxuce`, apply the pending hardening migration, run catalog/security-advisor checks, then perform verified-email and two-user RLS UAT.
