@@ -173,3 +173,9 @@ test('keyboard focus and disabled actions remain visible', () => {
     assert.ok(css.includes(selector), `missing accessibility selector ${selector}`);
   }
 });
+
+test('escape function uses secure regex replacement instead of DOM innerHTML to prevent XSS', () => {
+  const appJs = read('assets/js/app.js');
+  assert.ok(!appJs.includes('el.innerHTML'), 'escape function must not use innerHTML');
+  assert.match(appJs, /replace\(\/\[&<>\"']\/g/, 'escape function must use secure regex replacement');
+});
