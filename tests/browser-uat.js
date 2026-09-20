@@ -92,5 +92,5 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
   console.log(JSON.stringify({ ok: true, baseUrl, evidenceDir }));
 })().catch(error => {
   console.error(error);
-  process.exitCode = 1;
+  process.exit(1);
 });
