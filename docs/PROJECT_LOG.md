@@ -201,3 +201,12 @@ This is an append-oriented evidence log. Do not erase historical entries. Correc
 - Deployed demo UAT: both a formal VAT-enabled invoice and an ordinary invoice were issued with 15 rows. Each preview rendered all 15 rows, selected `print-density-tight`, displayed its footer, and kept output enabled.
 - Automated evidence: 16/16 Node tests passed locally and GitHub Actions run `33464364756` succeeded on review commit `1d9eed324504ab97d6fc1c8835f2692ed53f82bc`; both affected inline scripts parsed and `git diff --check` passed.
 - Remaining visual gate: the deployed Cloudflare stylesheet and complete 15-row DOMs were verified, but this cloud browser cannot export the native print preview to a file. Final Safari/Chrome PDF page-count inspection remains required before acceptance or merge.
+
+
+## 2026-09-20 — Ten-row landscape print delivery
+
+Owner decision: official A4 landscape and ordinary A5 landscape, both 10 rows with 5 mm margins. This supersedes the earlier portrait/12-row proposal. Short invoices receive blank rows; legacy over-budget invoices retain every row and disable output. Finora remains the ERP product; this delivery is limited to invoice printing (Chapters 251, 259 and 260).
+
+Status: IMPLEMENTED_UNVERIFIED. Local Node tests: 23 passed. Inline scripts and browser-test syntax pass. Local PDF validation is blocked by unavailable Chromium and a download timeout. CI now runs browser/PDF checks for one-page landscape dimensions and legacy-row preservation, and retains evidence artifacts. Browser and deployed acceptance remain pending; no production completion is claimed.
+
+Scope: invoice-preview.html, new-invoice.html, assets/css/mobile.css, tests/browser-uat.js, tests/project-control.test.js, .github/workflows/ci.yml and these control documents. No database, credentials or calculation changes. Rollback: revert this delivery. Next gate: inspect CI PDF evidence before merge/deployment.

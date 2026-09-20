@@ -67,3 +67,12 @@
 - Decision: Invoice trigger functions live in the unexposed `private` schema and have no direct `EXECUTE` grant for `PUBLIC`, `anon`, or `authenticated`. Snapshot capture and invoice-number guarding use caller privileges. Only atomic counter assignment retains definer privileges because the counter table intentionally has no client access.
 - Reason: A definer function in `public` can bypass RLS and may be exposed as an RPC surface through default function privileges. Trigger attachment does not require a client-callable function.
 - Consequence: The browser API shape is unchanged. Existing table triggers remain attached by object identity when their functions move schemas. Any future privileged function requires an explicit threat model, unexposed schema, minimal grants, fixed search path, migration, rollback notes, and advisor evidence.
+
+
+## 2026-09-20 — Ten-row landscape print delivery
+
+Owner decision: official A4 landscape and ordinary A5 landscape, both 10 rows with 5 mm margins. This supersedes the earlier portrait/12-row proposal. Short invoices receive blank rows; legacy over-budget invoices retain every row and disable output. Finora remains the ERP product; this delivery is limited to invoice printing (Chapters 251, 259 and 260).
+
+Status: IMPLEMENTED_UNVERIFIED. Local Node tests: 23 passed. Inline scripts and browser-test syntax pass. Local PDF validation is blocked by unavailable Chromium and a download timeout. CI now runs browser/PDF checks for one-page landscape dimensions and legacy-row preservation, and retains evidence artifacts. Browser and deployed acceptance remain pending; no production completion is claimed.
+
+Scope: invoice-preview.html, new-invoice.html, assets/css/mobile.css, tests/browser-uat.js, tests/project-control.test.js, .github/workflows/ci.yml and these control documents. No database, credentials or calculation changes. Rollback: revert this delivery. Next gate: inspect CI PDF evidence before merge/deployment.

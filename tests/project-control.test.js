@@ -109,7 +109,7 @@ test('Cloudflare Worker is configured as an assets-only static deployment', () =
   }
 });
 
-test('official A4 and unofficial A5 invoices use distinct single-page landscape contracts', () => {
+test('official A4 and unofficial A5 invoices use distinct landscape print contracts', () => {
   const preview = read('invoice-preview.html');
   const mobileCss = read('assets/css/mobile.css');
   for (const token of ['invoice-official', 'invoice-unofficial', 'صورتحساب رسمی فروش کالا و خدمات', 'فاکتور فروش کالا و خدمات', 'officialRows', 'unofficialRows']) {
@@ -117,16 +117,16 @@ test('official A4 and unofficial A5 invoices use distinct single-page landscape 
   }
   assert.match(mobileCss, /@media print/);
   assert.match(mobileCss, /grid-template-columns:repeat\(4,1fr\)!important/);
-  assert.match(mobileCss, /@page finoraA4\{size:A4 landscape;margin:6mm\}/);
-  assert.match(mobileCss, /@page finoraA5\{size:A5 landscape;margin:5mm\}/);
-  assert.match(mobileCss, /width:285mm!important;height:198mm!important/);
-  assert.match(mobileCss, /width:200mm!important;height:138mm!important/);
-  assert.match(mobileCss, /print-density-tight/);
+  assert.match(mobileCss, /size: A4 landscape; margin: 5mm/);
+  assert.match(preview, /official\?'A4':'A5'/);
+  assert.match(mobileCss, /width:287mm!important; min-height:199mm/);
+  assert.match(mobileCss, /width:200mm!important; min-height:137mm/);
+  assert.doesNotMatch(mobileCss, /overflow:hidden!important/);
   assert.match(mobileCss, /break-inside:avoid/);
-  assert.match(preview, /Array\.from\(\{length:15\}/);
-  assert.match(preview, /official\?15:10/);
+  assert.match(preview, /length:Math\.max\(10,source\.length\)/);
+  assert.match(preview, /limit=10/);
   assert.doesNotMatch(preview.match(/function renderUnofficial\(\).*?(?=function|paper\.innerHTML)/s)?.[0] || '', /مالیات و عوارض/);
-  assert.match(read('new-invoice.html'), /invoiceTypeInput\.value==='official'\?15:10/);
+  assert.match(read('new-invoice.html'), /limit=10/);
 });
 
 test('invoice completion migration preserves RLS tables and captures immutable party snapshots', () => {
