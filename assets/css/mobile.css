@@ -26,6 +26,7 @@
   .invoice-lines .table { min-width:0!important; width:100%!important; table-layout:fixed!important; }
   .invoice-lines .table th,.invoice-lines .table td { padding:1mm .7mm!important; font-size:9px!important; line-height:1.35!important; white-space:normal!important; overflow-wrap:anywhere; }
   .official-lines tbody tr { height:6mm; }
+  .print-a4 .invoice-lines .table th,.print-a4 .invoice-lines .table td { font-size:10px!important; }
   .unofficial-lines tbody tr { height:4mm; }
   .official-lines th:nth-child(1) { width:5%; }
   .official-lines th:nth-child(2) { width:28%; }

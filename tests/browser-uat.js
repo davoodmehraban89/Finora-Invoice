@@ -61,6 +61,7 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
 
   await page.goto(`${baseUrl}/invoice-preview.html?id=official-uat&demo=1`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.invoice-official');
+  assert.equal(await page.evaluate(() => FinoraPrint.fits(document.querySelector('#paper'))), true, 'Official print preflight');
   assert.equal(await page.locator('.official-lines tbody tr').count(), 10);
   assert.equal(await page.locator('[data-paper-size="A4"]').count(), 1);
   const officialParties = await page.locator('.official-parties').innerText();
@@ -70,11 +71,27 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
 
   await page.goto(`${baseUrl}/invoice-preview.html?id=ordinary-uat&demo=1`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.invoice-unofficial');
+  assert.equal(await page.evaluate(() => FinoraPrint.fits(document.querySelector('#paper'))), true, 'Ordinary print preflight');
   assert.equal(await page.locator('.unofficial-lines tbody tr').count(), 10);
   assert.equal(await page.locator('[data-paper-size="A5"]').count(), 1);
   assert.doesNotMatch(await page.locator('.unofficial-lines thead').innerText(), /مالیات|عوارض/);
   await page.screenshot({ path: path.join(evidenceDir, 'unofficial-a5.png'), fullPage: true });
   await printEvidence(page, 'unofficial-a5.pdf');
+  await page.evaluate(() => { window.printCalls = 0; window.print = () => { window.printCalls++; window.dispatchEvent(new Event('afterprint')); }; });
+  await page.locator('#outputButton').click();
+  await page.locator('#pdfOutput').click();
+  await page.waitForFunction(() => window.printCalls === 1);
+  const storedInvoices = await page.evaluate(() => localStorage.getItem('finora:demo-user:invoices'));
+  await page.locator('.invoice-notes p').first().evaluate(node => { node.textContent = 'توضیح بسیار بلند برای جلوگیری از قطع اطلاعات '.repeat(500); });
+  assert.equal(await page.evaluate(() => FinoraPrint.fits(document.querySelector('#paper'))), false, 'Long notes must not pass single-page preflight');
+  let overflowNotice = '';
+  page.once('dialog', async dialog => { overflowNotice = dialog.message(); await dialog.accept(); });
+  await page.locator('#outputButton').click();
+  await page.locator('#pdfOutput').click();
+  await page.waitForFunction(() => !document.querySelector('#outputDialog').open);
+  assert.equal(await page.evaluate(() => window.printCalls), 1, 'Overfilled output must not open print');
+  assert.match(overflowNotice, /هیچ اطلاعاتی حذف نشده/);
+  assert.equal(await page.evaluate(() => localStorage.getItem('finora:demo-user:invoices')), storedInvoices, 'Preflight must not rewrite invoices');
 
   for (const [filename, width, height] of [['official-a4.pdf', 841.89, 595.28], ['unofficial-a5.pdf', 595.28, 419.53]]) {
     const info = execFileSync('pdfinfo', [path.join(evidenceDir, filename)], { encoding: 'utf8' });
@@ -89,6 +106,8 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
   await page.waitForSelector('.invoice-unofficial');
   assert.equal(await page.locator('.unofficial-lines tbody tr').count(), 10);
   assert.equal(await page.locator('.blank-line').count(), 9);
+  await printEvidence(page, 'ordinary-short.pdf');
+  assert.match(execFileSync('pdfinfo', [path.join(evidenceDir, 'ordinary-short.pdf')], { encoding: 'utf8' }), /Pages:\s+1\b/);
   await page.goto(`${baseUrl}/invoice-preview.html?id=legacy-uat&demo=1`);
   await page.waitForSelector('.invoice-official');
   assert.equal(await page.locator('.official-lines tbody tr').count(), 15);
@@ -104,6 +123,20 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
   await page.waitForSelector('.official-lines tbody tr');
   assert.equal(await page.locator('.official-lines tbody tr').count(), 10);
   assert.equal(await page.locator('.blank-line').count(), 9);
+  await printEvidence(page, 'official-short.pdf');
+  assert.match(execFileSync('pdfinfo', [path.join(evidenceDir, 'official-short.pdf')], { encoding: 'utf8' }), /Pages:\s+1\b/);
+  for (const type of ['official', 'ordinary']) {
+    await page.goto(`${baseUrl}/new-invoice.html?demo=1`);
+    await page.waitForFunction(() => document.querySelector('#customer').options.length > 1);
+    await page.locator('#invoiceType').selectOption(type);
+    for (let i = 0; i < 11; i++) {
+      await page.locator('#description').fill(`Boundary item ${i + 1}`);
+      await page.locator('#unitPrice').fill('1000');
+      await page.locator('#addLine').click();
+    }
+    assert.equal(await page.locator('#lineRows tr').count(), 10);
+    assert.match(await page.locator('#errors').innerText(), /10/);
+  }
   assert.deepEqual(errors, []);
   await browser.close();
   console.log(JSON.stringify({ ok: true, baseUrl, evidenceDir }));

@@ -11,10 +11,26 @@
 </main>
 <dialog id="outputDialog" class="screen-only"><div class="dialog-card"><div class="dialog-head"><div><h2>نوع خروجی را انتخاب کنید</h2><p class="muted" id="paperHint">مرورگر پنجره استاندارد چاپ را باز می‌کند.</p></div><button class="btn btn-secondary" id="closeOutput" type="button">بستن</button></div><div class="choice-grid"><button class="choice-card" id="pdfOutput" type="button"><strong>ذخیره PDF</strong><br><small class="muted">در پنجره بعدی مقصد «Save as PDF» را انتخاب کنید.</small></button><button class="choice-card" id="printerOutput" type="button"><strong>چاپ با چاپگر</strong><br><small class="muted">اندازه کاغذ پیشنهادشده را انتخاب کنید.</small></button></div></div></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/invoice-core.js"></script><script src="assets/js/app.js"></script>
+<script src="assets/js/print-layout.js"></script>
 <script>
 Finora.requireAuth(async()=>{'use strict';
 const byId=id=>document.getElementById(id),back=byId('back'),editLink=byId('editLink'),paymentButton=byId('paymentBtn'),voidButton=byId('voidBtn'),paymentInput=byId('paymentInput'),paper=byId('paper'),outputButton=byId('outputButton'),outputDialog=byId('outputDialog');let invoice=null;
-outputButton.onclick=()=>outputDialog.showModal();byId('closeOutput').onclick=()=>outputDialog.close();const openPrintDialog=mode=>{outputDialog.close();const originalTitle=document.title;if(mode==='pdf')document.title=`Finora-${String(invoice?.invoiceNumber||'Invoice').replace(/[^\p{L}\p{N}._-]+/gu,'-')}`;window.addEventListener('afterprint',()=>{document.title=originalTitle},{once:true});window.print()};byId('pdfOutput').onclick=()=>openPrintDialog('pdf');byId('printerOutput').onclick=()=>openPrintDialog('printer');if(Finora.demo)back.href='invoices.html?demo=1';
+outputButton.onclick=()=>outputDialog.showModal();byId('closeOutput').onclick=()=>outputDialog.close();
+const openPrintDialog=async mode=>{
+  outputDialog.close();
+  try {
+    if(outputButton.disabled)return;
+    if(!await FinoraPrint.fits(paper)){
+      alert('محتوای فاکتور در یک صفحه جا نمی‌شود. هیچ اطلاعاتی حذف نشده است؛ طول توضیحات یا شرح اقلام را بررسی کنید.');
+      return;
+    }
+    const originalTitle=document.title;
+    if(mode==='pdf')document.title=`Finora-${String(invoice?.invoiceNumber||'Invoice').replace(/[^\p{L}\p{N}._-]+/gu,'-')}`;
+    window.addEventListener('afterprint',()=>{document.title=originalTitle},{once:true});
+    window.print();
+  }catch(error){alert('بررسی چیدمان چاپ انجام نشد؛ صفحه را دوباره بارگذاری کنید.');}
+};
+byId('pdfOutput').onclick=()=>openPrintDialog('pdf');byId('printerOutput').onclick=()=>openPrintDialog('printer');if(Finora.demo)back.href='invoices.html?demo=1';
 const id=new URLSearchParams(location.search).get('id');invoice=await Finora.get('invoices',id);if(!invoice){paper.innerHTML='<div class="empty">فاکتور یافت نشد.</div>';paymentButton.disabled=true;voidButton.disabled=true;outputButton.disabled=true;return}
 const [currentSeller,currentCustomer]=await Promise.all([Finora.get('settings','seller'),invoice.customerId?Finora.get('customers',invoice.customerId):null]),taxContext=FinoraInvoice.taxContext(invoice),official=taxContext.invoiceType==='official',limit=10,lineCount=(invoice.items||[]).length,currencyUnit=invoice.currencyUnit||currentSeller?.currencyUnit||'rial',seller=Object.keys(invoice.sellerSnapshot||{}).length?invoice.sellerSnapshot:Finora.sellerSnapshot(currentSeller||{}),customer=Object.keys(invoice.customerSnapshot||{}).length?invoice.customerSnapshot:Finora.customerSnapshot(currentCustomer||{name:invoice.customerName,nationalId:invoice.customerNationalId}),payment=FinoraInvoice.paymentStatus(invoice.total,invoice.paidAmount),documentState=FinoraInvoice.documentStatus(invoice);
 const pageStyle=document.createElement('style');pageStyle.textContent=`@page { size: ${official?'A4':'A5'} landscape; margin: 5mm; }`;document.head.appendChild(pageStyle);
