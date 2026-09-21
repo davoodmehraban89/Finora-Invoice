@@ -7,6 +7,7 @@
   html,body { margin:0!important; padding:0!important; background:#fff!important; overflow:visible!important; }
   .invoice-preview-content { margin:0!important; padding:0!important; width:auto!important; overflow:visible!important; }
   .invoice-paper { box-sizing:border-box; max-width:none!important; margin:0!important; padding:0!important; box-shadow:none!important; border:0!important; border-radius:0!important; overflow:visible!important; }
+  .invoice-paper,.invoice-paper * { line-height:1.25!important; }
   .print-a4 .invoice-paper { width:287mm!important; min-height:199mm; }
   .print-a5 .invoice-paper { width:200mm!important; min-height:137mm; }
   .invoice-document-head { display:flex!important; padding-bottom:2mm!important; gap:3mm!important; }
@@ -46,5 +47,26 @@
   .invoice-document-footer { display:flex!important; gap:2mm; margin-top:2mm!important; padding-top:1mm!important; font-size:8px!important; }
   .print-a5 .invoice-lines .table th,.print-a5 .invoice-lines .table td { font-size:8px!important; }
   .print-a5 .legal-field { font-size:8px!important; padding:.7mm!important; }
+  .print-a5 .invoice-document-head { padding-bottom:1mm!important; }
+  .print-a5 .invoice-brand h1 { font-size:13px!important; }
+  .print-a5 .invoice-number-box { grid-template-columns:auto auto; align-items:center; gap:1mm 2mm; }
+  .print-a5 .invoice-number-box .badge { grid-column:1/-1; padding:1mm 2mm; font-size:9px; }
+  .print-a5 .invoice-document-meta { margin:1mm 0!important; }
+  .print-a5 .invoice-document-meta strong { font-size:10px; }
+  .print-a5 .official-parties { grid-template-columns:1fr 1fr!important; gap:1mm!important; margin:1mm 0!important; }
+  .print-a5 .legal-field-grid { grid-template-columns:repeat(3,minmax(0,1fr))!important; }
+  .print-a5 .legal-field.wide { grid-column:span 3!important; display:flex; flex-wrap:wrap; gap:1mm; }
+  .print-a5 .legal-field span,.print-a5 .legal-field strong { font-size:9px; }
+  .print-a5 .invoice-lines { margin-top:1mm!important; }
+  .print-a5 .invoice-lines .table th,.print-a5 .invoice-lines .table td { padding:.4mm .7mm!important; font-size:10px!important; }
+  .print-a5 .blank-line td { height:4mm; }
+  .print-a5 .invoice-closing { grid-template-columns:1fr!important; gap:1mm!important; margin-top:1mm!important; }
+  .print-a5 .invoice-totals { grid-row:1; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); }
+  .print-a5 .invoice-totals>div { display:grid; gap:1mm; padding:1mm!important; border:0; border-left:1px solid var(--line); font-size:9px!important; }
+  .print-a5 .invoice-notes { display:grid; grid-template-columns:1fr 1fr; gap:1mm 3mm; padding:1mm!important; }
+  .print-a5 .invoice-notes h3 { grid-column:1/-1; margin:0; }
+  .print-a5 .invoice-notes p { margin:0!important; }
+  .print-a5 .signature-row { margin-top:2mm!important; }
+  .print-a5 .invoice-document-footer { margin-top:1mm!important; }
   .invoice-lines tbody tr,.legal-party,.invoice-closing { break-inside:avoid; page-break-inside:avoid; }
 }
