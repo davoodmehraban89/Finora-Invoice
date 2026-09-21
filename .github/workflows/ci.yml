@@ -28,7 +28,7 @@ jobs:
         if: always()
         with:
           name: landscape-print-evidence
-          path: .uat-evidence/
+          path: uat-evidence/
       - name: Validate required application files
         run: |
           test -s index.html

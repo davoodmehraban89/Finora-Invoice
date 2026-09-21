@@ -7,8 +7,25 @@ const { execFileSync } = require('node:child_process');
 const { chromium } = require('playwright');
 
 const baseUrl = process.env.FINORA_BASE_URL || 'http://127.0.0.1:4173';
-const evidenceDir = process.env.FINORA_EVIDENCE_DIR || path.resolve(process.cwd(), '.uat-evidence');
+const evidenceDir = process.env.FINORA_EVIDENCE_DIR || path.resolve(process.cwd(), 'uat-evidence');
 fs.mkdirSync(evidenceDir, { recursive: true });
+
+async function printEvidence(page, filename) {
+  await page.evaluate(() => document.fonts.ready);
+  await page.emulateMedia({ media: 'print' });
+  const layout = await page.locator('#paper').evaluate(paper => [paper, ...paper.children].map(element => {
+    const rect = element.getBoundingClientRect();
+    const style = getComputedStyle(element);
+    return { className: element.className, top: rect.top, height: rect.height, width: rect.width, margin: style.margin, padding: style.padding, font: style.font };
+  }));
+  console.log('PRINT_LAYOUT', filename, JSON.stringify(layout));
+  await page.pdf({ path: path.join(evidenceDir, filename), printBackground: true, preferCSSPageSize: true });
+  const info = execFileSync('pdfinfo', [path.join(evidenceDir, filename)], { encoding: 'utf8' });
+  console.log('PDF_INFO', filename, info);
+  fs.writeFileSync(path.join(evidenceDir, filename + '.txt'), info + JSON.stringify(layout, null, 2));
+  execFileSync('pdftoppm', ['-scale-to', '1500', '-png', path.join(evidenceDir, filename), path.join(evidenceDir, filename.replace('.pdf', '-printed'))]);
+  await page.emulateMedia({ media: 'screen' });
+}
 
 const seller = {
   id: 'seller', businessName: 'شرکت آزمون فینورا', nationalId: '۱۴۰۰۱۲۳۴۵۶۷', economicCode: '۴۱۱۱۱۱۱۱۱۱۱۱', registrationNumber: '۱۲۳۴۵',
@@ -49,7 +66,7 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
   const officialParties = await page.locator('.official-parties').innerText();
   assert.doesNotMatch(officialParties, /must-not-print|ایمیل|نوع شخص|شماره شبا/);
   await page.screenshot({ path: path.join(evidenceDir, 'official-a4.png'), fullPage: true });
-  await page.pdf({ path: path.join(evidenceDir, 'official-a4.pdf'), printBackground: true, preferCSSPageSize: true });
+  await printEvidence(page, 'official-a4.pdf');
 
   await page.goto(`${baseUrl}/invoice-preview.html?id=ordinary-uat&demo=1`, { waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.invoice-unofficial');
@@ -57,7 +74,7 @@ const invoice = (id, type, count) => ({ id, invoiceNumber: `UAT-${type}`, custom
   assert.equal(await page.locator('[data-paper-size="A5"]').count(), 1);
   assert.doesNotMatch(await page.locator('.unofficial-lines thead').innerText(), /مالیات|عوارض/);
   await page.screenshot({ path: path.join(evidenceDir, 'unofficial-a5.png'), fullPage: true });
-  await page.pdf({ path: path.join(evidenceDir, 'unofficial-a5.pdf'), printBackground: true, preferCSSPageSize: true });
+  await printEvidence(page, 'unofficial-a5.pdf');
 
   for (const [filename, width, height] of [['official-a4.pdf', 841.89, 595.28], ['unofficial-a5.pdf', 595.28, 419.53]]) {
     const info = execFileSync('pdfinfo', [path.join(evidenceDir, filename)], { encoding: 'utf8' });
