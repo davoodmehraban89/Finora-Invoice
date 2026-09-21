@@ -214,3 +214,14 @@ Scope: invoice-preview.html, new-invoice.html, assets/css/mobile.css, assets/js/
 Live demo verification on 2026-09-21: the deployed entry form rejects item 11 and preserves all ten items; an ordinary invoice was issued and previewed through the public UI using disposable browser-local demo data. Cloudflare's PR bot reported deployment of a4ccab64 even before merge: deployment and main-branch acceptance must not be conflated.
 
 Known limits: browser/printer overrides and physical Safari printing are not certified; existing Supabase/RLS and autonomous-model-runtime gates are outside this print delivery. Native browser print shortcuts can bypass the application's preflight, but no rows are hidden or truncated. Long descriptions may require manual correction to fit the fixed page budget. Next gate: complete final CI/visual review, merge PR 62 through the normal workflow, and verify the deployed print UI.
+
+
+## 2026-09-21 — Merged print milestone
+
+Status: VERIFIED for this print workstream only. PR #62 merged as `237e9782beeeb7a9bbaa4f08dfacab7d9587f57f`. Main-branch CI run `35557880383` succeeded; the `Workers Builds: finora-invoice` check also succeeded for that exact commit (build `a65ef742-dbd4-4cc6-b2ee-42d6563152e5`). The prior unmerged status above is historical and superseded by this entry.
+
+Evidence: PR https://github.com/davoodmehraban89/Finora-Invoice/pull/62 ; CI https://github.com/davoodmehraban89/Finora-Invoice/actions/runs/35557880383 . Four final PDF renders were visually reviewed with all rows, totals, signatures and footers visible. Deployed demo entry, ten-row limit, issue, preview and A5 output selection were checked using browser-local synthetic data. No customer production records were created.
+
+Boundary: this is not acceptance of the full ERP, authenticated two-user security, physical Safari/printer output or autonomous model execution. The native print shortcut remains outside application preflight. No data is clipped or discarded.
+
+Safest continuation: integrate this evidenced pilot outcome with Davood-AI-OS's task acceptance flow; do not describe the agent as autonomous until its model-authentication and worker execution gates have real evidence. Keep the existing unrelated security acceptance backlog intact.
