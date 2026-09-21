@@ -67,3 +67,16 @@
 - Decision: Invoice trigger functions live in the unexposed `private` schema and have no direct `EXECUTE` grant for `PUBLIC`, `anon`, or `authenticated`. Snapshot capture and invoice-number guarding use caller privileges. Only atomic counter assignment retains definer privileges because the counter table intentionally has no client access.
 - Reason: A definer function in `public` can bypass RLS and may be exposed as an RPC surface through default function privileges. Trigger attachment does not require a client-callable function.
 - Consequence: The browser API shape is unchanged. Existing table triggers remain attached by object identity when their functions move schemas. Any future privileged function requires an explicit threat model, unexposed schema, minimal grants, fixed search path, migration, rollback notes, and advisor evidence.
+
+
+## 2026-09-20 — Ten-row landscape print delivery
+
+Owner decision: official A4 landscape and ordinary A5 landscape, both 10 rows with 5 mm margins. This supersedes the earlier portrait/12-row proposal. Short invoices receive blank rows; legacy over-budget invoices retain every row and disable output. Finora remains the ERP product; this delivery is limited to invoice printing (Chapters 251, 259 and 260).
+
+Status: IMPLEMENTED_UNVERIFIED overall; print tests passed, not yet accepted on main. GitHub Actions run 35557493375 passed on a4ccab64406eafce0d25e38284da92284486e5e0: 23 Node tests, four one-page PDFs (official/ordinary, ten populated rows/one populated plus nine blank rows), exact landscape paper-size checks, preservation of historical 11/15-row records, long-note output rejection without storage mutation, and both entry-form ten-row boundaries. PDF artifacts were downloaded for visual review. Earlier failing runs correctly exposed two-page output; explicit print line height and a compact A5 layout fixed that defect.
+
+Scope: invoice-preview.html, new-invoice.html, assets/css/mobile.css, assets/js/print-layout.js, tests/browser-uat.js, tests/project-control.test.js, .github/workflows/ci.yml and these control documents. The print preflight measures active print CSS and rejects overflow instead of clipping or rewriting invoice data. No database, credentials or calculation changes. Rollback: revert PR 62 as a unit.
+
+Live demo verification on 2026-09-21: the deployed entry form rejects item 11 and preserves all ten items; an ordinary invoice was issued and previewed through the public UI using disposable browser-local demo data. Cloudflare's PR bot reported deployment of a4ccab64 even before merge: deployment and main-branch acceptance must not be conflated.
+
+Known limits: browser/printer overrides and physical Safari printing are not certified; existing Supabase/RLS and autonomous-model-runtime gates are outside this print delivery. Native browser print shortcuts can bypass the application's preflight, but no rows are hidden or truncated. Long descriptions may require manual correction to fit the fixed page budget. Next gate: complete final CI/visual review, merge PR 62 through the normal workflow, and verify the deployed print UI.
