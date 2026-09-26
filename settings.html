@@ -1,33 +1,160 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>تنظیمات | فینورا</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — تنظیمات سازمان و سامانه مؤدیان</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
 </head>
 <body>
-<aside class="sidebar"><div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div><a class="nav-link" href="dashboard.html"><span>نمای کلی</span></a><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a><a class="nav-link" href="invoices.html"><span>فاکتورها</span></a><a class="nav-link" href="customers.html"><span>اشخاص</span></a><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a><a class="nav-link active" href="settings.html"><span>تنظیمات</span></a></aside>
-<main class="content">
-<header class="page-head"><div><div class="eyebrow">پیکربندی</div><h1>تنظیمات فروش و فاکتور</h1><div class="muted">هویت فروشنده، سیاست شماره‌گذاری و پیش‌فرض‌های صدور و چاپ</div></div></header>
-<form id="form" class="settings-stack"><div id="message" class="notice" hidden></div>
-<section class="card"><h2>هویت قانونی و تجاری فروشنده</h2><div class="form-grid">
-<div class="field"><label for="businessName">نام تجاری/شخص *</label><input class="input" id="businessName" required maxlength="160"></div><div class="field"><label for="nationalId">شناسه ملی / کد ملی</label><input class="input" id="nationalId" maxlength="30"></div>
-<div class="field"><label for="economicCode">شماره اقتصادی</label><input class="input" id="economicCode" maxlength="30"></div><div class="field"><label for="registrationNumber">شماره ثبت</label><input class="input" id="registrationNumber" maxlength="30"></div>
-<div class="field"><label for="phone">تلفن</label><input class="input" id="phone" maxlength="30"></div><div class="field"><label for="email">ایمیل داخلی پرونده</label><input class="input" id="email" type="email"><small class="muted">در کادر مشخصات فاکتور چاپ نمی‌شود.</small></div>
-<div class="field"><label for="website">وب‌سایت</label><input class="input" id="website" inputmode="url" maxlength="160"></div><div class="field"><label for="bankAccount">شماره شبا/حساب</label><input class="input" id="bankAccount" maxlength="60"><small class="muted">فقط در بخش توضیحات پرداخت نمایش داده می‌شود.</small></div>
-<div class="field"><label for="province">استان</label><input class="input" id="province" maxlength="80"></div><div class="field"><label for="city">شهر</label><input class="input" id="city" maxlength="80"></div>
-<div class="field"><label for="postalCode">کد پستی</label><input class="input" id="postalCode" maxlength="20"></div><div class="field" style="grid-column:span 2"><label for="address">نشانی</label><textarea class="textarea" id="address" rows="3"></textarea></div>
-</div></section>
-<section class="card"><div class="settings-title"><div><h2>شماره‌گذاری فاکتور</h2><p class="muted">قفل شماره در پایگاه‌داده نیز اجرا می‌شود و فقط یک محدودیت ظاهری نیست.</p></div><span class="policy-badge" id="numberPolicyBadge">قفل</span></div><div class="form-grid">
-<div class="field"><label for="invoiceNumberPolicy">سیاست شماره فاکتور</label><select class="select" id="invoiceNumberPolicy"><option value="locked">خودکار و قفل‌شده</option><option value="editable">قابل ورود و اصلاح توسط کاربر</option></select></div><div class="field"><label for="invoicePrefix">پیشوند شماره خودکار</label><input class="input" id="invoicePrefix" maxlength="20" value="FI-" placeholder="FI-"><small class="muted">در حالت خودکار، نمونه: FI-000001</small></div>
-</div><div class="notice notice-warning" id="editableWarning" hidden>در حالت قابل اصلاح، کنترل یکتایی همچنان فعال است؛ مسئولیت ترتیب، اصالت و انطباق شماره‌ها با رویه قانونی بر عهده صادرکننده است.</div></section>
-<section class="card"><h2>پیش‌فرض‌های صدور فاکتور</h2><div class="form-grid">
-<div class="field"><label for="defaultInvoiceType">نوع فاکتور پیش‌فرض</label><select class="select" id="defaultInvoiceType"><option value="ordinary">غیررسمی</option><option value="official">رسمی</option></select></div><div class="field"><label for="defaultVatMode">ارزش افزوده پیش‌فرض</label><select class="select" id="defaultVatMode"><option value="excluded">بدون ارزش افزوده</option><option value="included">با ارزش افزوده</option></select></div>
-<div class="field"><label for="defaultPaymentMethod">روش پرداخت پیش‌فرض</label><select class="select" id="defaultPaymentMethod"><option>نقدی</option><option>کارت/انتقال بانکی</option><option>چک</option><option>اعتباری</option></select></div><div class="field"><label for="defaultOutputMode">خروجی پیش‌فرض</label><select class="select" id="defaultOutputMode"><option value="printer">چاپگر</option><option value="pdf">PDF</option></select></div>
-<div class="field"><label for="currencyUnit">واحد پول نمایشی</label><select class="select" id="currencyUnit"><option value="rial">ریال</option><option value="toman">تومان</option></select><small class="muted">مبالغ پایگاه داده همیشه به ریال نگهداری می‌شوند.</small></div>
-<div class="field" style="grid-column:span 2"><label for="invoiceFooter">متن پایین فاکتور</label><textarea class="textarea" id="invoiceFooter" rows="3" maxlength="500" placeholder="شرایط پرداخت، پیام تشکر یا توضیح حقوقی"></textarea></div>
-</div></section>
-<div class="settings-savebar"><span class="muted">پیش‌فرض‌ها روی فاکتورهای جدید اعمال می‌شوند؛ قفل شماره روی فاکتورهای موجود نیز اجرا می‌شود.</span><button class="btn btn-primary" id="saveSettings" type="submit">ذخیره همه تنظیمات</button></div>
-</form></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/app.js"></script>
-<script>(()=>{'use strict';const byId=id=>document.getElementById(id),form=byId('form'),message=byId('message'),button=byId('saveSettings');const fields=['businessName','nationalId','economicCode','registrationNumber','phone','email','website','bankAccount','province','city','postalCode','address','invoicePrefix','defaultInvoiceType','defaultVatMode','defaultPaymentMethod','defaultOutputMode','currencyUnit','invoiceFooter'];const defaults={invoicePrefix:'FI-',defaultInvoiceType:'ordinary',defaultVatMode:'excluded',defaultPaymentMethod:'نقدی',defaultOutputMode:'printer',currencyUnit:'rial'};function syncPolicy(){const editable=byId('invoiceNumberPolicy').value==='editable';byId('editableWarning').hidden=!editable;byId('numberPolicyBadge').textContent=editable?'قابل اصلاح':'قفل';byId('numberPolicyBadge').classList.toggle('is-editable',editable)}function fill(profile){const value={...defaults,...profile};fields.forEach(id=>{byId(id).value=value[id]??''});byId('invoiceNumberPolicy').value=value.invoiceNumberEditable?'editable':'locked';syncPolicy()}function notify(text,error=false){message.hidden=false;message.textContent=text;message.classList.toggle('notice-error',error);message.scrollIntoView({behavior:'smooth',block:'center'})}byId('invoiceNumberPolicy').addEventListener('change',syncPolicy);form.addEventListener('submit',async event=>{event.preventDefault();if(!byId('businessName').value.trim()){notify('نام تجاری یا نام شخص را وارد کنید.',true);byId('businessName').focus();return}button.disabled=true;button.textContent='در حال ذخیره…';try{const data={id:'seller',invoiceNumberEditable:byId('invoiceNumberPolicy').value==='editable'};fields.forEach(id=>data[id]=byId(id).value.trim());await Finora.save('settings',data);notify('همه تنظیمات با موفقیت ذخیره شد.')}catch(error){notify(`ذخیره تنظیمات انجام نشد: ${error.message||'خطا'}`,true)}finally{button.disabled=false;button.textContent='ذخیره همه تنظیمات'}});Finora.requireAuth(async()=>fill(await Finora.get('settings','seller')))})();</script>
-</body></html>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>⚡ پلتفرم مالی فینورا</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link">📊 پیشخوان اصلی</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور جدید</a></li>
+                        <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+                <li><a href="treasury.html" class="sidebar-link">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link">📑 مدیریت قراردادها</a></li>
+        <li><a href="invoices.html" class="sidebar-link">🧾 مدیریت فاکتورها</a></li>
+                <li><a href="payroll.html" class="sidebar-link">👥 حقوق و پرسنل (HR)</a></li>
+        <li><a href="customers.html" class="sidebar-link">👥 طرف‌حساب‌ها و مشتریان</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 کالاها و خدمات</a></li>
+        <li><a href="settings.html" class="sidebar-link active">⚙️ تنظیمات و مؤدیان</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 style="font-size: 1.25rem;">تنظیمات سازمان و زیرساخت مؤدیان</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">پیکربندی پرونده مالیاتی، حافظه مالیاتی و بازرسی سرفصل‌های دفترکل</span>
+        </div>
+      </header>
+
+      <div class="page-body">
+        <!-- Tax Settings -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">مشخصات پرونده مالیاتی و حافظه مالیاتی</h3>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">نام قانونی مودی</label>
+              <input type="text" class="form-control" value="شرکت پلتفرم مالی فینورا" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">شناسه ملی مودی</label>
+              <input type="text" class="form-control" value="10101010101" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">شماره اقتصادی مودی</label>
+              <input type="text" class="form-control" value="411111111111" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">شناسه یکتای حافظه مالیاتی (Fiscal Memory ID)</label>
+              <input type="text" class="form-control" value="TAX-MEM-1405-TEH" readonly>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Tax Rule Package -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">بسته‌های قوانین مالیاتی فعال (Tax Rule Engine Package)</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>شناسه بسته</th>
+                <th>حوزه قضایی</th>
+                <th>نسخه قانون</th>
+                <th>مأخذ قانونی</th>
+                <th>تاریخ شروع اثر</th>
+                <th>نرخ استاندارد ارزش افزوده</th>
+                <th>وضعیت</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>IR-VAT-1403-1405</code></td>
+                <td>ایران (IR)</td>
+                <td><code>1403.1</code></td>
+                <td>قانون بودجه و مالیات بر ارزش افزوده</td>
+                <td>1403/01/01</td>
+                <td><strong>۱۰ درصد (۱۰٪)</strong></td>
+                <td><span class="badge badge-success">فعال</span></td>
+              </tr>
+              <tr>
+                <td><code>IR-VAT-1402</code></td>
+                <td>ایران (IR)</td>
+                <td><code>1402.1</code></td>
+                <td>قانون مالیات بر ارزش افزوده دوره قبل</td>
+                <td>1398/01/01</td>
+                <td><strong>۹ درصد (۹٪)</strong></td>
+                <td><span class="badge badge-draft">بایگانی تاریخی</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Chart of Accounts Inspector -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">کدینگ حساب‌ها در دفترکل (Chart of Accounts)</h3>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>کد حساب</th>
+                <th>عنوان استاندارد حسابداری</th>
+                <th>طبقه حساب</th>
+                <th>ماهیت حساب</th>
+                <th>مانده فعلی (ریال)</th>
+              </tr>
+            </thead>
+            <tbody id="coa-tbody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const client = new FinoraClient();
+      const trial = client.ledger.getTrialBalance();
+      const tbody = document.getElementById('coa-tbody');
+
+      tbody.innerHTML = trial.accounts.map(acc => `
+        <tr>
+          <td><code>${acc.code}</code></td>
+          <td>${acc.name}</td>
+          <td><span class="badge badge-info">${acc.category}</span></td>
+          <td>${acc.debit >= acc.credit ? 'بدهکار' : 'بستانکار'}</td>
+          <td><strong>${acc.netBalance.toLocaleString('fa-IR')}</strong></td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

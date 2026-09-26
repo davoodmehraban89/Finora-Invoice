@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — مدیریت خزانه‌داری، چک‌های صیادی و مغایرت بانکی</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .treasury-tabs { display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 20px; }
+    .t-tab-btn { padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; font-size: 15px; font-weight: 600; cursor: pointer; color: #64748b; font-family: inherit; }
+    .t-tab-btn.active { color: #0284c7; border-bottom-color: #0284c7; }
+    .t-tab-content { display: none; }
+    .t-tab-content.active { display: block; }
+    .badge-vault { background: #fef3c7; color: #b45309; }
+    .badge-collection { background: #e0f2fe; color: #0369a1; }
+    .badge-cleared { background: #dcfce7; color: #15803d; }
+    .badge-bounced { background: #fee2e2; color: #b91c1c; }
+    .badge-endorsed { background: #f3e8ff; color: #7e22ce; }
+    .badge-issued { background: #ffedd5; color: #c2410c; }
+    .recon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 16px; }
+    .recon-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+  </style>
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>فینورا (Finora)</h2>
+        <span class="badge">نسخه ۱.۰ - سازمانی</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link">📊 داشبورد کلان</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور رسمی</a></li>
+        <li><a href="invoices.html" class="sidebar-link">📑 مدیریت فاکتورها</a></li>
+        <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+        <li><a href="treasury.html" class="sidebar-link active">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link">📜 مدیریت قراردادها (CLM)</a></li>
+        <li><a href="payroll.html" class="sidebar-link">👥 حقوق و دستمزد (HCM)</a></li>
+        <li><a href="customers.html" class="sidebar-link">🏢 طرف‌های حساب</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 انبار و کاتالوگ کالا</a></li>
+        <li><a href="settings.html" class="sidebar-link">⚙️ تنظیمات مودیان</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <small>کاربر فعال: داوود مهربان</small><br>
+        <small>شرکت انتقال گاز ایران</small>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-nav">
+        <div>
+          <h1>خزانه‌داری، چک‌های صیادی و مغایرت بانکی</h1>
+          <p class="subtitle">منطبق بر فصول ۰۲۰، ۰۳۳ و ۲۴۳ — ثبت چک صیاد، گردش اسناد، وصول، برگشت و صورت مغایرت هوشمند</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-secondary" onclick="seedSampleCheques()">📥 بارگذاری داده‌های نمونه</button>
+        </div>
+      </header>
+
+      <!-- KPI Summary Cards -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-title">موجودی نقد و بانک (معین ۱۱۰۱)</span>
+          <span class="metric-value" id="kpi-bank-cash">۰ ریال</span>
+          <span class="metric-sub text-success">تراز با دفتر کل</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">اسناد دریافتنی نزد صندوق (۱۱۰۲)</span>
+          <span class="metric-value" id="kpi-vault-cheques">۰ ریال</span>
+          <span class="metric-sub" id="kpi-vault-count">۰ فقره چک صیاد</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">اسناد در جریان وصول (۱۱۰۴)</span>
+          <span class="metric-value" id="kpi-collection-cheques">۰ ریال</span>
+          <span class="metric-sub text-primary">واگذار شده به بانک‌ها</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-title">اسناد پرداختنی تجاری / چک‌های صادره (۲۱۰۴)</span>
+          <span class="metric-value" id="kpi-issued-cheques">۰ ریال</span>
+          <span class="metric-sub text-warning">تعهدات سررسید آتی</span>
+        </div>
+      </section>
+
+      <!-- Tabs Navigation -->
+      <div class="treasury-tabs">
+        <button class="t-tab-btn active" onclick="switchTab('tab-received')">📥 چک‌های صیادی دریافتنی (مشتریان)</button>
+        <button class="t-tab-btn" onclick="switchTab('tab-issued')">📤 چک‌های صیادی پرداختنی (تأمین‌کنندگان)</button>
+        <button class="t-tab-btn" onclick="switchTab('tab-recon')">⚖️ صورت مغایرت بانکی هوشمند</button>
+      </div>
+
+      <!-- Tab 1: Received Cheques -->
+      <div id="tab-received" class="t-tab-content active">
+        <div class="card" style="margin-bottom: 20px;">
+          <h3>ثبت چک صیادی دریافتی جدید</h3>
+          <form id="form-new-cheque" onsubmit="handleRegisterCheque(event)" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">
+            <div class="form-group">
+              <label>شناسه ۱۶ رقمی صیاد *</label>
+              <input type="text" id="rec-sayad" required maxlength="16" placeholder="مثال: 7012987654321098" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>شماره سریال چک *</label>
+              <input type="text" id="rec-number" required placeholder="مثال: 883920" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>بانک صادرکننده *</label>
+              <input type="text" id="rec-bank" required placeholder="مثال: بانک ملت" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>صادرکننده / مشتری *</label>
+              <input type="text" id="rec-drawer" required placeholder="نام شخص یا شرکت" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>مبلغ چک (ریال) *</label>
+              <input type="number" id="rec-amount" required min="1" placeholder="مبلغ به ریال" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>تاریخ سررسید *</label>
+              <input type="text" id="rec-due" required placeholder="1405/03/15" class="form-control">
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+              <label>بابت / شرح سند</label>
+              <input type="text" id="rec-desc" placeholder="بابت تسویه فاکتور یا پیش‌پرداخت" class="form-control">
+            </div>
+            <div style="grid-column: span 4; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-primary">➕ ثبت چک صیادی در صندوق (سند حسابداری خودکار)</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>کارتابل اسناد دریافتنی (گردش چک صیاد)</h3>
+          <table class="table" style="margin-top: 12px;">
+            <thead>
+              <tr>
+                <th>شناسه صیاد</th>
+                <th>سریال</th>
+                <th>بانک</th>
+                <th>صادرکننده</th>
+                <th>مبلغ (ریال)</th>
+                <th>سررسید</th>
+                <th>وضعیت</th>
+                <th>عملیات خزانه‌داری</th>
+              </tr>
+            </thead>
+            <tbody id="received-cheques-table">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 2: Issued Cheques -->
+      <div id="tab-issued" class="t-tab-content">
+        <div class="card" style="margin-bottom: 20px;">
+          <h3>صدور چک صیادی پرداختنی در وجه تأمین‌کننده / بستانکار</h3>
+          <form id="form-issue-cheque" onsubmit="handleIssueCheque(event)" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px;">
+            <div class="form-group">
+              <label>شناسه ۱۶ رقمی صیاد *</label>
+              <input type="text" id="iss-sayad" required maxlength="16" placeholder="شناسه ۱۶ رقمی چک دسته چک شرکت" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>شماره سریال برگه *</label>
+              <input type="text" id="iss-serial" required placeholder="مثال: 10005" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>در وجه (ذینفع) *</label>
+              <input type="text" id="iss-payee" required placeholder="صنایع الکترونیک شیراز" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>مبلغ (ریال) *</label>
+              <input type="number" id="iss-amount" required min="1" placeholder="مبلغ چک صادره" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>تاریخ سررسید *</label>
+              <input type="text" id="iss-due" required placeholder="1405/04/01" class="form-control">
+            </div>
+            <div class="form-group" style="grid-column: span 3;">
+              <label>شرح و بابت</label>
+              <input type="text" id="iss-desc" placeholder="بابت سفارش خرید شماره PO-1405-01" class="form-control">
+            </div>
+            <div style="grid-column: span 4; display: flex; justify-content: flex-end;">
+              <button type="submit" class="btn btn-warning">📤 صدور رسمی چک پرداختنی (ثبت بدهکار بستانکاران و بستانکار اسناد پرداختنی)</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>کارتابل اسناد پرداختنی (چک‌های صادره شرکت)</h3>
+          <table class="table" style="margin-top: 12px;">
+            <thead>
+              <tr>
+                <th>شناسه صیاد</th>
+                <th>سریال</th>
+                <th>در وجه</th>
+                <th>مبلغ (ریال)</th>
+                <th>سررسید</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+              </tr>
+            </thead>
+            <tbody id="issued-cheques-table">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Bank Reconciliation -->
+      <div id="tab-recon" class="t-tab-content">
+        <div class="card">
+          <h3>تنظیم صورت مغایرت بانکی (تطبیق دفتر معین بانک با صورت‌حساب بانکی)</h3>
+          <p class="subtitle">مقایسه خودکار اسناد حسابداری صادره با گردش واقعی حساب بانکی جهت کشف وجوه بین‌راهی، چک‌های معوق و کارمزدهای ثبت‌نشده</p>
+          
+          <div style="display: flex; gap: 12px; margin-top: 12px;">
+            <button class="btn btn-primary" onclick="runAutomatedReconciliation()">🔄 اجرای تطبیق هوشمند بانکی دوره جاری</button>
+          </div>
+
+          <div id="recon-results-panel" style="display: none; margin-top: 20px;">
+            <div class="recon-grid">
+              <!-- Bank Side -->
+              <div class="recon-card">
+                <h4 style="color: #0369a1; border-bottom: 2px solid #e0f2fe; padding-bottom: 8px;">صورت‌حساب بانک (طرف بانک)</h4>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                  <span>مانده پایان دوره طبق صورتحساب بانک:</span>
+                  <strong id="recon-stmt-bal">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; color: #15803d;">
+                  <span>(+) اضافه می‌شود: واریزی‌های بین راهی (Deposits in Transit):</span>
+                  <strong id="recon-transit-amt">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; color: #b91c1c;">
+                  <span>(-) کسر می‌شود: چک‌های معوق پرداختنی (Outstanding Cheques):</span>
+                  <strong id="recon-outstanding-amt">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 16px;">
+                  <span>مانده تعدیل شده بانک:</span>
+                  <strong id="recon-adj-bank" style="color: #0369a1;">۰ ریال</strong>
+                </div>
+              </div>
+
+              <!-- Books Side -->
+              <div class="recon-card">
+                <h4 style="color: #15803d; border-bottom: 2px solid #dcfce7; padding-bottom: 8px;">دفاتر شرکت (طرف دفاتر مالی)</h4>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                  <span>مانده طبق دفاتر شرکت (معین ۱۱۰۱):</span>
+                  <strong id="recon-book-bal">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; color: #15803d;">
+                  <span>(+) اضافه می‌شود: واریزی‌های مستقیم بدون سند:</span>
+                  <strong id="recon-unrec-crd">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 8px; color: #b91c1c;">
+                  <span>(-) کسر می‌شود: کارمزدهای بانکی و برداشت‌های مستقیم:</span>
+                  <strong id="recon-unrec-deb">۰ ریال</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 8px; border-top: 1px dashed #cbd5e1; font-size: 16px;">
+                  <span>مانده تعدیل شده دفاتر:</span>
+                  <strong id="recon-adj-book" style="color: #15803d;">۰ ریال</strong>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; border-radius: 8px;" id="recon-status-banner">
+              <!-- Reconciled status message -->
+            </div>
+
+            <div id="unrecorded-items-action" style="margin-top: 16px;">
+              <!-- Action buttons to post bank charges -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    let client;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      client = new FinoraClient();
+      client.seedTreasuryData();
+      renderAll();
+    });
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.t-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.t-tab-content').forEach(c => c.classList.remove('active'));
+      
+      const activeBtn = Array.from(document.querySelectorAll('.t-tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+      if (activeBtn) activeBtn.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
+    }
+
+    function renderAll() {
+      renderKPIs();
+      renderReceivedTable();
+      renderIssuedTable();
+    }
+
+    function renderKPIs() {
+      const bankAcc = client.ledger.getAccount('1101');
+      const vaultAcc = client.ledger.getAccount('1102');
+      const collAcc = client.ledger.getAccount('1104');
+      const issuedAcc = client.ledger.getAccount('2104');
+
+      document.getElementById('kpi-bank-cash').textContent = (bankAcc ? bankAcc.netBalance : 0).toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('kpi-vault-cheques').textContent = (vaultAcc ? vaultAcc.netBalance : 0).toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('kpi-collection-cheques').textContent = (collAcc ? collAcc.netBalance : 0).toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('kpi-issued-cheques').textContent = (issuedAcc ? issuedAcc.netBalance : 0).toLocaleString('fa-IR') + ' ریال';
+
+      const vaultCount = Array.from(client.chequeEngine.receivedCheques.values()).filter(c => c.status === 'vault').length;
+      document.getElementById('kpi-vault-count').textContent = vaultCount + ' فقره چک در صندوق';
+    }
+
+    function renderReceivedTable() {
+      const tbody = document.getElementById('received-cheques-table');
+      tbody.innerHTML = '';
+
+      const cheques = Array.from(client.chequeEngine.receivedCheques.values());
+      if (cheques.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94a3b8;">هیچ چک دریافتی ثبت نشده است.</td></tr>';
+        return;
+      }
+
+      cheques.forEach(c => {
+        let badgeClass = 'badge-vault';
+        let statusTitle = 'نزد صندوق';
+        if (c.status === 'in_collection') { badgeClass = 'badge-collection'; statusTitle = 'در جریان وصول'; }
+        else if (c.status === 'cleared') { badgeClass = 'badge-cleared'; statusTitle = 'وصول شده'; }
+        else if (c.status === 'bounced') { badgeClass = 'badge-bounced'; statusTitle = 'برگشتی'; }
+        else if (c.status === 'endorsed') { badgeClass = 'badge-endorsed'; statusTitle = 'خرج شده'; }
+
+        let actionHtml = '';
+        if (c.status === 'vault') {
+          actionHtml = `
+            <button class="btn btn-sm btn-primary" onclick="depositCheque('${c.id}')">🏦 واگذاری به بانک</button>
+            <button class="btn btn-sm btn-secondary" onclick="endorseCheque('${c.id}')">خرج چک</button>
+          `;
+        } else if (c.status === 'in_collection') {
+          actionHtml = `
+            <button class="btn btn-sm btn-success" onclick="clearCheque('${c.id}')">✅ اعلام وصول</button>
+            <button class="btn btn-sm btn-danger" onclick="bounceCheque('${c.id}')">❌ اعلام برگشت</button>
+          `;
+        } else {
+          actionHtml = '<span style="color: #64748b; font-size: 13px;">تکمیل شده</span>';
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><code>${escapeHtml(c.sayad_id)}</code></td>
+          <td>${escapeHtml(c.cheque_number)}</td>
+          <td>${escapeHtml(c.bank_name)}</td>
+          <td><strong>${c.drawer_name}</strong></td>
+          <td>${c.amount.toLocaleString('fa-IR')}</td>
+          <td>${c.due_date}</td>
+          <td><span class="badge ${badgeClass}">${statusTitle}</span></td>
+          <td>${actionHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderIssuedTable() {
+      const tbody = document.getElementById('issued-cheques-table');
+      tbody.innerHTML = '';
+
+      const cheques = Array.from(client.chequeEngine.issuedCheques.values());
+      if (cheques.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8;">هیچ چک پرداختنی ثبت نشده است.</td></tr>';
+        return;
+      }
+
+      cheques.forEach(c => {
+        let badgeClass = c.status === 'issued' ? 'badge-issued' : 'badge-cleared';
+        let statusTitle = c.status === 'issued' ? 'سررسید آتی' : 'پاس شده';
+
+        let actionHtml = c.status === 'issued' ?
+          `<button class="btn btn-sm btn-success" onclick="clearIssuedCheque('${c.id}')">✅ اعلام پاس شدن چک</button>` :
+          `<span style="color: #15803d; font-size: 13px;">برداشت از حساب شد</span>`;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><code>${escapeHtml(c.sayad_id)}</code></td>
+          <td>${escapeHtml(c.cheque_number)}</td>
+          <td><strong>${c.payee_name}</strong></td>
+          <td>${c.amount.toLocaleString('fa-IR')}</td>
+          <td>${c.due_date}</td>
+          <td><span class="badge ${badgeClass}">${statusTitle}</span></td>
+          <td>${actionHtml}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function handleRegisterCheque(e) {
+      e.preventDefault();
+      const sayad = document.getElementById('rec-sayad').value.trim();
+      const num = document.getElementById('rec-number').value.trim();
+      const bank = document.getElementById('rec-bank').value.trim();
+      const drawer = document.getElementById('rec-drawer').value.trim();
+      const amt = Number(document.getElementById('rec-amount').value);
+      const due = document.getElementById('rec-due').value.trim();
+      const desc = document.getElementById('rec-desc').value.trim();
+
+      try {
+        client.chequeEngine.registerReceivedCheque({
+          id: 'chq_rec_' + Date.now(),
+          tenant_id: client.tenantId,
+          organization_id: client.organizationId,
+          sayad_id: sayad,
+          cheque_number: num,
+          bank_name: bank,
+          drawer_name: drawer,
+          amount: amt,
+          due_date: due,
+          description: desc
+        });
+        alert('چک صیادی با موفقیت در صندوق ثبت و سند حسابداری معین ۱۱۰۲ بدهکار و ۱۱۰۳ بستانکار صادر شد.');
+        document.getElementById('form-new-cheque').reset();
+        renderAll();
+      } catch (err) {
+        alert('خطا در ثبت چک: ' + err.message);
+      }
+    }
+
+    function depositCheque(id) {
+      try {
+        client.chequeEngine.depositChequeToBank(id, 'bank_acc_01', 'بانک ملت - شعبه مرکزی');
+        alert('چک به بانک واگذار شد (سند حسابداری: ۱۱۰۴ بدهکار و ۱۱۰۲ بستانکار).');
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+
+    function clearCheque(id) {
+      try {
+        client.chequeEngine.clearReceivedCheque(id);
+        alert('وصول چک ثبت شد و به موجودی بانک افزوده گردید (سند: ۱۱۰۱ بدهکار و ۱۱۰۴ بستانکار).');
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+
+    function bounceCheque(id) {
+      const reason = prompt('علت برگشت چک را وارد فرمایید:', 'کسری موجودی');
+      if (!reason) return;
+      try {
+        client.chequeEngine.bounceReceivedCheque(id, reason);
+        alert('برگشت چک ثبت شد و بدهی مشتری در دفتر کل احیا گردید (سند: ۱۱۰۳ بدهکار و ۱۱۰۴ بستانکار).');
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+
+    function endorseCheque(id) {
+      const supp = prompt('نام تأمین‌کننده جهت خرج چک:', 'صنایع الکترونیک شیراز');
+      if (!supp) return;
+      try {
+        client.chequeEngine.endorseChequeToSupplier(id, 'supp_01', supp);
+        alert('چک به تأمین‌کننده واگذار و بدهی تجاری تسویه شد (سند: ۲۱۰۱ بدهکار و ۱۱۰۲ بستانکار).');
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+
+    function handleIssueCheque(e) {
+      e.preventDefault();
+      const sayad = document.getElementById('iss-sayad').value.trim();
+      const serial = document.getElementById('iss-serial').value.trim();
+      const payee = document.getElementById('iss-payee').value.trim();
+      const amt = Number(document.getElementById('iss-amount').value);
+      const due = document.getElementById('iss-due').value.trim();
+      const desc = document.getElementById('iss-desc').value.trim();
+
+      try {
+        client.chequeEngine.issuePaymentCheque({
+          id: 'chq_iss_' + Date.now(),
+          tenant_id: client.tenantId,
+          organization_id: client.organizationId,
+          chequebook_id: 'book_melli_01',
+          sayad_id: sayad,
+          cheque_number: serial,
+          bank_account_id: 'bank_acc_01',
+          payee_id: 'supp_01',
+          payee_name: payee,
+          amount: amt,
+          due_date: due,
+          description: desc
+        });
+        alert('چک پرداختنی صادر شد (سند حسابداری: ۲۱۰۱ بدهکار و ۲۱۰۴ بستانکار).');
+        document.getElementById('form-issue-cheque').reset();
+        renderAll();
+      } catch (err) {
+        alert('خطا در صدور چک: ' + err.message);
+      }
+    }
+
+    function clearIssuedCheque(id) {
+      try {
+        client.chequeEngine.clearIssuedCheque(id);
+        alert('پاس شدن چک پرداختنی ثبت و مبلغ از بانک کسر گردید (سند: ۲۱۰۴ بدهکار و ۱۱۰۱ بستانکار).');
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+
+    function seedSampleCheques() {
+      client.chequeEngine.issuePaymentCheque({
+        id: 'chq_iss_seed_02',
+        tenant_id: client.tenantId,
+        organization_id: client.organizationId,
+        chequebook_id: 'book_melli_01',
+        sayad_id: '2233445566778899',
+        cheque_number: '10002',
+        bank_account_id: 'bank_acc_01',
+        payee_id: 'supp_01',
+        payee_name: 'صنایع الکترونیک شیراز',
+        amount: 85000000,
+        issue_date: '1405/02/20',
+        due_date: '1405/04/10',
+        description: 'بابت سفارش خرید قطعات سرور'
+      });
+      renderAll();
+      alert('داده‌های نمونه خزانه‌داری با موفقیت بارگذاری شدند.');
+    }
+
+    let activeRecon = null;
+
+    function runAutomatedReconciliation() {
+      // Current book balance from ledger
+      const bookBal = client.ledger.getAccount('1101').netBalance;
+      // Simulated bank statement ending balance
+      const stmtBal = bookBal + 35000000; 
+
+      activeRecon = client.bankReconEngine.performReconciliation({
+        id: 'recon_' + Date.now(),
+        tenant_id: client.tenantId,
+        organization_id: client.organizationId,
+        bank_account_id: 'bank_acc_01',
+        statement_date: '1405/02/31',
+        statement_ending_balance: stmtBal,
+        book_ending_balance: bookBal,
+        book_entries: [
+          { id: 'be_01', amount: 50000000, direction: 'debit', reference: 'PAYA-1102' },
+          { id: 'be_02', amount: 85000000, direction: 'credit', reference: 'CHQ-10002' },
+          { id: 'be_03', amount: 45000000, direction: 'debit', reference: 'DEP-IN-TRANSIT' }
+        ],
+        statement_entries: [
+          { id: 'se_01', amount: 50000000, direction: 'deposit', reference: 'PAYA-1102' },
+          { id: 'se_02', amount: 85000000, direction: 'withdrawal', reference: 'CHQ-10002' },
+          { id: 'se_03', amount: 10000000, direction: 'withdrawal', reference: 'FEE-BANK', description: 'کارمزد خدمات بانکی و اینترنت‌بانک' }
+        ]
+      });
+
+      document.getElementById('recon-results-panel').style.display = 'block';
+      document.getElementById('recon-stmt-bal').textContent = activeRecon.balances.statement_ending_balance.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-transit-amt').textContent = activeRecon.summary.deposits_in_transit_amount.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-outstanding-amt').textContent = activeRecon.summary.outstanding_cheques_amount.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-adj-bank').textContent = activeRecon.balances.adjusted_bank_balance.toLocaleString('fa-IR') + ' ریال';
+
+      document.getElementById('recon-book-bal').textContent = activeRecon.balances.book_ending_balance.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-unrec-crd').textContent = activeRecon.summary.unrecorded_credits_amount.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-unrec-deb').textContent = activeRecon.summary.unrecorded_debits_amount.toLocaleString('fa-IR') + ' ریال';
+      document.getElementById('recon-adj-book').textContent = activeRecon.balances.adjusted_book_balance.toLocaleString('fa-IR') + ' ریال';
+
+      const banner = document.getElementById('recon-status-banner');
+      if (activeRecon.balances.is_reconciled) {
+        banner.style.background = '#dcfce7';
+        banner.style.color = '#15803d';
+        banner.innerHTML = '<strong>✅ صورت مغایرت کاملاً تراز است:</strong> مانده تعدیل شده بانک و مانده تعدیل شده دفاتر کاملاً برابرند.';
+      } else {
+        banner.style.background = '#fef3c7';
+        banner.style.color = '#b45309';
+        banner.innerHTML = `<strong>⚠️ اقلام باز نیاز به بررسی:</strong> مغایرت ریالی ناشی از برداشت کارمزد ثبت نشده به مبلغ ${activeRecon.summary.unrecorded_debits_amount.toLocaleString('fa-IR')} ریال شناسایی شد.`;
+      }
+
+      const actionsDiv = document.getElementById('unrecorded-items-action');
+      if (activeRecon.details.unrecorded_debits.length > 0) {
+        actionsDiv.innerHTML = `
+          <button class="btn btn-primary" onclick="postBankCharges()">✍️ صدور خودکار سند حسابداری کارمزد بانکی (بدهکار هزینه کارمزد ۶۱۰۵ / بستانکار بانک ۱۱۰۱)</button>
+        `;
+      } else {
+        actionsDiv.innerHTML = '';
+      }
+    }
+
+    function postBankCharges() {
+      if (!activeRecon) return;
+      try {
+        const debitItem = activeRecon.details.unrecorded_debits[0];
+        client.bankReconEngine.postUnrecordedBankItem({
+          reconciliation_id: activeRecon.id,
+          item_id: debitItem.id,
+          account_code: '6105'
+        });
+        alert('سند حسابداری کارمزد بانکی در دفتر کل صادر شد.');
+        runAutomatedReconciliation();
+        renderAll();
+      } catch (err) {
+        alert('خطا: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

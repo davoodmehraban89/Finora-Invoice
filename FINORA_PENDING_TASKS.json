@@ -1,0 +1,161 @@
+[
+  {
+    "task_id": "TASK-TREASURY-SAYAD-RECONCILIATION",
+    "title": "Treasury, Sayad Cheques Lifecycle & Bank Reconciliation Engine",
+    "chapters": [
+      20,
+      33,
+      243
+    ],
+    "domain": "Treasury & Banking",
+    "priority": "P0",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/ledger/posting-engine.js"
+    ],
+    "completed_at": "2026-09-25T22:15:00-07:00",
+    "verification_evidence": "tests/treasury-engine.test.js (6/6 tests passing)"
+  },
+  {
+    "task_id": "TASK-MULTI-WAREHOUSE-INVENTORY-TRANSFERS",
+    "title": "Multi-Location Warehouses, Stock Transfers & Batch/Serial Tracking",
+    "chapters": [
+      12,
+      38,
+      55,
+      69,
+      95,
+      118,
+      145,
+      171
+    ],
+    "domain": "WMS & Supply Chain",
+    "priority": "P0",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/inventory/stock-engine.js"
+    ],
+    "completed_at": "2026-09-25T22:17:40-07:00",
+    "verification_evidence": "tests/warehouse-transfer-engine.test.js (5/5 tests passing)"
+  },
+  {
+    "task_id": "TASK-FIXED-ASSETS-DEPRECIATION",
+    "title": "Fixed Assets, Capital Expenditures & Depreciation Engine (Article 149 Tax Code)",
+    "chapters": [
+      48,
+      71,
+      97,
+      121,
+      147,
+      173
+    ],
+    "domain": "Fixed Assets & Depreciation",
+    "priority": "P1",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/ledger/posting-engine.js"
+    ],
+    "completed_at": "2026-09-25T22:19:40-07:00",
+    "verification_evidence": "tests/depreciation-engine.test.js (4/4 tests passing)"
+  },
+  {
+    "task_id": "TASK-BI-EXECUTIVE-ANALYTICS-REPORTING",
+    "title": "Executive Financial Intelligence Dashboard, DSO, Working Capital & Cash Burn Analytics",
+    "chapters": [
+      26,
+      40,
+      56,
+      73,
+      100,
+      124,
+      150,
+      176
+    ],
+    "domain": "BI & Executive Analytics",
+    "priority": "P1",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/treasury/cash-flow-engine.js",
+      "src/ledger/general-ledger.js"
+    ],
+    "completed_at": "2026-09-25T23:08:40-07:00",
+    "verification_evidence": "tests/financial-analytics-engine.test.js (5/5 tests passing)"
+  },
+  {
+    "task_id": "TASK-OCR-INTELLIGENT-DOCUMENT-PROCESSING",
+    "title": "Intelligent Document Processing (IDP), Persian OCR & AI Ingestion Pipeline",
+    "chapters": [
+      47,
+      74,
+      101,
+      126,
+      151,
+      178
+    ],
+    "domain": "IDP & OCR Engine",
+    "priority": "P2",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/documents/document-store.js"
+    ],
+    "completed_at": "2026-09-26T00:55:00-07:00",
+    "verification_evidence": "tests/idp-ocr-pipeline.test.js (4/4 tests passing)"
+  },
+  {
+    "task_id": "TASK-MANUFACTURING-BOM-MRP-COSTING",
+    "title": "Manufacturing & Assembly, Bill of Materials (BOM), Work Orders & Standard Costing",
+    "chapters": [
+      70,
+      103,
+      128,
+      153,
+      180
+    ],
+    "domain": "Manufacturing & MRP",
+    "priority": "P2",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/inventory/stock-engine.js"
+    ],
+    "completed_at": "2026-09-26T01:44:00-07:00",
+    "verification_evidence": "tests/mrp-bom-engine.test.js (3/3 tests passing)"
+  },
+  {
+    "task_id": "TASK-GOVERNMENT-COMPLIANCE-ARTICLE-141",
+    "title": "Corporate Trade Law Compliance, Article 141 Capital Impairment & Solvency Intelligence",
+    "chapters": [
+      141,
+      167,
+      193,
+      219,
+      245
+    ],
+    "domain": "Corporate Governance & Article 141",
+    "priority": "P0",
+    "status": "COMPLETED",
+    "dependencies": [
+      "src/ledger/general-ledger.js"
+    ],
+    "completed_at": "2026-09-26T03:17:30-07:00",
+    "verification_evidence": "tests/article-141-compliance-engine.test.js (6/6 tests passing)"
+  },
+  {
+    "task_id": "TASK-CRM-SALES-INTELLIGENCE",
+    "title": "Customer 360, Credit Limit Enforcement, Sales Pipeline & Revenue Intelligence",
+    "chapters": [
+      24,
+      36,
+      50,
+      67,
+      93,
+      115
+    ],
+    "domain": "CRM & Sales Intelligence",
+    "priority": "P1",
+    "status": "PENDING",
+    "dependencies": [
+      "src/domain/canonical/counterparty.js",
+      "src/invoicing/invoice-engine.js"
+    ]
+  }
+]

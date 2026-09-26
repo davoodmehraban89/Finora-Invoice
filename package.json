@@ -1,22 +1,43 @@
 {
   "name": "finora-invoice",
   "version": "1.0.0",
-  "description": "Finora Iranian Enterprise ERP, Invoicing, Tax, Payroll, Procurement, Treasury and Accounting Engine",
+  "description": "Finora Autonomous Enterprise Operating System & Financial Platform",
   "main": "assets/js/finora-core-client.js",
   "scripts": {
-    "test": "node --test tests/*.test.js",
-    "validate:matrix": "node -e \"const data = require('./FINORA_IMPLEMENTATION_MATRIX.json'); if (data.length !== 260) throw new Error('Expected 260 chapters'); console.log('Successfully verified 260 chapters in register.');\""
+    "test": "node --test tests/accounting-posting.test.js tests/contract-governance.test.js tests/contract-lifecycle.test.js tests/depreciation-engine.test.js tests/financial-analytics-engine.test.js tests/financial-invariants.test.js tests/frontend-integration.test.js tests/idp-ocr-pipeline.test.js tests/invoice-lifecycle.test.js tests/mrp-bom-engine.test.js tests/multi-tenant-rls.test.js tests/payroll-engine.test.js tests/procurement-engine.test.js tests/tax-engine-versioning.test.js tests/treasury-engine.test.js tests/warehouse-transfer-engine.test.js tests/article-141-compliance-engine.test.js tests/customer-360-engine.test.js tests/bpm-approval-engine.test.js tests/multi-currency-engine.test.js tests/industry-pack-registry.test.js tests/defect-remediation-regression.test.js tests/adversarial-red-team.test.js",
+    "test:invariants": "node --test tests/financial-invariants.test.js",
+    "test:tax": "node --test tests/tax-engine-versioning.test.js",
+    "test:rls": "node --test tests/multi-tenant-rls.test.js",
+    "test:frontend": "node --test tests/frontend-integration.test.js",
+    "validate:matrix": "node -e \"const data = require('./FINORA_IMPLEMENTATION_MATRIX.json'); if (data.length !== 260) throw new Error('Expected 260 chapters, found ' + data.length); console.log('Successfully verified 260 chapters in register.');\"",
+    "test:contracts": "node --test tests/contract-lifecycle.test.js",
+    "test:payroll": "node --test tests/payroll-engine.test.js",
+    "test:procurement": "node --test tests/procurement-engine.test.js",
+    "test:treasury": "node --test tests/treasury-engine.test.js",
+    "test:warehouse": "node --test tests/warehouse-transfer-engine.test.js",
+    "test:depreciation": "node --test tests/depreciation-engine.test.js",
+    "test:analytics": "node --test tests/financial-analytics-engine.test.js",
+    "test:idp": "node --test tests/idp-ocr-pipeline.test.js",
+    "test:mrp": "node --test tests/mrp-bom-engine.test.js",
+    "test:article141": "node --test tests/article-141-compliance-engine.test.js",
+    "test:crm": "node --test tests/customer-360-engine.test.js",
+    "test:bpm": "node --test tests/bpm-approval-engine.test.js",
+    "test:currency": "node --test tests/multi-currency-engine.test.js",
+    "test:industry": "node --test tests/industry-pack-registry.test.js",
+    "test:regression": "node --test tests/defect-remediation-regression.test.js",
+    "test:adversarial": "node --test tests/adversarial-red-team.test.js"
   },
   "keywords": [
     "finora",
-    "accounting",
     "erp",
+    "accounting",
+    "general-ledger",
+    "double-entry",
     "iran-moadian",
-    "tax-compliance",
-    "sayad-cheque",
-    "payroll",
-    "procurement"
+    "vat",
+    "invoicing",
+    "rls"
   ],
   "author": "Davood Mehraban",
-  "license": "UNLICENSED"
+  "license": "MIT"
 }

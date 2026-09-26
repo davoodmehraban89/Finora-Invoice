@@ -1,1 +1,142 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>فاکتورها | فینورا</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"><link rel="stylesheet" href="assets/css/app.css"><link rel="stylesheet" href="assets/css/mobile.css"></head><body><aside class="sidebar"><div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div><a class="nav-link" href="dashboard.html"><span>نمای کلی</span></a><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a><a class="nav-link active" href="invoices.html"><span>فاکتورها</span></a><a class="nav-link" href="customers.html"><span>اشخاص</span></a><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a><a class="nav-link" href="settings.html"><span>تنظیمات فروشنده</span></a></aside><main class="content"><header class="page-head"><div><div class="eyebrow">فروش • پیگیری</div><h1>فاکتورها و مطالبات</h1><div class="muted">جست‌وجو و کنترل وضعیت صدور و وصول</div></div><a class="btn btn-primary" href="new-invoice.html">+ فاکتور جدید</a></header><section class="card"><div class="form-grid" style="margin-bottom:16px"><div class="field"><label>جست‌وجو</label><input class="input" id="search" placeholder="شماره یا نام مشتری"></div><div class="field"><label>وضعیت سند</label><select class="select" id="status"><option value="">همه</option><option value="draft">پیش‌نویس</option><option value="issued">صادرشده</option><option value="void">باطل‌شده</option></select></div></div><div class="table-wrap"><table class="table"><thead><tr><th>شماره</th><th>مشتری</th><th>صدور/سررسید</th><th>مبلغ کل</th><th>دریافتی</th><th>مانده</th><th>وضعیت</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script src="assets/js/invoice-core.js"></script><script src="assets/js/app.js"></script><script>let invoices=[];function render(){const q=search.value.trim(),s=status.value;const data=invoices.filter(x=>(!s||x.documentStatus===s)&&(!q||(x.invoiceNumber||'').includes(q)||(x.customerName||'').includes(q)));rows.innerHTML=data.map(x=>{const p=FinoraInvoice.documentStatus(x);return `<tr><td><a href="invoice-preview.html?id=${encodeURIComponent(x.id)}${Finora.demo?'&demo=1':''}">${Finora.escape(x.invoiceNumber||'بدون شماره')}</a></td><td>${Finora.escape(x.customerName)}</td><td>${Finora.escape(x.issueDate)}<br><small class="muted">${Finora.escape(x.dueDate)}</small></td><td>${Finora.money(x.total)}</td><td>${Finora.money(x.paidAmount)}</td><td>${Finora.money(p.balance)}</td><td><span class="badge badge-${p.code}">${p.label}</span></td></tr>`}).join('')||'<tr><td colspan="7" class="empty">فاکتوری مطابق فیلتر یافت نشد.</td></tr>'}Finora.requireAuth(async()=>{invoices=await Finora.list('invoices');render();search.oninput=render;status.onchange=render});</script></body></html>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — مدیریت فاکتورها و سامانه مؤدیان</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>⚡ پلتفرم مالی فینورا</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link">📊 پیشخوان اصلی</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور جدید</a></li>
+                        <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+                <li><a href="treasury.html" class="sidebar-link">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link">📑 مدیریت قراردادها</a></li>
+        <li><a href="invoices.html" class="sidebar-link active">🧾 مدیریت فاکتورها</a></li>
+                <li><a href="payroll.html" class="sidebar-link">👥 حقوق و پرسنل (HR)</a></li>
+        <li><a href="customers.html" class="sidebar-link">👥 طرف‌حساب‌ها و مشتریان</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 کالاها و خدمات</a></li>
+        <li><a href="settings.html" class="sidebar-link">⚙️ تنظیمات و مؤدیان</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 style="font-size: 1.25rem;">مدیریت فاکتورهای فروش و وضعیت سامانه مؤدیان</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">پایش وضعیت ارسال الکترونیکی، اسناد دفترکل و رهگیری قانونی</span>
+        </div>
+        <a href="new-invoice.html" class="btn btn-primary">+ صدور فاکتور جدید</a>
+      </header>
+
+      <div class="page-body">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">لیست صورتحساب‌های تجاری</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>شماره فاکتور</th>
+                  <th>خریدار</th>
+                  <th>تاریخ صدور</th>
+                  <th>مبلغ نهایی (ریال)</th>
+                  <th>وضعیت فاکتور</th>
+                  <th>شناسه سند دفترکل</th>
+                  <th>وضعیت مؤدیان</th>
+                  <th>عملیات قانونی</th>
+                </tr>
+              </thead>
+              <tbody id="invoices-list-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Moadian Inspection Modal/Card -->
+        <div id="moadian-modal" class="card" style="display: none; border: 2px solid var(--primary); background: #fdfefe;">
+          <div class="card-header">
+            <h3 class="card-title" id="moadian-modal-title">خروجی الکترونیکی و امضای دیجیتال سامانه مؤدیان</h3>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('moadian-modal').style.display='none';">بستن</button>
+          </div>
+          <pre id="moadian-json-output" style="direction: ltr; text-align: left; background: #0f172a; color: #38bdf8; padding: 1.25rem; border-radius: var(--radius); font-size: 0.85rem; overflow-x: auto; max-height: 400px;"></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const client = new FinoraClient();
+
+      // If no invoices exist in this session, seed a sample posted invoice for instant visibility
+      if (client.getInvoices().length === 0) {
+        const custs = client.getCustomers();
+        const prods = client.getProducts();
+        if (custs.length > 0 && prods.length > 0) {
+          const inv = client.createInvoiceWithLines({
+            invoiceNumber: 'INV-1405-001',
+            customerId: custs[0].id,
+            invoiceDate: '2026-09-25',
+            lines: [{ productId: prods[0].id, quantity: 1, unitPrice: prods[0].base_sale_price }]
+          });
+          client.approveAndPostInvoice(inv.id, 'داوود مهربان');
+        }
+      }
+
+      const tbody = document.getElementById('invoices-list-tbody');
+      const invoices = client.getInvoices();
+
+      tbody.innerHTML = invoices.map(inv => `
+        <tr>
+          <td><strong>${escapeHtml(inv.invoice_number)}</strong></td>
+          <td>${escapeHtml(inv.customer_name)}</td>
+          <td>${inv.invoice_date}</td>
+          <td>${inv.total_final_amount.toLocaleString('fa-IR')}</td>
+          <td><span class="badge ${inv.status === 'posted' ? 'badge-posted' : 'badge-draft'}">${inv.status === 'posted' ? 'قطعی / ثبت‌شده' : 'پیش‌نویس'}</span></td>
+          <td><code>${inv.journal_id || 'ندارد'}</code></td>
+          <td><span class="badge badge-warning">${inv.moadian_status === 'unsubmitted' ? 'آماده ارسال' : 'تأییدشده'}</span></td>
+          <td>
+            <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="viewMoadian('${inv.id}')">مشاهده بسته مؤدیان</button>
+          </td>
+        </tr>
+      `).join('');
+
+      window.viewMoadian = function(invoiceId) {
+        try {
+          const payload = client.exportMoadianPayload(invoiceId);
+          document.getElementById('moadian-modal').style.display = 'block';
+          document.getElementById('moadian-modal-title').textContent = `بسته ارسال سامانه مؤدیان — فاکتور ${payload.header.inno}`;
+          document.getElementById('moadian-json-output').textContent = JSON.stringify(payload, null, 2);
+          window.scrollTo({ top: document.getElementById('moadian-modal').offsetTop - 50, behavior: 'smooth' });
+        } catch (err) {
+          alert('خطا در تولید بسته مؤدیان: ' + err.message);
+        }
+      };
+    });
+  </script>
+</body>
+</html>

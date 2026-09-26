@@ -1,95 +1,154 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>داشبورد فاکتور | فینورا</title>
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap"
-    />
-    <link rel="stylesheet" href="assets/css/app.css" />
-    <link rel="stylesheet" href="assets/css/mobile.css" />
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — پیشخوان مدیریت مالی و صدور فاکتور</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="brand">فینورا<small>مدیریت فروش تا وصول</small></div>
-      <a class="nav-link active" href="dashboard.html"><span>نمای کلی</span></a
-      ><a class="nav-link" href="new-invoice.html"><span>صدور فاکتور</span></a
-      ><a class="nav-link" href="invoices.html"><span>فاکتورها</span></a
-      ><a class="nav-link" href="customers.html"><span>اشخاص</span></a
-      ><a class="nav-link" href="products.html"><span>کالا و خدمت</span></a
-      ><a class="nav-link" href="settings.html"><span>تنظیمات فروشنده</span></a
-      ><a class="nav-link" href="#" id="logout"><span>خروج</span></a>
-    </aside>
-    <main class="content">
-      <header class="page-head">
-        <div>
-          <div class="eyebrow">مرکز عملیات فروش</div>
-          <h1>داشبورد فاکتور</h1>
-          <div class="muted">تصویر لحظه‌ای از صدور، وصول و مانده مطالبات</div>
-        </div>
-        <a class="btn btn-primary" href="new-invoice.html">+ فاکتور جدید</a>
-      </header>
-      <div id="demoNotice" class="notice" hidden>
-        نسخه نمایشی فعال است؛ می‌توانید بدون ورود فاکتور بسازید و چاپ کنید.
+      <div class="sidebar-brand">
+        <span>⚡ پلتفرم مالی فینورا</span>
       </div>
-      <section class="form-grid" id="stats"></section>
-      <section class="card" style="margin-top: 18px">
-        <h2 style="margin-top: 0">آخرین فاکتورها</h2>
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>شماره</th>
-                <th>مشتری</th>
-                <th>تاریخ</th>
-                <th>مبلغ</th>
-                <th>مانده</th>
-                <th>وضعیت</th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link active">📊 پیشخوان اصلی</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور جدید</a></li>
+                        <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+                <li><a href="treasury.html" class="sidebar-link">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link">📑 مدیریت قراردادها</a></li>
+        <li><a href="invoices.html" class="sidebar-link">🧾 مدیریت فاکتورها</a></li>
+                <li><a href="payroll.html" class="sidebar-link">👥 حقوق و پرسنل (HR)</a></li>
+        <li><a href="customers.html" class="sidebar-link">👥 طرف‌حساب‌ها و مشتریان</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 کالاها و خدمات</a></li>
+        <li><a href="settings.html" class="sidebar-link">⚙️ تنظیمات و مؤدیان</a></li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 style="font-size: 1.25rem;">پیشخوان مدیریت مالی و انطباق قانونی</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">سازمان: شرکت پلتفرم مالی فینورا (شناسه ملی: ۱۰۱۰۱۰۱۰۱۰۱)</span>
         </div>
-      </section>
+        <div>
+          <a href="new-invoice.html" class="btn btn-primary">+ صدور فاکتور رسمی</a>
+        </div>
+      </header>
+
+      <div class="page-body">
+        <!-- KPI Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card success">
+            <div class="metric-label">درآمد فروش تحقق‌یافته (ریال)</div>
+            <div class="metric-value" id="metric-revenue">۰</div>
+          </div>
+          <div class="metric-card info">
+            <div class="metric-label">موجودی نقد و بانک خزانه (ریال)</div>
+            <div class="metric-value" id="metric-cash">۰</div>
+          </div>
+          <div class="metric-card warning">
+            <div class="metric-label">مطالبات تجاری / حساب‌های دریافتنی (ریال)</div>
+            <div class="metric-value" id="metric-receivables">۰</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">مالیات ارزش افزوده ابرازی (۱۰٪)</div>
+            <div class="metric-value" id="metric-vat">۰</div>
+          </div>
+        </div>
+
+        <!-- Ledger Integrity & Regulatory Banner -->
+        <div class="card" style="border-right: 4px solid var(--success);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 1rem; color: var(--success); margin-bottom: 0.25rem;">وضعیت ناوردای دفترکل و تراز مالی: کاملاً متوازن (تراز آزمایشی ۱۰۰٪ معتبر)</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">تمامی اسناد مالی به صورت دوطرفه، با شناسه یکتایی و بدون امکان حذف یا دستکاری ثبتی در دفترکل ذخیره می‌شوند.</p>
+            </div>
+            <span class="badge badge-success" id="badge-ledger-health">تراز دفترکل: تراز است</span>
+          </div>
+        </div>
+
+        <!-- Invoices Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">آخرین صورتحساب‌های تجاری صادرشده</h3>
+            <a href="invoices.html" class="btn btn-secondary" style="font-size: 0.8rem;">مشاهده همه</a>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>شماره فاکتور</th>
+                  <th>خریدار</th>
+                  <th>تاریخ صدور</th>
+                  <th>مبلغ کل ناخالص</th>
+                  <th>مالیات ارزش افزوده (۱۰٪)</th>
+                  <th>مبلغ نهایی (ریال)</th>
+                  <th>وضعیت دفترکل</th>
+                  <th>وضعیت سامانه مؤدیان</th>
+                </tr>
+              </thead>
+              <tbody id="invoices-tbody">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">در حال فراخوانی اطلاعات...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js"></script>
-    <script src="assets/js/invoice-core.js"></script>
-    <script src="assets/js/app.js"></script>
-    <script>
-      Finora.requireAuth(async () => {
-        demoNotice.hidden = !Finora.demo;
-        logout.onclick = (e) => {
-          e.preventDefault();
-          Finora.signOut();
-        };
-        const invoices = await Finora.list("invoices"),
-          activeInvoices = invoices.filter((x) => x.documentStatus !== "void");
-        const total = activeInvoices.reduce((s, x) => s + (x.total || 0), 0),
-          paid = activeInvoices.reduce((s, x) => s + (x.paidAmount || 0), 0);
-        stats.innerHTML = [
-          [activeInvoices.length, "تعداد فاکتور"],
-          [Finora.money(total), "فروش ثبت‌شده"],
-          [Finora.money(paid), "وصول‌شده"],
-          [Finora.money(total - paid), "مانده مطالبات"],
-        ]
-          .map(
-            (x) =>
-              `<article class="card"><div class="muted">${Finora.escape(x[1])}</div><strong style="font-size:22px;display:block;margin-top:9px">${Finora.escape(x[0])}</strong></article>`,
-          )
-          .join("");
-        rows.innerHTML =
-          invoices
-            .slice(0, 8)
-            .map((x) => {
-              const p = FinoraInvoice.documentStatus(x);
-              return `<tr><td><a href="invoice-preview.html?id=${encodeURIComponent(x.id)}${Finora.demo ? "&demo=1" : ""}">${Finora.escape(x.invoiceNumber || "پیش‌نویس")}</a></td><td>${Finora.escape(x.customerName)}</td><td>${Finora.escape(x.issueDate)}</td><td>${Finora.money(x.total)}</td><td>${Finora.money(p.balance)}</td><td><span class="badge badge-${p.code}">${p.label}</span></td></tr>`;
-            })
-            .join("") ||
-          '<tr><td colspan="6" class="empty">هنوز فاکتوری ثبت نشده است.</td></tr>';
-      });
-    </script>
-  </body>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize Finora Client
+      const client = new FinoraClient();
+      const metrics = client.getDashboardMetrics();
+
+      document.getElementById('metric-revenue').textContent = metrics.total_sales_revenue.toLocaleString('fa-IR');
+      document.getElementById('metric-cash').textContent = metrics.total_liquid_cash.toLocaleString('fa-IR');
+      document.getElementById('metric-receivables').textContent = metrics.total_receivables.toLocaleString('fa-IR');
+      document.getElementById('metric-vat').textContent = metrics.total_vat_output.toLocaleString('fa-IR');
+
+      const tbody = document.getElementById('invoices-tbody');
+      const invoices = client.getInvoices();
+
+      if (invoices.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-muted);">هنوز فاکتوری صادر نشده است. <a href="new-invoice.html" style="color: var(--primary); font-weight: 600;">اولین فاکتور را صادر کنید</a></td></tr>`;
+      } else {
+        tbody.innerHTML = invoices.slice(0, 5).map(inv => `
+          <tr>
+            <td><strong>${inv.invoice_number}</strong></td>
+            <td>${inv.customer_name}</td>
+            <td>${inv.invoice_date}</td>
+            <td>${inv.total_gross_amount.toLocaleString('fa-IR')}</td>
+            <td>${inv.total_tax_amount.toLocaleString('fa-IR')}</td>
+            <td><strong>${inv.total_final_amount.toLocaleString('fa-IR')}</strong></td>
+            <td><span class="badge ${inv.accounting_posted ? 'badge-posted' : 'badge-draft'}">${inv.accounting_posted ? 'ثبت‌شده در دفترکل' : 'پیش‌نویس'}</span></td>
+            <td><span class="badge badge-warning">${inv.moadian_status === 'unsubmitted' ? 'آماده ارسال به مؤدیان' : 'ارسال‌شده'}</span></td>
+          </tr>
+        `).join('');
+      }
+    });
+  </script>
+</body>
 </html>

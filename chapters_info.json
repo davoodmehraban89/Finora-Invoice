@@ -1,0 +1,1302 @@
+{
+  "1": {
+    "title": "معرفی محصول Finora",
+    "domain": "Product Vision",
+    "v1": true
+  },
+  "2": {
+    "title": "اهداف و فلسفه ساخت",
+    "domain": "Product Philosophy",
+    "v1": true
+  },
+  "3": {
+    "title": "مدل مدیریت پروژه",
+    "domain": "Project Governance",
+    "v1": true
+  },
+  "4": {
+    "title": "اصول معماری نرم‌افزار Finora",
+    "domain": "Architecture Principles",
+    "v1": true
+  },
+  "5": {
+    "title": "معماری کلان Finora",
+    "domain": "Platform Architecture",
+    "v1": true
+  },
+  "6": {
+    "title": "طراحی کامل منوها و ساختار Navigation",
+    "domain": "Navigation & UX",
+    "v1": true
+  },
+  "7": {
+    "title": "ماژول داشبورد (Dashboard)",
+    "domain": "Executive Dashboard",
+    "v1": true
+  },
+  "8": {
+    "title": "ماژول مدیریت کاربران و دسترسی‌ها",
+    "domain": "IAM & RBAC",
+    "v1": true
+  },
+  "9": {
+    "title": "تنظیمات سازمان (Organization Settings)",
+    "domain": "Multi-Tenant Org",
+    "v1": true
+  },
+  "10": {
+    "title": "اشخاص و طرف حساب‌ها",
+    "domain": "Parties & Counterparties",
+    "v1": true
+  },
+  "11": {
+    "title": "ماژول کالا و خدمات (Product & Service Management)",
+    "domain": "Catalog & Products",
+    "v1": true
+  },
+  "12": {
+    "title": "ماژول انبار (Inventory Management)",
+    "domain": "Inventory Core",
+    "v1": true
+  },
+  "13": {
+    "title": "ماژول فروش (Sales Management)",
+    "domain": "Sales Management",
+    "v1": true
+  },
+  "14": {
+    "title": "موتور فاکتور (Invoice Engine)",
+    "domain": "Invoicing Engine",
+    "v1": true
+  },
+  "15": {
+    "title": "مدیریت اسناد و هوش مصنوعی پردازش اسناد",
+    "domain": "Document AI & OCR",
+    "v1": true
+  },
+  "16": {
+    "title": "موتور قوانین کسب‌وکار، مالیات و ارزش افزوده",
+    "domain": "Business Rules & Tax",
+    "v1": true
+  },
+  "17": {
+    "title": "Taxpayer System & Electronic Invoice Integration",
+    "domain": "Iran Moadian E-Invoicing",
+    "v1": true
+  },
+  "18": {
+    "title": "Government Procurement, Tendering & SETAD Integration",
+    "domain": "Government Procurement",
+    "v1": true
+  },
+  "19": {
+    "title": "مدیریت قراردادها، تعهدات، دریافت‌ها و پرداخت‌های عملیاتی",
+    "domain": "Contracts & Operational Finance",
+    "v1": true
+  },
+  "20": {
+    "title": "خزانه‌داری، بانک، چک، نقدینگی و موتور جریان وجوه",
+    "domain": "Treasury & Cash Flow",
+    "v1": true
+  },
+  "21": {
+    "title": "حسابداری، دفتر کل، کدینگ حساب‌ها و موتور ثبت مالی",
+    "domain": "General Ledger & Accounting",
+    "v1": true
+  },
+  "22": {
+    "title": "مدیریت کالا، انبار، زنجیره تأمین و موتور موجودی",
+    "domain": "Supply Chain & Inventory",
+    "v1": true
+  },
+  "23": {
+    "title": "مدیریت خرید، تأمین‌کنندگان، سفارش خرید و زنجیره تأمین",
+    "domain": "Procurement Core",
+    "v1": true
+  },
+  "24": {
+    "title": "مدیریت مشتری، CRM، فروش و موتور ارتباط با مشتری",
+    "domain": "CRM & Sales Intelligence",
+    "v1": true
+  },
+  "25": {
+    "title": "هوش مصنوعی Finora AI، دستیار سازمانی و موتور تصمیم‌یار هوشمند",
+    "domain": "AI Assistant & Copilot",
+    "v1": true
+  },
+  "26": {
+    "title": "داشبورد مدیریتی، هوش تجاری، گزارش‌ساز و مرکز تحلیل سازمانی",
+    "domain": "BI & Reporting",
+    "v1": true
+  },
+  "27": {
+    "title": "امنیت سازمانی، مدیریت کاربران، دسترسی‌ها، Audit و معماری Enterprise Security",
+    "domain": "Enterprise Security & Audit",
+    "v1": true
+  },
+  "28": {
+    "title": "معماری فنی نهایی Finora",
+    "domain": "Technical Architecture",
+    "v1": true
+  },
+  "29": {
+    "title": "طراحی تجربه کاربری کامل Finora",
+    "domain": "UX/UI Design System",
+    "v1": true
+  },
+  "30": {
+    "title": "برنامه اجرایی توسعه Finora، نقشه راه، مدیریت پروژه و تقسیم وظایف تیم",
+    "domain": "Delivery Strategy & Roadmap",
+    "v1": true
+  },
+  "31": {
+    "title": "موتور مالیاتی ایران، سامانه مؤدیان، ارزش افزوده و زیرساخت اتصال به دولت الکترونیک",
+    "domain": "Iran Tax Compliance",
+    "v1": true
+  },
+  "32": {
+    "title": "مدیریت اسناد، بایگانی سازمانی، گردش مکاتبات و امضای دیجیتال",
+    "domain": "DMS & e-Signature",
+    "v1": true
+  },
+  "33": {
+    "title": "خزانه‌داری، بانک، چک، دریافت، پرداخت و مدیریت هوشمند نقدینگی",
+    "domain": "Treasury & Liquidity",
+    "v1": true
+  },
+  "34": {
+    "title": "مدیریت چرخه عمر قراردادها، تعهدات حقوقی، کنترل ریسک و هوش قرارداد",
+    "domain": "CLM & Legal Ops",
+    "v1": true
+  },
+  "35": {
+    "title": "مدیریت منابع انسانی، کارکنان، حقوق و دستمزد، حضور و غیاب و پرتال کارکنان",
+    "domain": "HRM & Payroll",
+    "v1": false
+  },
+  "36": {
+    "title": "مدیریت فروش، CRM پیشرفته، مشتری ۳۶۰ درجه، قیف فروش و موتور رشد درآمد",
+    "domain": "Advanced CRM",
+    "v1": true
+  },
+  "37": {
+    "title": "مدیریت خرید، تأمین‌کنندگان، تدارکات، مناقصه، سفارش خرید و هوش تأمین",
+    "domain": "Advanced Procurement",
+    "v1": true
+  },
+  "38": {
+    "title": "مدیریت انبار، زنجیره تأمین، موجودی، ردیابی کالا، لجستیک و بهینه‌سازی هوشمند موجودی",
+    "domain": "Advanced WMS",
+    "v1": true
+  },
+  "39": {
+    "title": "مدیریت تولید، برنامه‌ریزی مواد، BOM، کنترل عملیات، هزینه‌یابی تولید و سیستم اجرایی تولید",
+    "domain": "Manufacturing & MRP",
+    "v1": false
+  },
+  "40": {
+    "title": "هوش تجاری، داشبوردهای مدیریتی، انبار داده، KPI، گزارش‌ساز و مرکز تصمیم‌گیری مدیران",
+    "domain": "Enterprise BI & DWH",
+    "v1": true
+  },
+  "41": {
+    "title": "معماری هوش مصنوعی Finora، دستیار سازمانی، Agentها، RAG، اتوماسیون هوشمند و نسل آینده ERP",
+    "domain": "Enterprise AI & RAG",
+    "v1": true
+  },
+  "42": {
+    "title": "معماری فنی نهایی Finora، انتخاب تکنولوژی، Backend، Frontend، Database، API، امنیت، DevOps و زیرساخت Cloud",
+    "domain": "Cloud Infrastructure",
+    "v1": true
+  },
+  "43": {
+    "title": "طراحی تجربه کاربری نهایی، رابط کاربری، Design System، Prototype و معماری صفحات",
+    "domain": "Design System",
+    "v1": true
+  },
+  "44": {
+    "title": "برنامه اجرایی ساخت Finora، Roadmap توسعه، MVP، مدیریت پروژه، تقسیم وظایف Codex و Jules، GitHub Workflow و فرآیند تحویل محصول",
+    "domain": "Execution Governance",
+    "v1": true
+  },
+  "45": {
+    "title": "طراحی اجرایی هسته مالی و حسابداری Finora",
+    "domain": "Financial Core",
+    "v1": true
+  },
+  "46": {
+    "title": "موتور انطباق مالیاتی ایران، سامانه مودیان، صورتحساب الکترونیکی، ارزش افزوده، کلیدهای امنیتی و کنترل‌های قانونی",
+    "domain": "Iran Moadian Engine",
+    "v1": true
+  },
+  "47": {
+    "title": "مدیریت اسناد سازمانی، آرشیو هوشمند، OCR، ورود PDF و Excel، استخراج اطلاعات با هوش مصنوعی و گردش اسناد",
+    "domain": "IDP & OCR Engine",
+    "v1": true
+  },
+  "48": {
+    "title": "موتور گردش کار سازمانی، اعلان‌ها، کارتابل کاربران، تأییدها، وظایف و اتوماسیون فرآیندها",
+    "domain": "Workflow & BPM",
+    "v1": true
+  },
+  "49": {
+    "title": "مدیریت منابع انسانی، پرسنل، حقوق و دستمزد، بیمه، مالیات حقوق، حضور و غیاب، ارزیابی عملکرد و پرتال کارکنان",
+    "domain": "HCM & Payroll",
+    "v1": false
+  },
+  "50": {
+    "title": "مدیریت ارتباط با مشتریان، فروش هوشمند، بازاریابی، خدمات پس از فروش، تیکتینگ و دستیار فروش هوشمند",
+    "domain": "CRM 360",
+    "v1": true
+  },
+  "51": {
+    "title": "مدیریت خرید و زنجیره تأمین، تأمین‌کنندگان، مناقصه، سفارش خرید، کنترل هزینه و هوش مصنوعی تأمین",
+    "domain": "Procurement Intelligence",
+    "v1": true
+  },
+  "52": {
+    "title": "مدیریت قراردادها، چرخه عمر قرارداد، تعهدات، ریسک حقوقی، الحاقیه‌ها و هوش مصنوعی تحلیل قرارداد",
+    "domain": "Contract Intelligence",
+    "v1": true
+  },
+  "53": {
+    "title": "مدیریت پروژه، کنترل هزینه، برنامه‌ریزی منابع، صورت‌وضعیت، سودآوری پروژه و هوش مصنوعی مدیریت پروژه",
+    "domain": "Project Controls",
+    "v1": false
+  },
+  "54": {
+    "title": "مدیریت تولید، برنامه‌ریزی مواد، BOM، MRP، ظرفیت تولید، کنترل کیفیت، هزینه‌یابی تولید و هوش مصنوعی تولید",
+    "domain": "Production Execution",
+    "v1": false
+  },
+  "55": {
+    "title": "مدیریت انبار و لجستیک پیشرفته، کنترل موجودی، بارکد، RFID، سریال، بچ، مکان‌یابی و هوش مصنوعی موجودی",
+    "domain": "Advanced Logistics",
+    "v1": true
+  },
+  "56": {
+    "title": "هوش تجاری، داشبوردهای مدیریتی، انبار داده، KPI، گزارش‌ساز، تحلیل پیش‌بینانه و مرکز تصمیم‌گیری سازمان",
+    "domain": "Executive Intelligence",
+    "v1": true
+  },
+  "57": {
+    "title": "معماری امنیت سازمانی، مدیریت هویت، کنترل دسترسی، رمزنگاری، Audit، امنیت API و حفاظت از داده‌ها",
+    "domain": "Security Architecture",
+    "v1": true
+  },
+  "58": {
+    "title": "معماری فنی نهایی Finora، انتخاب تکنولوژی، زیرساخت Production، Cloud، DevOps، CI/CD، Container، Kubernetes و استاندارد توسعه",
+    "domain": "Production Engineering",
+    "v1": true
+  },
+  "59": {
+    "title": "طراحی تجربه کاربری، سیستم طراحی، رابط کاربری، منوهای نهایی، صفحات نرم‌افزار، Wireframe و استاندارد UX/UI",
+    "domain": "Design System Standard",
+    "v1": true
+  },
+  "60": {
+    "title": "برنامه اجرایی ساخت Finora، Roadmap توسعه، MVP، مدیریت تیم، Sprintها، GitHub Workflow، نقش Codex، Jules و مسیر رسیدن به محصول واقعی",
+    "domain": "Sprint Governance",
+    "v1": true
+  },
+  "61": {
+    "title": "طراحی دیتامدل جامع Finora، استاندارد نام‌گذاری، Master Data Management، Entity Relationship و معماری پایگاه داده Enterprise",
+    "domain": "Data Architecture & MDM",
+    "v1": true
+  },
+  "62": {
+    "title": "موتور مالی جامع Finora، حسابداری چندشرکتی، دفتر کل، خزانه، اسناد مالی، بودجه، کنترل داخلی، بهای تمام‌شده و یکپارچگی مالیاتی",
+    "domain": "Comprehensive Finance",
+    "v1": true
+  },
+  "63": {
+    "title": "موتور قوانین مالیاتی ایران، ارزش افزوده، سامانه مودیان، صورتحساب الکترونیکی، Tax Engine و هوش مالیاتی",
+    "domain": "Tax Engine & Moadian",
+    "v1": true
+  },
+  "64": {
+    "title": "مدیریت اسناد سازمانی، آرشیو دیجیتال، OCR، پردازش PDF و Excel، استخراج هوشمند اطلاعات و اتصال اسناد به فرآیندهای ERP",
+    "domain": "Document Integration",
+    "v1": true
+  },
+  "65": {
+    "title": "موتور گردش کار سازمانی، BPM، Approval Engine، فرم‌ساز بدون کدنویسی، اتوماسیون فرآیندها و مدیریت درخواست‌ها",
+    "domain": "BPM & Approval Engine",
+    "v1": true
+  },
+  "66": {
+    "title": "مدیریت منابع انسانی پیشرفته، پرونده پرسنلی، استخدام، ارزیابی عملکرد، حضور و غیاب، حقوق و دستمزد، بیمه، مالیات حقوق و هوش مصنوعی منابع انسانی",
+    "domain": "Advanced HCM",
+    "v1": false
+  },
+  "67": {
+    "title": "مدیریت ارتباط با مشتری، فروش، بازاریابی، قیف فروش، خدمات پس از فروش، باشگاه مشتریان و هوش مصنوعی فروش",
+    "domain": "Customer Lifecycle",
+    "v1": true
+  },
+  "68": {
+    "title": "مدیریت خرید، تأمین زنجیره تأمین، تأمین‌کنندگان، درخواست خرید، مناقصه، سفارش خرید، ارزیابی تأمین‌کننده و هوش مصنوعی تأمین",
+    "domain": "Supplier Lifecycle",
+    "v1": true
+  },
+  "69": {
+    "title": "مدیریت انبار، لجستیک، موجودی، ردیابی کالا، بارکد، سریال، بچ، انبارگردانی، حمل‌ونقل و هوش مصنوعی موجودی",
+    "domain": "Logistics & Barcoding",
+    "v1": true
+  },
+  "70": {
+    "title": "مدیریت تولید و برنامه‌ریزی کارخانه، BOM، MRP، دستور ساخت، کنترل تولید، کیفیت، نگهداری ماشین‌آلات و هوش مصنوعی تولید",
+    "domain": "Smart Factory & MRP",
+    "v1": false
+  },
+  "71": {
+    "title": "مدیریت پروژه سازمانی، کنترل هزینه، زمان‌بندی، منابع، قرارداد پروژه، پیمانکاری، صورت‌وضعیت، EPM و هوش مصنوعی پروژه",
+    "domain": "EPM Platform",
+    "v1": false
+  },
+  "72": {
+    "title": "مدیریت چرخه عمر قراردادها، حقوقی، تعهدات، الحاقیه‌ها، تمدید، SLA، ریسک قراردادی و هوش مصنوعی قرارداد",
+    "domain": "CLM Platform",
+    "v1": true
+  },
+  "73": {
+    "title": "هوش تجاری سازمانی، انبار داده، داشبوردهای مدیریتی، KPI Engine، گزارش‌ساز، تحلیل پیشرفته و هوش تصمیم‌گیری",
+    "domain": "Enterprise DWH & BI",
+    "v1": true
+  },
+  "74": {
+    "title": "امنیت سازمانی، مدیریت کاربران، نقش‌ها، دسترسی‌ها، SSO، رمزنگاری، Audit، امنیت داده و چارچوب امنیت سایبری",
+    "domain": "SSO & Cyber Security",
+    "v1": true
+  },
+  "75": {
+    "title": "معماری فنی نهایی Finora، Microservices، API Gateway، Event Driven Architecture، طراحی پایگاه داده، Cloud/On-Premise Deployment و DevOps Platform",
+    "domain": "Event Driven Cloud",
+    "v1": true
+  },
+  "76": {
+    "title": "تجربه کاربری، Design System، رابط کاربری Enterprise، داشبوردها، Mobile UX، دسترسی نقش‌محور و طراحی بصری کامل Finora",
+    "domain": "Enterprise Visual Design",
+    "v1": true
+  },
+  "77": {
+    "title": "تست، کنترل کیفیت نرم‌افزار، QA Framework، تست خودکار، تست امنیت، تست کارایی، UAT و فرآیند انتشار محصول",
+    "domain": "QA & Automated Testing",
+    "v1": true
+  },
+  "78": {
+    "title": "استقرار سازمانی، مهاجرت داده، Onboarding مشتری، آموزش کاربران، پشتیبانی، SLA خدمات، Customer Success و عملیات پس از فروش",
+    "domain": "Data Migration & Rollout",
+    "v1": true
+  },
+  "79": {
+    "title": "مدیریت محصول، Roadmap، Feature Management، مدل قیمت‌گذاری، License، Marketplace، اکوسیستم شرکا و هوش محصول",
+    "domain": "Product Lifecycle",
+    "v1": true
+  },
+  "80": {
+    "title": "مدل کسب‌وکار، استراتژی درآمد، فروش Enterprise، کانال‌های توزیع، بازاریابی، قراردادهای SaaS، مالی محصول و Growth Engine",
+    "domain": "SaaS Business Model",
+    "v1": true
+  },
+  "81": {
+    "title": "استانداردهای صنعتی، Compliance، حاکمیت سازمانی، کنترل داخلی، ممیزی، استانداردهای مالی و آمادگی برای بازارهای جهانی",
+    "domain": "GRC & Standards",
+    "v1": true
+  },
+  "82": {
+    "title": "مدیریت داده سازمانی، Master Data Management، حاکمیت داده، کیفیت داده، Metadata، Data Lineage و هوش داده",
+    "domain": "Data Governance & MDM",
+    "v1": true
+  },
+  "83": {
+    "title": "اتوماسیون فرآیندهای سازمانی، Workflow Engine، مدیریت فرآیند کسب‌وکار، قوانین سازمانی، Approval Engine و Process Intelligence",
+    "domain": "BPM Automation",
+    "v1": true
+  },
+  "84": {
+    "title": "مدیریت ارتباطات سازمانی، همکاری تیمی، پیام‌رسان داخلی، جلسات، تقویم سازمانی، اعلان‌ها، اشتراک دانش و محیط کار دیجیتال",
+    "domain": "Digital Workplace",
+    "v1": false
+  },
+  "85": {
+    "title": "مدیریت هوش مصنوعی سازمانی، AI Platform، مدل‌ها، Agentها، RAG، Vector Database، AI Governance، Prompt Management و AI Operating System",
+    "domain": "AI Platform & MLOps",
+    "v1": true
+  },
+  "86": {
+    "title": "معماری جهانی Finora، Localization، چندارزی، چندکشوری، مالیات بین‌المللی، زبان‌ها، استانداردهای جهانی و آمادگی Enterprise Global",
+    "domain": "Globalization & Multicurrency",
+    "v1": false
+  },
+  "87": {
+    "title": "مدیریت زیرساخت ابری، Cloud Native Architecture، Kubernetes، High Availability، Disaster Recovery، Observability و عملیات پلتفرم",
+    "domain": "Cloud Infrastructure",
+    "v1": true
+  },
+  "88": {
+    "title": "اکوسیستم توسعه‌دهندگان، API Marketplace، SDK، Extension Framework، Webhook، Integration Hub و Developer Platform",
+    "domain": "Developer Platform",
+    "v1": false
+  },
+  "89": {
+    "title": "مدیریت صنعت‌ها، Industry Cloud، راهکارهای عمودی، Templateهای تخصصی، موتور پیکربندی صنعت و بسته‌های Enterprise",
+    "domain": "Industry Clouds Framework",
+    "v1": false
+  },
+  "90": {
+    "title": "مدیریت تجربه کاربر، UX Platform، Design System، Personalization، Accessibility، Mobile Experience و طراحی انسان‌محور سازمانی",
+    "domain": "Inclusive UX",
+    "v1": true
+  },
+  "91": {
+    "title": "امنیت نسل سازمانی، Zero Trust Architecture، Identity، IAM، Privileged Access، Data Protection، Threat Intelligence و عملیات امنیت سایبری",
+    "domain": "Zero Trust IAM",
+    "v1": true
+  },
+  "92": {
+    "title": "مدیریت مالی خود Finora، ERP داخلی شرکت، حسابداری SaaS، Billing، Revenue Recognition، Cost Management و Financial Intelligence",
+    "domain": "SaaS Financial Ops",
+    "v1": false
+  },
+  "93": {
+    "title": "مدیریت سرمایه انسانی Finora، HR Platform، Talent Management، Performance، Learning، Compensation، Workforce Analytics و AI HR",
+    "domain": "Talent Intelligence",
+    "v1": false
+  },
+  "94": {
+    "title": "مدیریت زنجیره تأمین، Procurement، Vendor Management، Sourcing، Purchase Automation، Supplier Intelligence و AI Supply Chain",
+    "domain": "Strategic Sourcing",
+    "v1": true
+  },
+  "95": {
+    "title": "مدیریت تولید، Manufacturing Execution System، برنامه‌ریزی تولید، MRP، کیفیت، نگهداری تجهیزات، کارخانه هوشمند و Industrial AI",
+    "domain": "Industrial Operations",
+    "v1": false
+  },
+  "96": {
+    "title": "مدیریت پروژه و دارایی‌های سازمانی، Project Portfolio Management، PMO، کنترل هزینه پروژه، منابع، ریسک، زمان‌بندی و AI Project Intelligence",
+    "domain": "PPM & PMO",
+    "v1": false
+  },
+  "97": {
+    "title": "مدیریت دارایی‌های سازمانی، Enterprise Asset Management، نگهداری، چرخه عمر دارایی، IoT Asset Monitoring و AI Asset Intelligence",
+    "domain": "EAM & Asset Twin",
+    "v1": false
+  },
+  "98": {
+    "title": "مدیریت مشتری، Customer Experience Platform، CRM نسل جدید، Customer 360، فروش هوشمند، Marketing Automation و AI Customer Intelligence",
+    "domain": "Customer Experience",
+    "v1": true
+  },
+  "99": {
+    "title": "مدیریت قراردادها، Contract Lifecycle Management، مذاکره، تعهدات، ریسک حقوقی، امضای دیجیتال و AI Contract Intelligence",
+    "domain": "Contract Intelligence",
+    "v1": true
+  },
+  "100": {
+    "title": "مدیریت دانش سازمانی پیشرفته، Enterprise Knowledge Graph، Semantic Search، Knowledge Intelligence، AI Memory و Organizational Intelligence",
+    "domain": "Knowledge Graph",
+    "v1": false
+  },
+  "101": {
+    "title": "مدیریت دولت الکترونیک و سازمان‌های عمومی، Citizen Platform، خدمات دیجیتال، Compliance دولتی، بودجه عمومی و Government Intelligence",
+    "domain": "Public Sector Platform",
+    "v1": false
+  },
+  "102": {
+    "title": "مدیریت سلامت دیجیتال، Healthcare Platform، پرونده الکترونیک سلامت، بیمار، پزشک، بیمارستان، بیمه درمانی، AI پزشکی و Clinical Intelligence",
+    "domain": "Healthcare Platform",
+    "v1": false
+  },
+  "103": {
+    "title": "مدیریت آموزش و دانشگاه دیجیتال، Learning Experience Platform، مدرسه هوشمند، دانشگاه، محتوای آموزشی، ارزیابی، AI Tutor و Education Intelligence",
+    "domain": "Education Platform",
+    "v1": false
+  },
+  "104": {
+    "title": "مدیریت رسانه، محتوا، ارتباطات سازمانی، Digital Experience، Content Intelligence، Media Platform و AI Content Generation",
+    "domain": "Media Platform",
+    "v1": false
+  },
+  "105": {
+    "title": "مدیریت همکاری سازمانی، Digital Workplace، Team Collaboration، Meeting Intelligence، Enterprise Messaging، Remote Work و AI Collaboration",
+    "domain": "Digital Workplace",
+    "v1": false
+  },
+  "106": {
+    "title": "مدیریت داده سازمانی، Data Governance، Master Data Management، Data Quality، Data Marketplace، Data Fabric و Enterprise Data Intelligence",
+    "domain": "Data Mesh & Fabric",
+    "v1": true
+  },
+  "107": {
+    "title": "هوش تجاری سازمانی، Business Intelligence، Executive Dashboard، KPI Engine، Decision Intelligence، Predictive Analytics و AI Business Analyst",
+    "domain": "Decision Intelligence",
+    "v1": true
+  },
+  "108": {
+    "title": "مدیریت هوش مصنوعی سازمانی، AI Platform، Model Governance، AI Agents، Machine Learning Operations، Generative AI و Autonomous Enterprise",
+    "domain": "AI Operations & Agents",
+    "v1": true
+  },
+  "109": {
+    "title": "امنیت سایبری سازمانی، Zero Trust Architecture، Identity Security، SIEM، SOC، Threat Intelligence، Cyber AI و Enterprise Security Operating System",
+    "domain": "Cyber Defense & SIEM",
+    "v1": true
+  },
+  "110": {
+    "title": "زیرساخت ابری سازمانی، Cloud Platform، Hybrid Cloud، Kubernetes، Infrastructure Automation، DevOps، SRE و Cloud Intelligence",
+    "domain": "Cloud Automation & SRE",
+    "v1": true
+  },
+  "111": {
+    "title": "معماری نرم‌افزار Enterprise، Microservices، API Gateway، Service Mesh، Event Driven Architecture، Integration Platform و Application Intelligence",
+    "domain": "Application Architecture",
+    "v1": true
+  },
+  "112": {
+    "title": "تجربه کاربری سازمانی، Design System، Omnichannel Experience، Frontend Architecture، Accessibility، Personalization و AI UX Intelligence",
+    "domain": "Omnichannel UX",
+    "v1": true
+  },
+  "113": {
+    "title": "مدیریت تست سازمانی، Quality Engineering، Test Automation، Performance Testing، Security Testing، AI Testing و Continuous Quality Platform",
+    "domain": "Quality Engineering",
+    "v1": true
+  },
+  "114": {
+    "title": "مدیریت محصول سازمانی، Product Management Platform، Roadmap، Backlog، Discovery، Product Analytics، Experimentation و AI Product Manager",
+    "domain": "Product Intelligence",
+    "v1": true
+  },
+  "115": {
+    "title": "مدیریت پروژه و برنامه‌های سازمانی، Enterprise Project Management، Portfolio Management، PMO، Agile، Resource Planning، Risk Management و AI Project Manager",
+    "domain": "Portfolio Intelligence",
+    "v1": false
+  },
+  "116": {
+    "title": "مدیریت قراردادها و حقوق سازمانی، Contract Lifecycle Management، Legal Operations، Compliance، AI Legal Assistant و Enterprise Legal Intelligence",
+    "domain": "Legal Operations",
+    "v1": true
+  },
+  "117": {
+    "title": "مدیریت زنجیره تأمین سازمانی، Supply Chain Intelligence، Procurement، Inventory، Logistics، Demand Planning، Digital Twin و AI Supply Chain",
+    "domain": "Supply Chain Twin",
+    "v1": true
+  },
+  "118": {
+    "title": "مدیریت تولید و عملیات صنعتی، Smart Manufacturing، MES، کارخانه هوشمند، IoT صنعتی، Digital Twin، Quality Manufacturing و AI Operations",
+    "domain": "Smart Manufacturing",
+    "v1": false
+  },
+  "119": {
+    "title": "مدیریت انرژی و پایداری سازمانی، Energy Intelligence، ESG، Carbon Management، Sustainability Analytics، Green Operations و AI Sustainability",
+    "domain": "ESG & Carbon",
+    "v1": false
+  },
+  "120": {
+    "title": "مدیریت نوآوری سازمانی، Innovation Management، Idea Platform، R&D Intelligence، Research Management، Patent Intelligence و AI Innovation Engine",
+    "domain": "Innovation Intelligence",
+    "v1": false
+  },
+  "121": {
+    "title": "مدیریت دانش سازمانی، Knowledge Management، Enterprise Search، Knowledge Graph، Document Intelligence، Learning Organization و AI Knowledge Assistant",
+    "domain": "Knowledge Management",
+    "v1": false
+  },
+  "122": {
+    "title": "آموزش سازمانی، Learning Management System، Skill Intelligence، Talent Development، Certification، AI Learning Assistant و Enterprise Learning Intelligence",
+    "domain": "Corporate Learning",
+    "v1": false
+  },
+  "123": {
+    "title": "مدیریت ارتباط با مشتری نسل آینده، Customer Experience، CRM Intelligence، Customer Data Platform، Customer Journey، AI Customer Agent و Hyper-Personalization",
+    "domain": "Hyper-Personalized CRM",
+    "v1": true
+  },
+  "124": {
+    "title": "مدیریت مالی نسل آینده، Intelligent Finance، Autonomous Accounting، Treasury Intelligence، FP&A، Tax Intelligence و AI CFO",
+    "domain": "Intelligent Finance",
+    "v1": true
+  },
+  "125": {
+    "title": "مدیریت منابع انسانی نسل آینده، Intelligent HR، Workforce Analytics، Talent Intelligence، Employee Experience، Payroll، AI HR Assistant و Future Of Work",
+    "domain": "Intelligent Workforce",
+    "v1": false
+  },
+  "126": {
+    "title": "مدیریت دولت و حکمرانی سازمانی، Enterprise Governance، Policy Management، Decision Intelligence، Regulatory Intelligence، Risk Governance و AI Governance",
+    "domain": "Policy & Governance",
+    "v1": true
+  },
+  "127": {
+    "title": "مدیریت امنیت سازمانی نسل آینده، Cyber Security Intelligence، Zero Trust، Identity Security، Threat Intelligence، SOC، AI Security و Autonomous Defense",
+    "domain": "Autonomous Defense",
+    "v1": true
+  },
+  "128": {
+    "title": "مدیریت زیرساخت سازمانی نسل آینده، Cloud Intelligence، Hybrid Cloud، Infrastructure Automation، DevOps، SRE، Observability و AI Infrastructure Operations",
+    "domain": "Infrastructure Intelligence",
+    "v1": true
+  },
+  "129": {
+    "title": "مدیریت داده سازمانی نسل آینده، Data Intelligence، Data Governance، Data Lakehouse، Master Data Management، Data Quality، Data Fabric و AI Data Platform",
+    "domain": "Data Intelligence Layer",
+    "v1": true
+  },
+  "130": {
+    "title": "هوش تجاری نسل آینده، Business Intelligence، Analytics Platform، Executive Dashboard، Predictive Analytics، Decision Intelligence و AI Analytics",
+    "domain": "Predictive Analytics",
+    "v1": true
+  },
+  "131": {
+    "title": "مدیریت هوش مصنوعی سازمانی، Enterprise AI Platform، AI Agents، Model Management، MLOps، AI Governance، Generative AI و Autonomous Enterprise",
+    "domain": "Enterprise AI Platform",
+    "v1": true
+  },
+  "132": {
+    "title": "معماری نهایی Autonomous Enterprise، Enterprise Operating System، Digital Enterprise Brain، AI Organization، Agent Economy و Future Enterprise Architecture",
+    "domain": "Autonomous Enterprise OS",
+    "v1": false
+  },
+  "133": {
+    "title": "برنامه اجرایی ساخت Finora، Roadmap، Phasing، Engineering Strategy، تیم‌ها، اولویت‌بندی توسعه، معماری پیاده‌سازی و مسیر تبدیل Blueprint به محصول واقعی",
+    "domain": "Engineering Strategy",
+    "v1": true
+  },
+  "134": {
+    "title": "مدل کسب‌وکار Finora، Enterprise SaaS Strategy، Pricing Model، Marketplace، Partner Ecosystem، Go-To-Market و مسیر تبدیل به شرکت جهانی",
+    "domain": "SaaS & GTM Strategy",
+    "v1": true
+  },
+  "135": {
+    "title": "استانداردهای نهایی Finora، Enterprise Architecture Governance، Reference Architecture، Compliance Framework، Certification، Maturity Model و Vision 2035",
+    "domain": "Architecture Standards",
+    "v1": true
+  },
+  "136": {
+    "title": "شروع برنامه عملیاتی ساخت Finora، تشکیل تیم Core، ایجاد Repository، تعریف Backlog، Sprint Framework، Engineering Workflow و اولین Release عملیاتی",
+    "domain": "Launch Blueprint",
+    "v1": true
+  },
+  "137": {
+    "title": "طراحی دقیق Platform Foundation، Multi-Tenant Architecture، Identity Core، API Gateway، Event Bus، Service Mesh، Security Layer و اولین معماری اجرایی Finora",
+    "domain": "Platform Foundation",
+    "v1": true
+  },
+  "138": {
+    "title": "طراحی Data Foundation اجرایی، Database Strategy، Data Lakehouse اولیه، Event Storage، Master Data Base، Data Governance و AI Ready Data Layer",
+    "domain": "Data Foundation Core",
+    "v1": true
+  },
+  "139": {
+    "title": "طراحی Security Foundation اجرایی، Zero Trust Implementation، IAM پیشرفته، Policy Engine، Audit Platform، SIEM، Secrets Management و Cyber Defense Base",
+    "domain": "Security Foundation Core",
+    "v1": true
+  },
+  "140": {
+    "title": "طراحی AI Foundation اجرایی، Enterprise AI Runtime، Model Gateway، Agent Framework، Prompt Engineering Platform، RAG، AI Governance و اولین AI Services",
+    "domain": "AI Foundation Core",
+    "v1": true
+  },
+  "141": {
+    "title": "طراحی اولین Business Domain اجرایی، Finance Core Implementation، Accounting Engine، Ledger Service، Transaction Platform، Financial Intelligence و اتصال Finance به AI Layer",
+    "domain": "Finance Core Execution",
+    "v1": true
+  },
+  "142": {
+    "title": "طراحی Customer Intelligence Core، CRM Engine، Customer 360، Sales Platform، Marketing Intelligence، Customer AI Agent و اتصال CRM به Finance و Analytics",
+    "domain": "Customer Core Execution",
+    "v1": true
+  },
+  "143": {
+    "title": "طراحی Workforce Intelligence Core، HR Platform، Employee 360، Talent Management، Payroll، Learning Intelligence، Workforce AI Agent و اتصال منابع انسانی به سازمان هوشمند",
+    "domain": "Workforce Core Execution",
+    "v1": false
+  },
+  "144": {
+    "title": "طراحی Supply Chain Intelligence Core، Procurement Platform، Supplier 360، Inventory Intelligence، Logistics Optimization، Supply Chain AI Agent و اتصال زنجیره تأمین به Finance و Operations",
+    "domain": "Supply Chain Core Execution",
+    "v1": true
+  },
+  "145": {
+    "title": "طراحی Manufacturing Intelligence Core، Production Platform، MES، Quality Intelligence، Maintenance AI، Digital Factory، IoT Integration و اتصال تولید به Supply Chain و Finance",
+    "domain": "Manufacturing Core Execution",
+    "v1": false
+  },
+  "146": {
+    "title": "طراحی Asset Intelligence Core، Enterprise Asset Management، Equipment Lifecycle، Predictive Maintenance، Asset Digital Twin و Asset AI Agent",
+    "domain": "Asset Core Execution",
+    "v1": false
+  },
+  "147": {
+    "title": "طراحی Project & Portfolio Intelligence Core، Project Management Platform، Resource Planning، Portfolio Management، Project Risk Intelligence و Project AI Agent",
+    "domain": "Project Core Execution",
+    "v1": false
+  },
+  "148": {
+    "title": "طراحی Enterprise Workflow & Automation Core، BPM Engine، Process Mining، Intelligent Automation، RPA Platform و Workflow AI Agent",
+    "domain": "Workflow Core Execution",
+    "v1": true
+  },
+  "149": {
+    "title": "طراحی Enterprise Knowledge Intelligence Core، Knowledge Graph، Enterprise Search، Document Intelligence، Organizational Memory و Knowledge AI Agent",
+    "domain": "Knowledge Core Execution",
+    "v1": false
+  },
+  "150": {
+    "title": "طراحی Finora Enterprise Operating System Release Architecture، Release Model، Deployment Strategy، Product Packaging، SaaS Architecture، Private Cloud Deployment و Enterprise Rollout Model",
+    "domain": "Release & Deployment Architecture",
+    "v1": true
+  },
+  "151": {
+    "title": "طراحی Autonomous Enterprise Evolution، Digital Twin سازمانی، Autonomous Decision Engine، AI Workforce، Multi-Agent Organization و Self-Optimizing Enterprise Architecture",
+    "domain": "Autonomous Evolution",
+    "v1": false
+  },
+  "152": {
+    "title": "طراحی Enterprise Intelligence Control Tower، Executive Command Center، Business Intelligence Fabric، Decision Dashboard و AI Executive Suite",
+    "domain": "Control Tower & Command",
+    "v1": true
+  },
+  "153": {
+    "title": "طراحی Enterprise Simulation Platform، Scenario Intelligence، Digital Twin Simulation Engine، What-If Analysis و Strategic Planning AI Layer",
+    "domain": "Simulation & Scenario Planning",
+    "v1": false
+  },
+  "154": {
+    "title": "طراحی Enterprise AI Governance، Responsible AI Framework، AI Ethics، Model Risk Management، AI Audit، AI Compliance و Trustworthy AI Architecture",
+    "domain": "AI Governance Architecture",
+    "v1": true
+  },
+  "155": {
+    "title": "طراحی Enterprise Cyber Intelligence Platform، Zero Trust Security، AI Security Operations، Threat Intelligence، Autonomous SOC و Cyber Defense AI Architecture",
+    "domain": "Cyber Intelligence Platform",
+    "v1": true
+  },
+  "156": {
+    "title": "طراحی Enterprise Data Intelligence Evolution، Data Mesh، Data Fabric، Semantic Data Layer، Data Marketplace و Autonomous Data Platform",
+    "domain": "Data Mesh & Evolution",
+    "v1": true
+  },
+  "157": {
+    "title": "طراحی Enterprise Integration Intelligence Platform، API Economy، Event Mesh، Integration Hub، Legacy Modernization و Autonomous Integration Layer",
+    "domain": "Integration Mesh",
+    "v1": true
+  },
+  "158": {
+    "title": "طراحی Enterprise Marketplace & Ecosystem Platform، Partner Network، Developer Platform، App Store، AI Agent Marketplace و Finora Ecosystem Architecture",
+    "domain": "Ecosystem Platform",
+    "v1": false
+  },
+  "159": {
+    "title": "طراحی Enterprise Digital Experience Platform، Unified User Experience، Super App Architecture، Employee Experience، Customer Experience و AI Interface Layer",
+    "domain": "Digital Experience Layer",
+    "v1": true
+  },
+  "160": {
+    "title": "طراحی Enterprise Knowledge Economy، Organizational Learning Platform، Continuous Innovation Engine، Research Intelligence و Self-Evolving Enterprise Architecture",
+    "domain": "Organizational Evolution",
+    "v1": false
+  },
+  "161": {
+    "title": "طراحی Enterprise Globalization Platform، Multi-Country Operations، Localization Engine، Regulatory Intelligence، Global Compliance و International Enterprise Architecture",
+    "domain": "Globalization Platform",
+    "v1": false
+  },
+  "162": {
+    "title": "طراحی Enterprise Industry Intelligence Platform، Vertical Solutions، Industry Templates، Domain AI Models و Finora Industry Cloud Architecture",
+    "domain": "Industry Cloud Architecture",
+    "v1": false
+  },
+  "163": {
+    "title": "طراحی Enterprise Sustainability Intelligence Platform، ESG Intelligence، Carbon Management، Environmental AI، Sustainable Operations و Green Enterprise Architecture",
+    "domain": "Sustainability Platform",
+    "v1": false
+  },
+  "164": {
+    "title": "طراحی Enterprise Trust Intelligence Platform، Digital Identity، Reputation Management، Trust Graph، Behavioral Intelligence و Enterprise Trust Architecture",
+    "domain": "Trust Intelligence Architecture",
+    "v1": false
+  },
+  "165": {
+    "title": "طراحی Enterprise Financial Intelligence Evolution، Autonomous CFO، Predictive Finance، Treasury AI، Investment Intelligence و Autonomous Financial Operating System",
+    "domain": "Autonomous Financial OS",
+    "v1": true
+  },
+  "166": {
+    "title": "طراحی Enterprise Customer Intelligence Evolution، Autonomous CMO، Customer Digital Twin، Hyper-Personalization، Revenue AI و Autonomous Customer Operating System",
+    "domain": "Autonomous Customer OS",
+    "v1": true
+  },
+  "167": {
+    "title": "طراحی Enterprise Workforce Intelligence Evolution، Autonomous CHRO، Employee Digital Twin، Talent AI، Future of Work Platform و Autonomous Workforce Operating System",
+    "domain": "Autonomous Workforce OS",
+    "v1": false
+  },
+  "168": {
+    "title": "طراحی Enterprise Operations Intelligence Evolution، Autonomous COO، Process Digital Twin، Hyperautomation، Operational AI و Autonomous Operations Operating System",
+    "domain": "Autonomous Operations OS",
+    "v1": false
+  },
+  "169": {
+    "title": "طراحی Enterprise Manufacturing Intelligence Platform، Smart Factory، Industrial Digital Twin، Predictive Maintenance، Autonomous Production و Industry 4.0 Architecture",
+    "domain": "Industry 4.0 Platform",
+    "v1": false
+  },
+  "170": {
+    "title": "طراحی Enterprise Supply Chain Intelligence Platform، Autonomous Supply Chain، Digital Supply Chain Twin، Demand AI، Logistics Intelligence و Resilient Supply Network Architecture",
+    "domain": "Autonomous Supply Chain OS",
+    "v1": true
+  },
+  "171": {
+    "title": "طراحی Enterprise Asset Intelligence Platform، Asset Digital Twin، Predictive Asset Management، IoT Intelligence، Reliability Engineering و Autonomous Asset Operations System",
+    "domain": "Autonomous Asset OS",
+    "v1": false
+  },
+  "172": {
+    "title": "طراحی Enterprise Knowledge Graph Platform، Semantic Intelligence، Organizational Graph، AI Reasoning Layer و Enterprise Brain Architecture",
+    "domain": "Enterprise Brain Architecture",
+    "v1": false
+  },
+  "173": {
+    "title": "طراحی Enterprise Autonomous Governance Platform، Digital Board، AI Governance Council، Policy Intelligence، Strategic Control و Self-Regulating Enterprise Architecture",
+    "domain": "Digital Board & Governance",
+    "v1": false
+  },
+  "174": {
+    "title": "طراحی Enterprise Autonomous Ecosystem Intelligence، Global Partner Network AI، Ecosystem Orchestration، Platform Economy و Self-Growing Enterprise Network",
+    "domain": "Autonomous Ecosystem OS",
+    "v1": false
+  },
+  "175": {
+    "title": "طراحی Enterprise Autonomous Strategy Platform، AI CEO، Strategic Digital Twin، Competitive War-Gaming، Capital Strategy و Self-Driving Enterprise Strategy Engine",
+    "domain": "Autonomous Strategy & AI CEO",
+    "v1": false
+  },
+  "176": {
+    "title": "طراحی Enterprise Autonomous Risk & Resilience Platform، Enterprise Risk Digital Twin، Crisis AI، Business Continuity Intelligence، Systemic Risk Graph و Self-Healing Enterprise Resilience Architecture",
+    "domain": "Systemic Risk & Resilience",
+    "v1": false
+  },
+  "177": {
+    "title": "طراحی Enterprise Legal & Regulatory Intelligence Platform، Contract Intelligence، Legal Knowledge Graph، Regulatory Change AI، Litigation Intelligence و Autonomous Legal Operations Architecture",
+    "domain": "Autonomous Legal Ops",
+    "v1": false
+  },
+  "178": {
+    "title": "طراحی Enterprise Quality & Excellence Intelligence Platform، Continuous Quality Management، Root Cause AI، Enterprise Performance Excellence، Control Intelligence و Self-Improving Quality Operating System",
+    "domain": "Quality & Excellence Engine",
+    "v1": false
+  },
+  "179": {
+    "title": "طراحی Enterprise Innovation & R&D Intelligence Platform، Idea-to-Value Engine، Technology Radar، Research Knowledge Graph، AI Scientist، Innovation Portfolio و Autonomous Innovation Operating System",
+    "domain": "Autonomous Innovation OS",
+    "v1": false
+  },
+  "180": {
+    "title": "طراحی Enterprise Sustainability & ESG Intelligence Platform، Carbon Accounting، Climate Risk Digital Twin، Energy Intelligence، Circular Economy، ESG Evidence Architecture و Autonomous Sustainability Operating System",
+    "domain": "Autonomous ESG OS",
+    "v1": false
+  },
+  "181": {
+    "title": "Finora Banking Cloud — معماری کلان Banking Operating System، Core Banking Intelligence، Customer 360 Banking، Financial Crime AI، Risk، Treasury و Open Banking",
+    "domain": "Industry Pack: Banking",
+    "v1": false
+  },
+  "182": {
+    "title": "طراحی Finora Insurance Cloud، Policy Administration، Underwriting AI، Claims Intelligence، Fraud Detection، Actuarial Intelligence، Reinsurance و Insurance Digital Twin",
+    "domain": "Industry Pack: Insurance",
+    "v1": false
+  },
+  "183": {
+    "title": "طراحی Finora Healthcare Cloud، Patient 360، Clinical Operations، Hospital Intelligence، Care Pathway، Revenue Cycle، Medical AI Governance و Healthcare Digital Twin",
+    "domain": "Industry Pack: Healthcare",
+    "v1": false
+  },
+  "184": {
+    "title": "طراحی Finora Manufacturing Cloud، MES Intelligence، Production Digital Twin، Advanced Planning & Scheduling، Industrial IoT، Predictive Maintenance، Quality 4.0، OEE Intelligence و Autonomous Factory Operating System",
+    "domain": "Industry Pack: Manufacturing",
+    "v1": false
+  },
+  "185": {
+    "title": "طراحی Finora Retail & Commerce Cloud، Unified Commerce، Product Intelligence، Store Operations، Demand AI، Dynamic Pricing، Promotion Optimization، Loyalty، Fulfillment و Retail Digital Twin",
+    "domain": "Industry Pack: Retail & Commerce",
+    "v1": false
+  },
+  "186": {
+    "title": "طراحی Finora Telecom Cloud، Subscriber 360، OSS/BSS Intelligence، Network Digital Twin، Service Assurance، Telecom Billing، Revenue Assurance، Churn AI، Fraud Management و Autonomous Network Operations",
+    "domain": "Industry Pack: Telecom",
+    "v1": false
+  },
+  "187": {
+    "title": "طراحی Finora Energy & Utilities Cloud، Metering، Grid Intelligence، Energy Trading، Asset Performance، Outage Management، Demand Forecasting، Utility Billing و Energy Digital Twin",
+    "domain": "Industry Pack: Energy & Utilities",
+    "v1": false
+  },
+  "188": {
+    "title": "طراحی Finora Transportation & Logistics Cloud، Fleet Intelligence، Transportation Management، Route Optimization، Shipment Visibility، Warehouse Integration، Last-Mile AI، Freight Settlement و Logistics Digital Twin",
+    "domain": "Industry Pack: Logistics",
+    "v1": false
+  },
+  "189": {
+    "title": "طراحی Finora Construction & Real Estate Cloud، Project Controls، BIM/Digital Twin، Cost Intelligence، Procurement، Contract Management، Site Operations، Property Lifecycle، Facility Management و Built-Environment Operating System",
+    "domain": "Industry Pack: Construction & Real Estate",
+    "v1": false
+  },
+  "190": {
+    "title": "طراحی Finora Government & Public Sector Cloud، Citizen 360، Case Management، Digital Government Services، Grants & Benefits، Public Finance، Regulatory Operations، Government Digital Twin و AI-Governed Public Administration",
+    "domain": "Industry Pack: Government & Public Sector",
+    "v1": false
+  },
+  "191": {
+    "title": "Finora Education Cloud",
+    "domain": "Industry Pack: Education",
+    "v1": false
+  },
+  "192": {
+    "title": "Finora Agriculture & AgriFood Cloud",
+    "domain": "Industry Pack: Agriculture",
+    "v1": false
+  },
+  "193": {
+    "title": "Finora Hospitality & Travel Cloud",
+    "domain": "Industry Pack: Hospitality",
+    "v1": false
+  },
+  "194": {
+    "title": "Finora Automotive & Mobility Cloud",
+    "domain": "Industry Pack: Automotive",
+    "v1": false
+  },
+  "195": {
+    "title": "Finora Aerospace & Aviation Cloud",
+    "domain": "Industry Pack: Aerospace",
+    "v1": false
+  },
+  "196": {
+    "title": "Finora Pharmaceutical & Life Sciences Cloud",
+    "domain": "Industry Pack: Pharma & Life Sciences",
+    "v1": false
+  },
+  "197": {
+    "title": "Finora Food & Beverage Cloud",
+    "domain": "Industry Pack: Food & Beverage",
+    "v1": false
+  },
+  "198": {
+    "title": "Finora Mining & Metals Cloud",
+    "domain": "Industry Pack: Mining & Metals",
+    "v1": false
+  },
+  "199": {
+    "title": "Finora Oil & Gas Cloud",
+    "domain": "Industry Pack: Oil & Gas",
+    "v1": false
+  },
+  "200": {
+    "title": "Finora Chemicals Cloud",
+    "domain": "Industry Pack: Chemicals",
+    "v1": false
+  },
+  "201": {
+    "title": "Finora Media & Entertainment Cloud",
+    "domain": "Industry Pack: Media & Entertainment",
+    "v1": false
+  },
+  "202": {
+    "title": "Finora Professional Services Cloud",
+    "domain": "Industry Pack: Professional Services",
+    "v1": false
+  },
+  "203": {
+    "title": "Finora Legal Services Cloud",
+    "domain": "Industry Pack: Legal Services",
+    "v1": false
+  },
+  "204": {
+    "title": "Finora Accounting & Audit Cloud",
+    "domain": "Industry Pack: Accounting & Audit",
+    "v1": false
+  },
+  "205": {
+    "title": "Finora Nonprofit & NGO Cloud",
+    "domain": "Industry Pack: Nonprofit & NGO",
+    "v1": false
+  },
+  "206": {
+    "title": "Finora Sports & Venue Cloud",
+    "domain": "Industry Pack: Sports & Venue",
+    "v1": false
+  },
+  "207": {
+    "title": "Finora Smart City Cloud",
+    "domain": "Industry Pack: Smart City",
+    "v1": false
+  },
+  "208": {
+    "title": "Finora Defense & Mission Operations Cloud",
+    "domain": "Industry Pack: Defense",
+    "v1": false
+  },
+  "209": {
+    "title": "Finora Ports & Maritime Cloud",
+    "domain": "Industry Pack: Ports & Maritime",
+    "v1": false
+  },
+  "210": {
+    "title": "Finora Rail & Transit Cloud",
+    "domain": "Industry Pack: Rail & Transit",
+    "v1": false
+  },
+  "211": {
+    "title": "Finora Postal & Parcel Cloud",
+    "domain": "Industry Pack: Postal & Parcel",
+    "v1": false
+  },
+  "212": {
+    "title": "Finora Waste & Environmental Services Cloud",
+    "domain": "Industry Pack: Waste & Environment",
+    "v1": false
+  },
+  "213": {
+    "title": "Finora Water & Wastewater Cloud",
+    "domain": "Industry Pack: Water & Wastewater",
+    "v1": false
+  },
+  "214": {
+    "title": "Finora Renewable Energy Cloud",
+    "domain": "Industry Pack: Renewable Energy",
+    "v1": false
+  },
+  "215": {
+    "title": "Finora Data Center & Cloud Infrastructure Cloud",
+    "domain": "Industry Pack: Data Center & Cloud Infra",
+    "v1": false
+  },
+  "216": {
+    "title": "Finora Semiconductor & High-Tech Manufacturing Cloud",
+    "domain": "Industry Pack: Semiconductor",
+    "v1": false
+  },
+  "217": {
+    "title": "Finora Electronics & Device Lifecycle Cloud",
+    "domain": "Industry Pack: Electronics & Device",
+    "v1": false
+  },
+  "218": {
+    "title": "Finora Fashion & Apparel Cloud",
+    "domain": "Industry Pack: Fashion & Apparel",
+    "v1": false
+  },
+  "219": {
+    "title": "Finora Luxury & Consumer Goods Cloud",
+    "domain": "Industry Pack: Luxury & Consumer Goods",
+    "v1": false
+  },
+  "220": {
+    "title": "Finora Wholesale & Distribution Cloud",
+    "domain": "Industry Pack: Wholesale & Distribution",
+    "v1": false
+  },
+  "221": {
+    "title": "Finora Franchise & Multi-Unit Operations Cloud",
+    "domain": "Industry Pack: Franchise",
+    "v1": false
+  },
+  "222": {
+    "title": "Finora Security Services Cloud",
+    "domain": "Industry Pack: Security Services",
+    "v1": false
+  },
+  "223": {
+    "title": "Finora Facilities & Integrated Workplace Cloud",
+    "domain": "Industry Pack: Facilities & Workplace",
+    "v1": false
+  },
+  "224": {
+    "title": "Finora Humanitarian & Disaster Response Cloud",
+    "domain": "Industry Pack: Humanitarian Response",
+    "v1": false
+  },
+  "225": {
+    "title": "Finora Scientific Research & Laboratory Cloud",
+    "domain": "Industry Pack: Scientific Research & Lab",
+    "v1": false
+  },
+  "226": {
+    "title": "Finora Marketplace & Platform Business Cloud",
+    "domain": "Industry Pack: Marketplace & Platform",
+    "v1": false
+  },
+  "227": {
+    "title": "Finora Subscription & Digital Services Cloud",
+    "domain": "Industry Pack: Subscription & Digital Services",
+    "v1": false
+  },
+  "228": {
+    "title": "Finora Cybersecurity Operations Cloud",
+    "domain": "Industry Pack: Cybersecurity Ops",
+    "v1": false
+  },
+  "229": {
+    "title": "Finora Enterprise Holding & Conglomerate Cloud",
+    "domain": "Industry Pack: Holding & Conglomerate",
+    "v1": false
+  },
+  "230": {
+    "title": "Finora Industry Cloud Composition & Reference Architecture",
+    "domain": "Industry Cloud Architecture & Composition",
+    "v1": false
+  },
+  "231": {
+    "title": "Global Accounting Standards & Digital Reporting Engine",
+    "domain": "Normative Architecture: Accounting Standards",
+    "v1": true
+  },
+  "232": {
+    "title": "Global Tax & E-Invoicing Compliance Platform",
+    "domain": "Normative Architecture: Global Tax & E-Invoicing",
+    "v1": true
+  },
+  "233": {
+    "title": "Regulatory Knowledge Graph & Rules Lifecycle",
+    "domain": "Normative Architecture: Regulatory Engine",
+    "v1": true
+  },
+  "234": {
+    "title": "Privacy, Data Residency & Records of Processing",
+    "domain": "Normative Architecture: Privacy & Residency",
+    "v1": true
+  },
+  "235": {
+    "title": "Financial Crime, KYC/KYB, AML/CFT & Sanctions",
+    "domain": "Normative Architecture: AML/KYC & Sanctions",
+    "v1": false
+  },
+  "236": {
+    "title": "Payments, Open Banking & ISO 20022",
+    "domain": "Normative Architecture: Payments & Banking",
+    "v1": true
+  },
+  "237": {
+    "title": "Internal Controls, GRC & Continuous Audit",
+    "domain": "Normative Architecture: GRC & Internal Controls",
+    "v1": true
+  },
+  "238": {
+    "title": "Electronic Records, e-Signature, Legal Hold & Evidence",
+    "domain": "Normative Architecture: Records & e-Signature",
+    "v1": true
+  },
+  "239": {
+    "title": "Global Payroll, Labor & Social Insurance Localization",
+    "domain": "Normative Architecture: Global Payroll & Labor",
+    "v1": false
+  },
+  "240": {
+    "title": "Consolidation, Intercompany, FX, Transfer Pricing & Pillar Two",
+    "domain": "Normative Architecture: Consolidation & Transfer Pricing",
+    "v1": false
+  },
+  "241": {
+    "title": "Financial Instruments, Revenue, Leases, Assets & Impairment",
+    "domain": "Normative Architecture: Financial Instruments & IFRS",
+    "v1": true
+  },
+  "242": {
+    "title": "Subledger, Ledger Integrity, Reconciliation & Financial Close",
+    "domain": "Normative Architecture: Ledger Integrity & Close",
+    "v1": true
+  },
+  "243": {
+    "title": "Treasury, Liquidity, Market Risk & Hedging",
+    "domain": "Normative Architecture: Treasury & Market Risk",
+    "v1": true
+  },
+  "244": {
+    "title": "Responsible AI, Model Risk & Human Authority",
+    "domain": "Normative Architecture: Responsible AI & Ethics",
+    "v1": true
+  },
+  "245": {
+    "title": "Secure SDLC, Software Supply Chain & SBOM",
+    "domain": "Normative Architecture: Secure SDLC & SBOM",
+    "v1": true
+  },
+  "246": {
+    "title": "Operational Resilience, BCP/DR, DORA & NIS2",
+    "domain": "Normative Architecture: Resilience & DORA/NIS2",
+    "v1": true
+  },
+  "247": {
+    "title": "Accessibility, Internationalization & Inclusive UX",
+    "domain": "Normative Architecture: Accessibility & i18n",
+    "v1": true
+  },
+  "248": {
+    "title": "Data Governance, Lineage, MDM, XBRL & Retention",
+    "domain": "Normative Architecture: Data Governance & Lineage",
+    "v1": true
+  },
+  "249": {
+    "title": "Conformance Testing, Certification & Regulatory Evidence Packs",
+    "domain": "Normative Architecture: Conformance & Evidence",
+    "v1": true
+  },
+  "250": {
+    "title": "Deployment, Tenant Isolation, Sovereignty & Product Packaging",
+    "domain": "Normative Architecture: Deployment & Isolation",
+    "v1": true
+  },
+  "251": {
+    "title": "Version 1 Product Boundary & Release Definition",
+    "domain": "Normative Release: V1 Boundary",
+    "v1": true
+  },
+  "252": {
+    "title": "Canonical Domain Model & Accounting Event Contract",
+    "domain": "Normative Model: Canonical & Event Contract",
+    "v1": true
+  },
+  "253": {
+    "title": "API/Event Contract Governance & Integration Compatibility",
+    "domain": "Normative Architecture: API/Event Governance",
+    "v1": true
+  },
+  "254": {
+    "title": "Migration, Reconciliation & Opening Balance Assurance",
+    "domain": "Normative Migration: Opening Balances & Reconciliation",
+    "v1": true
+  },
+  "255": {
+    "title": "Observability, SRE, FinOps & Capacity Governance",
+    "domain": "Normative Operations: SRE & FinOps",
+    "v1": true
+  },
+  "256": {
+    "title": "Support, Incident, Problem, Change & Customer Success",
+    "domain": "Normative Operations: Support & Change Management",
+    "v1": true
+  },
+  "257": {
+    "title": "Implementation Method, RACI, Stage Gates & Delivery Governance",
+    "domain": "Normative Governance: Implementation Method & RACI",
+    "v1": true
+  },
+  "258": {
+    "title": "Commercial, Licensing, DPA, SLA & Enterprise Contracts",
+    "domain": "Normative Contracts: Licensing & SLA",
+    "v1": true
+  },
+  "259": {
+    "title": "Acceptance Matrix, Go-Live Readiness & Independent Assurance",
+    "domain": "Normative Release: Acceptance Matrix & Assurance",
+    "v1": true
+  },
+  "260": {
+    "title": "Finora Product Constitution & Final Reference Roadmap",
+    "domain": "Normative Constitution: Product Constitution & Reference Roadmap",
+    "v1": true
+  }
+}

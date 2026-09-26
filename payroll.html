@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — حقوق و دستمزد و مدیریت سرمایه انسانی (HCM & Payroll)</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>⚡ پلتفرم مالی فینورا</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link">📊 پیشخوان اصلی</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور جدید</a></li>
+        <li><a href="invoices.html" class="sidebar-link">🧾 مدیریت فاکتورها</a></li>
+                <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+                <li><a href="treasury.html" class="sidebar-link">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link">📑 مدیریت قراردادها</a></li>
+        <li><a href="payroll.html" class="sidebar-link active">👥 حقوق و پرسنل (HR)</a></li>
+        <li><a href="customers.html" class="sidebar-link">👥 طرف‌حساب‌ها و مشتریان</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 کالاها و خدمات</a></li>
+        <li><a href="settings.html" class="sidebar-link">⚙️ تنظیمات و مؤدیان</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 style="font-size: 1.25rem;">مدیریت منابع انسانی، حقوق و دستمزد، بیمه و مالیات حقوق</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">انطباق کامل با قانون کار، بیمه تأمین اجتماعی (۳۰٪) و مالیات پله‌ای ماده ۸۴ و ۸۵ ق.م.م</span>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('new-emp-card').style.display='block'; window.scrollTo({top: 0, behavior: 'smooth'});">+ استخدام / ثبت کارمند جدید</button>
+      </header>
+
+      <div class="page-body">
+        <!-- KPI Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card success">
+            <div class="metric-label">هزینه کل پرسنلی سازمان (ریال)</div>
+            <div class="metric-value" id="metric-payroll-cost">۰</div>
+          </div>
+          <div class="metric-card info">
+            <div class="metric-label">حقوق خالص پرداختنی به پرسنل (ریال)</div>
+            <div class="metric-value" id="metric-net-salary">۰</div>
+          </div>
+          <div class="metric-card warning">
+            <div class="metric-label">تعهد بیمه تأمین اجتماعی ۳۰٪ (ریال)</div>
+            <div class="metric-value" id="metric-sso-payable">۰</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">مالیات حقوق کسر شده ماده ۸۴ و ۸۵</div>
+            <div class="metric-value" id="metric-tax-payable">۰</div>
+          </div>
+        </div>
+
+        <!-- Monthly Payroll Run Action Card -->
+        <div class="card" style="border-right: 4px solid var(--secondary);">
+          <div class="card-header">
+            <h3 class="card-title">اجرای محاسبات حقوق و صدور سند حسابداری ماهانه</h3>
+            <span class="badge badge-info">دوره مالی جاری: شهریور ۱۴۰۵</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">دوره کارکرد</label>
+              <input type="text" id="run-period" class="form-control" value="1405-06" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">تاریخ مؤثر سند مالی</label>
+              <input type="date" id="run-date" class="form-control">
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end;">
+              <button type="button" class="btn btn-success" id="btn-run-payroll" style="width: 100%;">⚡ محاسبه حقوق و ثبت سند در دفترکل</button>
+            </div>
+          </div>
+          <div id="payroll-run-summary" style="display: none; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius); margin-top: 1rem;">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- New Employee Form (Initially Hidden) -->
+        <div class="card" id="new-emp-card" style="display: none; border-right: 4px solid var(--primary);">
+          <div class="card-header">
+            <h3 class="card-title">ثبت پرونده پرسنلی کارمند جدید</h3>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('new-emp-card').style.display='none';">بستن</button>
+          </div>
+          <form id="employee-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">کد پرسنلی</label>
+                <input type="text" id="emp-code" class="form-control" placeholder="EMP-103" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نام</label>
+                <input type="text" id="emp-first-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نام خانوادگی</label>
+                <input type="text" id="emp-last-name" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">کد ملی</label>
+                <input type="text" id="emp-national-id" class="form-control" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">واحد سازمانی / دپارتمان</label>
+                <input type="text" id="emp-dept" class="form-control" value="فناوری و توسعه" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">سمت شغلی</label>
+                <input type="text" id="emp-pos" class="form-control" value="توسعه‌دهنده نرم‌افزار" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">حقوق پایه ماهانه (ریال)</label>
+                <input type="number" id="emp-salary" class="form-control" min="0" value="120000000" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">تعداد فرزندان مشمول حق اولاد</label>
+                <input type="number" id="emp-children" class="form-control" min="0" value="0">
+              </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary">+ ذخیره و ایجاد پرونده کارمند</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Employee Directory Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">فهرست پرسنل و وضعیت احکام کارگزینی</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>کد پرسنلی</th>
+                  <th>نام و نام خانوادگی</th>
+                  <th>کد ملی</th>
+                  <th>دپارتمان</th>
+                  <th>سمت</th>
+                  <th>پایه حقوق (ریال)</th>
+                  <th>بن و مسکن (ریال)</th>
+                  <th>وضعیت</th>
+                  <th>عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="employees-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Payslip Modal -->
+        <div id="payslip-modal" class="card" style="display: none; border: 2px solid var(--primary); background: #ffffff;">
+          <div class="card-header">
+            <h3 class="card-title" id="payslip-modal-title">فیش حقوق و دستمزد ماهانه کارمند</h3>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('payslip-modal').style.display='none';">بستن</button>
+          </div>
+          <div id="payslip-modal-content">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const client = new FinoraClient();
+      document.getElementById('run-date').value = new Date().toISOString().split('T')[0];
+
+      function renderEmployees() {
+        const tbody = document.getElementById('employees-tbody');
+        const list = client.getEmployees();
+        tbody.innerHTML = list.map(emp => `
+          <tr>
+            <td><code>${emp.employee_code}</code></td>
+            <td><strong>${emp.full_name}</strong></td>
+            <td>${emp.national_id || '-'}</td>
+            <td>${emp.department}</td>
+            <td>${emp.position}</td>
+            <td>${emp.base_salary.toLocaleString('fa-IR')}</td>
+            <td>${(emp.housing_allowance + emp.grocery_allowance).toLocaleString('fa-IR')}</td>
+            <td><span class="badge badge-success">فعال</span></td>
+            <td>
+              <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="viewPayslip('${emp.id}')">مشاهده فیش حقوقی</button>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function updateMetricsFromRun(run) {
+        if (!run) return;
+        document.getElementById('metric-payroll-cost').textContent = run.totals.total_employer_cost.toLocaleString('fa-IR');
+        document.getElementById('metric-net-salary').textContent = run.totals.net_payable.toLocaleString('fa-IR');
+        document.getElementById('metric-sso-payable').textContent = run.totals.total_sso_payable.toLocaleString('fa-IR');
+        document.getElementById('metric-tax-payable').textContent = run.totals.salary_tax_payable.toLocaleString('fa-IR');
+      }
+
+      window.viewPayslip = function(empId) {
+        const runDate = document.getElementById('run-date').value;
+        const slip = client.calculateEmployeeSalary({
+          employee_id: empId,
+          effective_date: runDate,
+          overtime_hours: 10,
+          bonus_amount: 5000000
+        });
+
+        const modal = document.getElementById('payslip-modal');
+        const content = document.getElementById('payslip-modal-content');
+        modal.style.display = 'block';
+        document.getElementById('payslip-modal-title').textContent = `فیش حقوقی رسمی — ${slip.full_name} (${slip.employee_code})`;
+
+        content.innerHTML = `
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- Earnings Box -->
+            <div style="background: #f8fafc; padding: 1.25rem; border-radius: var(--radius); border: 1px solid var(--border-color);">
+              <h4 style="color: var(--success); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.4rem;">حقوق و مزایای ناخالص (مزایا)</h4>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>پایه حقوق ماهانه:</span><strong>${slip.base_salary.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>حق مسکن مصوب:</span><strong>${slip.housing_allowance.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>بن خواروبار و اقلام مصرفی:</span><strong>${slip.grocery_allowance.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>حق اولاد قانونی:</span><strong>${slip.child_allowance.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>اضافه‌کاری (${slip.overtime_hours} ساعت):</span><strong>${slip.overtime_pay.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>پاداش و کارانه:</span><strong>${slip.bonus_amount.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; border-top: 2px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; font-weight: 700;">
+                <span>جمع ناخالص مزایا:</span><span style="color: var(--success);">${slip.gross_earnings.toLocaleString('fa-IR')} ریال</span>
+              </div>
+            </div>
+
+            <!-- Deductions Box -->
+            <div style="background: #f8fafc; padding: 1.25rem; border-radius: var(--radius); border: 1px solid var(--border-color);">
+              <h4 style="color: var(--danger); margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.4rem;">کسورات قانونی (بیمه و مالیات)</h4>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>حق بیمه تأمین اجتماعی سهم کارگر (۷٪):</span><strong style="color: var(--danger);">${slip.employee_sso_share.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>مالیات بر درآمد حقوق (ماده ۸۴ و ۸۵):</span><strong style="color: var(--danger);">${slip.salary_tax.toLocaleString('fa-IR')} ریال</strong></div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;"><span>معافیت ماهانه اعمال‌شده (ماده ۸۴):</span><span>${slip.tax_details.exemption_applied.toLocaleString('fa-IR')} ریال</span></div>
+              <div style="display: flex; justify-content: space-between; border-top: 2px solid var(--border-color); padding-top: 0.5rem; margin-top: 0.5rem; font-weight: 700;">
+                <span>جمع کل کسورات:</span><span style="color: var(--danger);">${slip.total_deductions.toLocaleString('fa-IR')} ریال</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Net Payable & Employer Contribution -->
+          <div style="display: flex; justify-content: space-between; align-items: center; background: #eff6ff; padding: 1.25rem; border-radius: var(--radius); border: 1px solid #bfdbfe;">
+            <div>
+              <span style="font-size: 0.85rem; color: #1e3a8a;">بیمه سهم کارفرما (۲۳٪ - ۲۰٪ سهم کارفرما + ۳٪ بیمه بیکاری):</span>
+              <div style="font-weight: 700; color: #1e3a8a;">${slip.employer_sso_contribution.toLocaleString('fa-IR')} ریال</div>
+            </div>
+            <div style="text-align: left;">
+              <span style="font-size: 0.9rem; color: var(--text-muted);">مبلغ خالص قابل پرداخت به کارمند:</span>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">${slip.net_payable.toLocaleString('fa-IR')} ریال</div>
+            </div>
+          </div>
+        `;
+
+        window.scrollTo({ top: modal.offsetTop - 50, behavior: 'smooth' });
+      };
+
+      // Run Payroll Button Handler
+      document.getElementById('btn-run-payroll').addEventListener('click', () => {
+        try {
+          const periodKey = document.getElementById('run-period').value;
+          const runDate = document.getElementById('run-date').value;
+
+          const res = client.executeMonthlyPayrollRun({
+            period_key: periodKey,
+            effective_date: runDate,
+            overtime_records: { 'emp_01': 15, 'emp_02': 8 },
+            actor: 'داوود مهربان'
+          });
+
+          const run = res.payrollRun;
+          updateMetricsFromRun(run);
+
+          const summary = document.getElementById('payroll-run-summary');
+          summary.style.display = 'block';
+          summary.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <strong style="color: var(--success); font-size: 1rem;">✓ لیست حقوق و دستمزد دوره ${run.period_key} با موفقیت قطعی و سند حسابداری در دفترکل ثبت گردید!</strong>
+                <p style="font-size: 0.85rem; color: #334155; margin-top: 0.25rem;">
+                  تعداد پرسنل: <strong>${run.employee_count} نفر</strong> | 
+                  شناسه سند حسابداری دفترکل: <code>${run.journal_id || 'ندارد'}</code> | 
+                  مجموع خالص پرداختی: <strong>${run.totals.net_payable.toLocaleString('fa-IR')} ریال</strong>
+                </p>
+              </div>
+            </div>
+          `;
+          alert(`لیست حقوق دوره ${run.period_key} محاسبه شد و سند مالی به شماره ${run.journal_id} در دفترکل ثبت شد.`);
+        } catch (err) {
+          alert('خطا در اجرای محاسبات حقوق: ' + err.message);
+        }
+      });
+
+      // Handle New Employee Submission
+      document.getElementById('employee-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        try {
+          client.createEmployee({
+            id: `emp_${Date.now()}`,
+            employee_code: document.getElementById('emp-code').value,
+            first_name: document.getElementById('emp-first-name').value,
+            last_name: document.getElementById('emp-last-name').value,
+            national_id: document.getElementById('emp-national-id').value,
+            department: document.getElementById('emp-dept').value,
+            position: document.getElementById('emp-pos').value,
+            base_salary: document.getElementById('emp-salary').value,
+            child_count: document.getElementById('emp-children').value
+          });
+          alert('پرونده کارمند جدید با موفقیت ثبت شد!');
+          document.getElementById('employee-form').reset();
+          document.getElementById('new-emp-card').style.display = 'none';
+          renderEmployees();
+        } catch (err) {
+          alert('خطا در ثبت کارمند: ' + err.message);
+        }
+      });
+
+      renderEmployees();
+    });
+  </script>
+</body>
+</html>

@@ -1,2 +1,6 @@
-.uat-evidence/
-supabase/.temp/
+agent_sandbox/
+*.zip
+*.bundle
+*.tar
+*.tmp
+node_modules/

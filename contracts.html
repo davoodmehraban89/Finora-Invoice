@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — مدیریت چرخه عمر قراردادها و تحلیل ریسک حقوقی</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+    if (typeof window !== 'undefined') window.escapeHtml = escapeHtml;
+  </script>
+
+</head>
+<body>
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span>⚡ پلتفرم مالی فینورا</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="dashboard.html" class="sidebar-link">📊 پیشخوان اصلی</a></li>
+        <li><a href="new-invoice.html" class="sidebar-link">➕ صدور فاکتور جدید</a></li>
+        <li><a href="invoices.html" class="sidebar-link">🧾 مدیریت فاکتورها</a></li>
+                <li><a href="procurement.html" class="sidebar-link">🛒 خرید و تدارکات (PO)</a></li>
+                <li><a href="treasury.html" class="sidebar-link">🏦 خزانه‌داری و چک صیاد</a></li>
+        <li><a href="contracts.html" class="sidebar-link active">📑 مدیریت قراردادها</a></li>
+        <li><a href="customers.html" class="sidebar-link">👥 طرف‌حساب‌ها و مشتریان</a></li>
+        <li><a href="products.html" class="sidebar-link">📦 کالاها و خدمات</a></li>
+        <li><a href="settings.html" class="sidebar-link">⚙️ تنظیمات و مؤدیان</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h2 style="font-size: 1.25rem;">مدیریت چرخه عمر قراردادها و هوش حقوقی (CLM & Legal Ops)</h2>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">پایش تعهدات، الحاقیه‌ها، کنترل ریسک حقوقی و امضای دیجیتال</span>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('new-contract-card').style.display='block'; window.scrollTo({top: 0, behavior: 'smooth'});">+ ثبت قرارداد جدید</button>
+      </header>
+
+      <div class="page-body">
+        <!-- KPI Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="metric-card success">
+            <div class="metric-label">ارزش کل قراردادهای فعال (ریال)</div>
+            <div class="metric-value" id="metric-contract-value">۰</div>
+          </div>
+          <div class="metric-card info">
+            <div class="metric-label">قراردادهای جاری و معتبر</div>
+            <div class="metric-value" id="metric-active-count">۰</div>
+          </div>
+          <div class="metric-card warning">
+            <div class="metric-label">تعهدات نزدیک به سررسید (۳۰ روز آینده)</div>
+            <div class="metric-value" id="metric-due-obligations">۰</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">تعداد کل پرونده‌های قراردادی</div>
+            <div class="metric-value" id="metric-total-contracts">۰</div>
+          </div>
+        </div>
+
+        <!-- New Contract Card / Form -->
+        <div class="card" id="new-contract-card" style="display: none; border-right: 4px solid var(--primary);">
+          <div class="card-header">
+            <h3 class="card-title">ثبت پیش‌نویس قرارداد سازمانی جدید</h3>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('new-contract-card').style.display='none';">بستن</button>
+          </div>
+          <form id="contract-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">شماره قرارداد</label>
+                <input type="text" id="cnt-number" class="form-control" placeholder="مانند CNT-1405-002" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نوع قرارداد</label>
+                <select id="cnt-type" class="form-control" required>
+                  <option value="sales">قرارداد فروش و درآمدی</option>
+                  <option value="purchase">قرارداد خرید و تأمین</option>
+                  <option value="service">قرارداد خدمات و پشتیبانی</option>
+                  <option value="government">معاملات دولتی و مناقصات</option>
+                  <option value="partnership">مشارکت تجاری</option>
+                  <option value="nda">توافق‌نامه محرمانگی (NDA)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">طرف قرارداد</label>
+                <select id="cnt-party" class="form-control" required>
+                  <option value="">-- انتخاب طرف‌حساب --</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group" style="grid-column: span 2;">
+                <label class="form-label">عنوان قرارداد</label>
+                <input type="text" id="cnt-title" class="form-control" placeholder="موضوع رسمی قرارداد" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">مبلغ کل قرارداد (ریال)</label>
+                <input type="number" id="cnt-amount" class="form-control" min="0" value="0" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">تاریخ شروع</label>
+                <input type="date" id="cnt-start-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">تاریخ پایان (سررسید)</label>
+                <input type="date" id="cnt-end-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">شرایط و مراحل پرداخت</label>
+                <input type="text" id="cnt-terms" class="form-control" placeholder="مثال: ۳۰٪ پیش‌پرداخت، ۷۰٪ تحویل نهایی">
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary">+ ایجاد پیش‌نویس قرارداد</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Contracts Table -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">فهرست قراردادهای سازمانی و وضعیت ریسک</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>شماره قرارداد</th>
+                  <th>عنوان و موضوع</th>
+                  <th>طرف قرارداد</th>
+                  <th>نوع</th>
+                  <th>مبلغ کل (ریال)</th>
+                  <th>تاریخ اعتبار</th>
+                  <th>نسخه</th>
+                  <th>وضعیت حقوقی</th>
+                  <th>سطح ریسک AI</th>
+                  <th>عملیات</th>
+                </tr>
+              </thead>
+              <tbody id="contracts-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Risk & Obligations Inspection Modal -->
+        <div id="risk-modal" class="card" style="display: none; border: 2px solid var(--warning); background: #fffdfa;">
+          <div class="card-header">
+            <h3 class="card-title" id="risk-modal-title">تحلیل هوشمند ریسک و تعهدات قراردادی</h3>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('risk-modal').style.display='none';">بستن</button>
+          </div>
+          <div id="risk-modal-content" style="padding: 1rem;">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/finora-core-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const client = new FinoraClient();
+      const customers = client.getCustomers();
+
+      // Populate Counterparties dropdown
+      const partySelect = document.getElementById('cnt-party');
+      customers.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = `${c.name} (${c.national_id || '-'})`;
+        partySelect.appendChild(opt);
+      });
+
+      document.getElementById('cnt-start-date').value = new Date().toISOString().split('T')[0];
+      const nextYear = new Date();
+      nextYear.setFullYear(nextYear.getFullYear() + 1);
+      document.getElementById('cnt-end-date').value = nextYear.toISOString().split('T')[0];
+      document.getElementById('cnt-number').value = `CNT-1405-${String(Math.floor(Math.random() * 900) + 100)}`;
+
+      function updateDashboardMetrics() {
+        const m = client.getDashboardMetrics();
+        document.getElementById('metric-contract-value').textContent = m.total_contract_value.toLocaleString('fa-IR');
+        document.getElementById('metric-active-count').textContent = m.active_contracts_count.toLocaleString('fa-IR');
+        document.getElementById('metric-due-obligations').textContent = m.due_obligations_count.toLocaleString('fa-IR');
+        document.getElementById('metric-total-contracts').textContent = m.total_contracts_count.toLocaleString('fa-IR');
+      }
+
+      function getRiskBadge(level) {
+        if (level === 'critical') return '<span class="badge badge-danger">بحرانی (Critical)</span>';
+        if (level === 'high') return '<span class="badge badge-warning">پرریسک (High)</span>';
+        if (level === 'medium') return '<span class="badge badge-info">متوسط (Medium)</span>';
+        return '<span class="badge badge-success">کم‌ریسک (Low)</span>';
+      }
+
+      function getStatusBadge(status) {
+        if (status === 'signed' || status === 'active') return '<span class="badge badge-success">امضاشده / جاری</span>';
+        if (status === 'approved') return '<span class="badge badge-info">تأییدشده</span>';
+        if (status === 'amended') return '<span class="badge badge-warning">دارای الحاقیه</span>';
+        return '<span class="badge badge-draft">پیش‌نویس</span>';
+      }
+
+      function renderContracts() {
+        const tbody = document.getElementById('contracts-tbody');
+        const list = client.getContracts();
+
+        tbody.innerHTML = list.map(cnt => {
+          const risk = cnt.risk_evaluation || client.evaluateContractRisk(cnt.id);
+          return `
+            <tr>
+              <td><strong>${cnt.contract_number}</strong></td>
+              <td>${cnt.title}</td>
+              <td>${cnt.party_name}</td>
+              <td>${cnt.contract_type}</td>
+              <td><strong>${cnt.contract_amount.toLocaleString('fa-IR')}</strong></td>
+              <td style="font-size: 0.8rem;">${cnt.start_date} تا ${cnt.end_date}</td>
+              <td><code>v${cnt.version}</code></td>
+              <td>${getStatusBadge(cnt.status)}</td>
+              <td>${getRiskBadge(risk.risk_level)}</td>
+              <td>
+                <div style="display: flex; gap: 0.25rem;">
+                  <button class="btn btn-secondary btn-sm" style="font-size: 0.75rem;" onclick="viewRisk('${cnt.id}')">ارزیابی ریسک</button>
+                  ${cnt.status === 'draft' ? `<button class="btn btn-success btn-sm" style="font-size: 0.75rem;" onclick="approveContract('${cnt.id}')">تأیید</button>` : ''}
+                  ${cnt.status === 'approved' ? `<button class="btn btn-primary btn-sm" style="font-size: 0.75rem;" onclick="signContract('${cnt.id}')">امضا</button>` : ''}
+                  ${cnt.is_locked ? `<button class="btn btn-warning btn-sm" style="font-size: 0.75rem;" onclick="promptAmendment('${cnt.id}')">+ الحاقیه</button>` : ''}
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        updateDashboardMetrics();
+      }
+
+      window.viewRisk = function(cntId) {
+        const cnt = client.getContract(cntId);
+        const risk = client.evaluateContractRisk(cntId);
+        const modal = document.getElementById('risk-modal');
+        const content = document.getElementById('risk-modal-content');
+
+        modal.style.display = 'block';
+        document.getElementById('risk-modal-title').textContent = `گزارش تحلیل ریسک هوشمند — قرارداد ${cnt.contract_number}`;
+
+        let findingsHtml = '';
+        if (risk.findings.length === 0) {
+          findingsHtml = '<div class="alert-box alert-success">هیچ بند یا ریسک حقوقی حادی در این قرارداد شناسایی نشد.</div>';
+        } else {
+          findingsHtml = risk.findings.map(f => `
+            <div style="padding: 0.75rem; border-right: 3px solid ${f.severity === 'critical' ? 'var(--danger)' : 'var(--warning)'}; background: #ffffff; border-radius: var(--radius); margin-bottom: 0.75rem; box-shadow: var(--shadow-sm);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <strong style="color: ${f.severity === 'critical' ? 'var(--danger)' : 'var(--warning)'}; font-size: 0.95rem;">${f.title}</strong>
+                <span class="badge ${f.severity === 'critical' ? 'badge-danger' : 'badge-warning'}">${f.severity}</span>
+              </div>
+              <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0.4rem;">${f.description}</p>
+              <div style="font-size: 0.8rem; background: var(--bg-main); padding: 0.4rem 0.6rem; border-radius: 4px; color: var(--primary);">
+                💡 <strong>اقدام اصلاحی پیشنهادی:</strong> ${f.recommendation}
+              </div>
+            </div>
+          `).join('');
+        }
+
+        content.innerHTML = `
+          <div style="display: flex; gap: 2rem; align-items: center; margin-bottom: 1.25rem; padding: 1rem; background: #ffffff; border-radius: var(--radius);">
+            <div>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">امتیاز ریسک کل (از ۱۰۰):</span>
+              <div style="font-size: 2rem; font-weight: 800; color: ${risk.risk_score >= 60 ? 'var(--danger)' : (risk.risk_score >= 30 ? 'var(--warning)' : 'var(--success)')};">${risk.risk_score}</div>
+            </div>
+            <div>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">طبقه ریسک:</span>
+              <div>${getRiskBadge(risk.risk_level)}</div>
+            </div>
+            <div>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">تعداد یافته‌های حقوقی:</span>
+              <div style="font-size: 1.2rem; font-weight: 700;">${risk.findings_count} مورد</div>
+            </div>
+          </div>
+          <h4 style="margin-bottom: 0.75rem; font-size: 0.95rem;">یافته‌ها و توصیه‌های هوش حقوقی:</h4>
+          ${findingsHtml}
+        `;
+
+        window.scrollTo({ top: modal.offsetTop - 50, behavior: 'smooth' });
+      };
+
+      window.approveContract = function(cntId) {
+        try {
+          client.approveContract(cntId, 'داوود مهربان');
+          alert('قرارداد با موفقیت تأیید شد و آماده امضا است.');
+          renderContracts();
+        } catch (err) {
+          alert('خطا در تأیید: ' + err.message);
+        }
+      };
+
+      window.signContract = function(cntId) {
+        try {
+          const res = client.signContract(cntId, 'داوود مهربان');
+          alert(`قرارداد رسماً امضا شد و سند اسنپ‌شات با هش رمزنگاری ${res.snapshotDigest.slice(0, 16)}... منجمد گردید.`);
+          renderContracts();
+        } catch (err) {
+          alert('خطا در امضا: ' + err.message);
+        }
+      };
+
+      window.promptAmendment = function(cntId) {
+        const reason = prompt('علت صدور الحاقیه را وارد کنید (مثال: افزایش سقف مبلغ قرارداد):');
+        if (!reason) return;
+        const addAmount = prompt('مبلغ افزایش/کاهش را به ریال وارد کنید (مثال: 2000000000):', '0');
+        try {
+          const res = client.createContractAmendment(cntId, {
+            amendment_type: 'amount_change',
+            amount_change: Number(addAmount) || 0,
+            reason: reason,
+            actor: 'داوود مهربان'
+          });
+          alert(`الحاقیه ${res.amendment.amendment_id} ثبت شد و نسخه قرارداد به v${res.contract.version} ارتقا یافت.`);
+          renderContracts();
+        } catch (err) {
+          alert('خطا در صدور الحاقیه: ' + err.message);
+        }
+      };
+
+      document.getElementById('contract-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        try {
+          const cnt = client.createContract({
+            counterpartyId: document.getElementById('cnt-party').value,
+            contract_number: document.getElementById('cnt-number').value,
+            contract_type: document.getElementById('cnt-type').value,
+            title: document.getElementById('cnt-title').value,
+            contract_amount: document.getElementById('cnt-amount').value,
+            start_date: document.getElementById('cnt-start-date').value,
+            end_date: document.getElementById('cnt-end-date').value,
+            payment_terms: document.getElementById('cnt-terms').value
+          });
+
+          // Add standard clauses
+          client.addContractClause(cnt.id, {
+            type: 'scope',
+            title: 'موضوع قرارداد',
+            text: cnt.title
+          });
+
+          client.addContractClause(cnt.id, {
+            type: 'dispute_resolution',
+            title: 'مرجع داوری',
+            text: 'مرکز داوری اتاق بازرگانی تهران'
+          });
+
+          alert('قرارداد جدید با موفقیت ایجاد شد!');
+          document.getElementById('contract-form').reset();
+          document.getElementById('new-contract-card').style.display = 'none';
+          renderContracts();
+        } catch (err) {
+          alert('خطا در ایجاد قرارداد: ' + err.message);
+        }
+      });
+
+      renderContracts();
+    });
+  </script>
+</body>
+</html>

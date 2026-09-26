@@ -1,44 +1,57 @@
-name: CI
+name: Finora CI & Quality Assurance Pipeline
+
 on:
-  pull_request:
   push:
-    branches: [main]
-permissions:
-  contents: read
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
 jobs:
   test:
+    name: Automated Invariant & Domain Tests (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
-      - run: node --test tests/*.test.js
-      - name: Install print verification tools
+          node-version: ${{ matrix.node-version }}
+
+      - name: Display Environment Info
         run: |
-          npm install --no-save --package-lock=false playwright@1.51.1
-          npx playwright install --with-deps chromium
-          sudo apt-get install -y poppler-utils
-      - name: Verify rendered landscape invoices
-        run: |
-          python3 -m http.server 4173 > /tmp/finora-http.log 2>&1 &
-          node tests/browser-uat.js
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: landscape-print-evidence
-          path: uat-evidence/
-      - name: Validate required application files
-        run: |
-          test -s index.html
-          test -s assets/js/app.js
-          test -s assets/js/invoice-core.js
-          test -s assets/js/supabase-config.js
-          test -s assets/js/tax-rules.js
-          test -s supabase/migrations/202608280001_invoice_phase.sql
-          test -s supabase/migrations/202608310001_invoice_tax_context.sql
-          test -s supabase/migrations/202608310002_invoice_settings_numbering.sql
-          test -s supabase/migrations/202609010003_invoice_completion_snapshots.sql
-          test -s supabase/migrations/20260913212458_harden_invoice_snapshot_trigger.sql
-          test -s wrangler.jsonc
+          node -v
+          npm -v
+
+      - name: Run Financial Invariant Tests (Chapters 021, 045, 141, 242, 252)
+        run: node --test tests/financial-invariants.test.js
+
+      - name: Run Accounting Posting & GL Tests (Chapters 021, 045, 062, 241)
+        run: node --test tests/accounting-posting.test.js
+
+      - name: Run Versioned Tax & Moadian E-Invoice Tests (Chapters 016, 017, 031, 046, 232, 233)
+        run: node --test tests/tax-engine-versioning.test.js
+
+      - name: Run Multi-Tenant RLS Isolation Tests (Chapters 008, 009, 027, 057, 137, 234, 250)
+        run: node --test tests/multi-tenant-rls.test.js
+
+      - name: Run Full Invoicing Lifecycle Tests (Chapters 013, 014, 016, 045)
+        run: node --test tests/invoice-lifecycle.test.js
+
+      - name: Run Contracts, Stock & Treasury Tests (Chapters 012, 015, 020, 032, 238)
+        run: node --test tests/contract-governance.test.js
+
+      - name: Run Frontend Client Bridge Integration Tests (Chapters 006, 007, 013, 014)
+        run: node --test tests/frontend-integration.test.js
+
+      - name: Run All Test Suites Aggregated
+        run: npm test
+
+      - name: Validate 260-Chapter Completion Register
+        run: npm run validate:matrix

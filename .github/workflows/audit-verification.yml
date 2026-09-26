@@ -1,0 +1,68 @@
+name: Finora Architecture & Compliance Verification
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+  workflow_dispatch:
+
+jobs:
+  compliance-audit:
+    name: Verify 260 Chapters, ADRs and Security Policies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Verify 260-Chapter Register Integrity
+        run: |
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('./FINORA_IMPLEMENTATION_MATRIX.json', 'utf8'));
+            if (data.length !== 260) {
+              console.error('Error: Expected exactly 260 chapters, found ' + data.length);
+              process.exit(1);
+            }
+            console.log('Register Integrity Confirmed: 260 chapters mapped and accounted for.');
+          "
+
+      - name: Verify Architecture Decision Records (ADR-001 through ADR-010)
+        run: |
+          for i in $(seq 1 10); do
+            num=$(printf "%03d" $i)
+            file=$(ls FINORA_ARCHITECTURE_DECISIONS/ADR-${num}-*.md 2>/dev/null || true)
+            if [ -z "$file" ]; then
+              echo "Error: Missing Architecture Decision Record ADR-${num}"
+              exit 1
+            fi
+            echo "Found: $file"
+          done
+          echo "All 10 foundational ADRs verified."
+
+      - name: Verify Core Database Schema & RLS
+        run: |
+          if [ ! -f "supabase/migrations/20260925_finora_core_schema.sql" ]; then
+            echo "Error: Core SQL migration schema missing!"
+            exit 1
+          fi
+          grep -q "ENABLE ROW LEVEL SECURITY" supabase/migrations/20260925_finora_core_schema.sql || {
+            echo "Security Error: Missing RLS enablement in schema!"
+            exit 1
+          }
+          echo "SQL Schema and Row Level Security verified."
+
+      - name: Check for Plain-text Secrets in Repository
+        run: |
+          echo "Scanning tracked files for plain-text private key exposure..."
+          if grep -rn "BEGIN PRIVATE KEY" --exclude="*.test.js" --exclude="*.md" src/ assets/ 2>/dev/null; then
+            echo "Security Violation: Plain-text private key found in tracked source files!"
+            exit 1
+          fi
+          echo "Secret scan passed: No plain-text private keys exposed."

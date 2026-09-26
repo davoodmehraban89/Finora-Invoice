@@ -1,0 +1,147 @@
+[
+  {
+    "defect_id": "DEFECT-01",
+    "title": "Stored Cross-Site Scripting (XSS) via Unsanitized innerHTML Rendering",
+    "severity": "CRITICAL",
+    "affected_modules": [
+      "customers.html",
+      "invoices.html",
+      "procurement.html",
+      "treasury.html",
+      "dashboard.html",
+      "payroll.html",
+      "contracts.html",
+      "products.html",
+      "new-invoice.html",
+      "settings.html"
+    ],
+    "root_cause": "User-supplied customer names, invoice numbers, supplier names, and Sayad IDs were directly interpolated into DOM table innerHTML without contextual HTML entity encoding.",
+    "remediation": "Implemented robust escapeHtml() utility in assets/js/finora-core-client.js and injected safe escaping scripts into all frontend HTML interfaces. All dynamic inputs are sanitized prior to DOM insertion.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 1: Sanitizes malicious input while preserving Persian and English text)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-02",
+    "title": "Non-Compliant Iranian Moadian E-Invoicing Unique Tax Identifier (TaxID)",
+    "severity": "CRITICAL",
+    "affected_modules": [
+      "src/tax/iran-moadian-adapter.js"
+    ],
+    "root_cause": "generateTaxUniqueId previously produced mock strings ('TAX-MEM-...') violating the official 22-character INTA standard structure, lacking Julian epoch date calculation, 10-digit serial padding, and Verhoeff check digit.",
+    "remediation": "Implemented official 22-character Tax ID algorithm: [Fiscal Memory ID (6 chars)] + [Elapsed Days from 1970-01-01 (5 digits)] + [Zero-padded Serial (10 digits)] + [Verhoeff Checksum (1 digit)]. Added validateTaxUniqueId() with dihedral D5 group check digit tables.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 2: Verhoeff generation & vector validation); tests/tax-engine-versioning.test.js",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-03",
+    "title": "Duplicate Supplier Billing Vulnerability in Three-Way Matching Engine",
+    "severity": "CRITICAL",
+    "affected_modules": [
+      "src/procurement/procurement-engine.js"
+    ],
+    "root_cause": "executeThreeWayMatch only verified individual invoice billed quantity against received goods without tracking cumulative invoiced quantities, permitting multiple invoices to bill the same goods receipt repeatedly.",
+    "remediation": "Added po.invoiced_items cumulative tracking, atomic duplicate billing detection (DUPLICATE_BILLING), partial invoicing support, and full invoice cancellation/reversal lifecycle with GL reversal entries.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 3: Rejects multiple invoices billing the same received PO quantity)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-04",
+    "title": "Disconnection Between Sales Invoicing, Warehouse Stock Issue, and COGS Accounting",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/invoicing/invoice-engine.js"
+    ],
+    "root_cause": "Sales invoice approval only credited revenue (4101) and output VAT (2102) and debited AR (1103) without triggering warehouse stock issue or Cost of Goods Sold (COGS) recognition.",
+    "remediation": "Integrated StockEngine into InvoiceEngine. Invoice approval now automatically issues physical goods from warehouse, computes moving average cost valuation, and posts Double-Entry COGS journal (Debit 5101 COGS, Credit 1105 Inventory).",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 4: Invoicing & COGS Double-Entry journal posting and stock deduction)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-05",
+    "title": "Floating-Point Precision Loss in Monetary Arithmetic and FX Conversions",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/accounting/accounting-event-contract.js",
+      "src/currency/multi-currency-engine.js",
+      "src/common/money-precision.js"
+    ],
+    "root_cause": "IEEE-754 floating-point operations in JavaScript caused rounding drift (e.g. 0.1 + 0.2 != 0.3) and loose balance comparisons (diff < 0.0001) in accounting event contracts and multi-currency conversions.",
+    "remediation": "Created MoneyPrecision module enforcing exact integer Rial arithmetic for domestic currency and 4-decimal scaled integer multiplication for rates. AccountingEventContract now enforces exact debit-credit equality.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 5: Exact precision & 500-billion Rial validation); tests/financial-invariants.test.js",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-06",
+    "title": "Concurrency Race Conditions and Over-Allocation in Stock and Customer Credit",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/inventory/stock-engine.js",
+      "src/crm/customer-360-engine.js"
+    ],
+    "root_cause": "Simultaneous asynchronous requests could read available stock or credit limits concurrently before updating, resulting in negative warehouse stock and exceeding customer credit limits.",
+    "remediation": "Implemented atomic lock acquisition and two-phase reservation controls (reserveStock, reserveCredit, commitCreditReservation, releaseCreditReservation) ensuring invariants hold under concurrent execution.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 6: Prevents negative stock and limits credit exposure); tests/adversarial-red-team.test.js (Test 4)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-07",
+    "title": "Missing Financial-Year Closing Workflow & Nominal Account Balances",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/ledger/general-ledger.js"
+    ],
+    "root_cause": "GeneralLedger lacked nominal (temporary) revenue and expense account closing capabilities, opening balance generation, and formal fiscal year locking.",
+    "remediation": "Implemented closeFiscalYear() workflow: zeroes all revenue and expense accounts into Income Summary (9901), transfers Net Profit/Loss to Retained Earnings (3201), locks the fiscal period (LOCKED), and generates next-year opening balances.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 7: Nominal account zeroing, Retained Earnings transfer, period lock)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-08",
+    "title": "Unhandled Endorsed Sayad Cheque Dishonor (Bounce) Lifecycle",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/treasury/sayad-cheque-engine.js"
+    ],
+    "root_cause": "SayadChequeEngine supported endorsing cheques to suppliers but lacked the state transition, Central Bank protest certificate recording, and accounting reversal when an endorsed cheque bounced at destination.",
+    "remediation": "Implemented bounceEndorsedCheque(): transitions status to 'endorsed_bounced', records Central Bank protest certificate, and automatically posts balanced Double-Entry journal reinstating supplier liability (Credit 2101 AP) and customer receivable (Debit 1103 AR).",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 8: Endorsed cheque bounce AP/AR restoration); tests/treasury-engine.test.js",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-09",
+    "title": "Uncontrolled Weighbridge Quantity Tolerance and Overbilling Exposure",
+    "severity": "MEDIUM",
+    "affected_modules": [
+      "src/procurement/procurement-engine.js"
+    ],
+    "root_cause": "Procurement engine lacked configurable weighbridge tolerance for bulk industrial commodities (e.g., cement, steel, aggregates), risking either false rejections or uncontrolled supplier overbilling.",
+    "remediation": "Implemented per-item and contractual quantity tolerance configuration (item_tolerances) with a strict 5.0% maximum safety cap, preventing uncontrolled overbilling while accommodating calibrated weighbridge variances.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 9: Controlled tolerance accepts minor variances and rejects overbilling)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-10",
+    "title": "Multi-Organization Data Leakage and Missing Mutation Boundaries",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/security/rls-enforcer.js",
+      "supabase/migrations/20260926_organization_level_rls_policies.sql"
+    ],
+    "root_cause": "RlsEnforcer and PostgreSQL RLS policies only filtered datasets by tenant_id, allowing users in one branch or subsidiary to view and mutate financial records of another organization within the same tenant.",
+    "remediation": "Implemented filterDatasetByOrganization() and org-aware authorizeMutation() in RlsEnforcer. Added database migration 20260926_organization_level_rls_policies.sql with current_user_organization_id() and user_has_holding_access().",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 10: Blocks cross-organization reads and mutations); tests/adversarial-red-team.test.js (Test 3)",
+    "status": "VERIFIED_RESOLVED"
+  },
+  {
+    "defect_id": "DEFECT-11",
+    "title": "Article 141 Capital Reduction Violating Article 5 Statutory Minimum Capital Floors",
+    "severity": "HIGH",
+    "affected_modules": [
+      "src/governance/article-141-compliance-engine.js"
+    ],
+    "root_cause": "simulateRemediation permitted capital reductions down to 1 Rial, violating mandatory minimum statutory capital requirements under Article 5 of the Iranian Commercial Code (5,000,000 IRR for public joint stock, 1,000,000 IRR for private).",
+    "remediation": "Configured versioned statutory rules (1405.1) enforcing company-type minimum capital floors. In capital reduction simulations, reductions below the statutory floor are legally blocked and capped at the legal minimum with warning advisories.",
+    "test_evidence": "tests/defect-remediation-regression.test.js (Test 11: Article 141 & Article 5 minimum capital enforcement)",
+    "status": "VERIFIED_RESOLVED"
+  }
+]
