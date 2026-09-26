@@ -1,0 +1,22 @@
+{
+  "name": "finora-invoice",
+  "version": "1.0.0",
+  "description": "Finora Iranian Enterprise ERP, Invoicing, Tax, Payroll, Procurement, Treasury and Accounting Engine",
+  "main": "assets/js/finora-core-client.js",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "validate:matrix": "node -e \"const data = require('./FINORA_IMPLEMENTATION_MATRIX.json'); if (data.length !== 260) throw new Error('Expected 260 chapters'); console.log('Successfully verified 260 chapters in register.');\""
+  },
+  "keywords": [
+    "finora",
+    "accounting",
+    "erp",
+    "iran-moadian",
+    "tax-compliance",
+    "sayad-cheque",
+    "payroll",
+    "procurement"
+  ],
+  "author": "Davood Mehraban",
+  "license": "UNLICENSED"
+}
