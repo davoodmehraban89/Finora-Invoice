@@ -225,3 +225,21 @@ Evidence: PR https://github.com/davoodmehraban89/Finora-Invoice/pull/62 ; CI htt
 Boundary: this is not acceptance of the full ERP, authenticated two-user security, physical Safari/printer output or autonomous model execution. The native print shortcut remains outside application preflight. No data is clipped or discarded.
 
 Safest continuation: integrate this evidenced pilot outcome with Davood-AI-OS's task acceptance flow; do not describe the agent as autonomous until its model-authentication and worker execution gates have real evidence. Keep the existing unrelated security acceptance backlog intact.
+
+## 2026-09-27 — Ledger replay integrity
+
+PLANNED: Chapters 21, 242, 251, 259, 260; IN_V1. Owner: implementation agent.
+Scope: reject changed payloads reusing a posting key, include stored financial dimensions in digest, freeze posted line arrays. Files: posting engine, event contract, regression tests and control documents. No production/schema changes. Tests: genuine replay, changed amount/organization/project/reversal, immutable lines and full baseline comparison. Rollback: revert this branch.
+Recovery: official GitHub main resolves to 97e73c32d2b7b9553836e9d72166ae48c2e051d6; local matches. Master hash matches canonical anchor. Baseline full suite: 111 pass, 9 fail (120 total). Supabase Finora is INACTIVE. Existing 100% completion claim is not accepted evidence.
+
+## 2026-09-27 — Verified local ledger integrity correction
+
+Branch: `codex/ledger-replay-integrity`, based on official GitHub main `97e73c32d2b7b9553836e9d72166ae48c2e051d6`. Status: IMPLEMENTED_UNVERIFIED for release; local tests verified, no deployment or database mutation.
+
+Changed `src/ledger/posting-engine.js`, `src/accounting/accounting-event-contract.js`, `tests/accounting-posting.test.js`: conflicting reuse of a posting key now fails before balance/audit mutation; digest includes project, effective description and reversal reference; posted line arrays are frozen. Identical intent still replays. This is an in-memory core correction, not proof of persistent tenant isolation.
+
+Verification: `node --test tests/accounting-posting.test.js tests/financial-invariants.test.js tests/treasury-engine.test.js` passed 21/21. `node --test tests/*.test.js` passed 119/128; the same nine baseline failures remain (two test-file startup failures and seven legacy UI contract failures). Eight new regression tests pass. `git diff --check` passed.
+
+Supabase official read confirms Finora `npqeyfghtewymiqyxuce` is INACTIVE. No production catalog or Auth/RLS acceptance is claimed. The old execution-state claim of 260/260 completion is unverified and must not be used for release acceptance. Master roadmap SHA-256 matches `f445ec30b395319aece8bd7eb7d98e80bd4655eff6cc81b0253688b551bbc29b`.
+
+Compatibility: payload digest changed for in-memory journals; no persisted adapter was migrated. Rollback: revert this branch as a unit. Safest next action: resolve baseline UI/integration failures, then verify persistent organization isolation and posting with a reachable Finora database.

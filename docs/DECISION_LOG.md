@@ -91,3 +91,6 @@ Evidence: PR https://github.com/davoodmehraban89/Finora-Invoice/pull/62 ; CI htt
 Boundary: this is not acceptance of the full ERP, authenticated two-user security, physical Safari/printer output or autonomous model execution. The native print shortcut remains outside application preflight. No data is clipped or discarded.
 
 Safest continuation: integrate this evidenced pilot outcome with Davood-AI-OS's task acceptance flow; do not describe the agent as autonomous until its model-authentication and worker execution gates have real evidence. Keep the existing unrelated security acceptance backlog intact.
+
+## 2026-09-27 — Fail closed on posting-key conflicts
+Chapters 242, 251, 259, 260. A key is replayable only for matching financial payload hash. Reusing a key for another tenant/organization or changed payload is rejected, not returned as successful. This does not establish tenant separation for account balances; organization-bound ledger persistence remains a release gate. Freeze posted line collections as well as each line.

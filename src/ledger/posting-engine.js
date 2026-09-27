@@ -20,6 +20,9 @@ class PostingEngine {
     if (this.ledger.idempotencyStore.has(event.idempotency_key)) {
       const existingJournalId = this.ledger.idempotencyStore.get(event.idempotency_key);
       const existingEntry = this.ledger.journalEntries.find(j => j.journal_id === existingJournalId);
+      if (!existingEntry || existingEntry.payload_hash !== validation.payloadHash) {
+        throw new Error('Idempotency conflict: key already used for a different accounting payload.');
+      }
       return {
         success: true,
         isIdempotentReplay: true,
@@ -54,7 +57,7 @@ class PostingEngine {
       source_entity_id: event.source_entity_id,
       currency: event.currency,
       payload_hash: validation.payloadHash,
-      lines: event.lines.map((l, idx) => Object.freeze({
+      lines: Object.freeze(event.lines.map((l, idx) => Object.freeze({
         line_number: idx + 1,
         account_code: l.account_code,
         debit: Number(l.debit) || 0,
@@ -63,7 +66,7 @@ class PostingEngine {
         cost_center: l.cost_center || null,
         project_id: l.project_id || null,
         description: l.description || event.description || ''
-      })),
+      }))),
       total_debit: validation.totalDebit,
       total_credit: validation.totalCredit,
       is_reversed: false,
