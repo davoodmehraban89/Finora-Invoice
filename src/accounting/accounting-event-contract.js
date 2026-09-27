@@ -122,12 +122,15 @@ class AccountingEventContract {
       source_module: event.source_module,
       source_entity_id: event.source_entity_id,
       currency: event.currency,
+      reversal_of: event.reversal_of || null,
       lines: event.lines.map(l => ({
         account_code: l.account_code,
         debit: l.debit || 0,
         credit: l.credit || 0,
         party_id: l.party_id || null,
-        cost_center: l.cost_center || null
+        cost_center: l.cost_center || null,
+        project_id: l.project_id || null,
+        description: l.description || event.description || ''
       }))
     });
 
