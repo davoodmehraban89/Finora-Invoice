@@ -1,58 +1,79 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ورود | فینورا</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="assets/css/app.css">
-<link rel="stylesheet" href="assets/css/mobile.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فینورا — ورود به پلتفرم مالی و سازمانی</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/finora-core-client.js"></script>
 </head>
-<body>
-<main class="login">
-<section class="login-card">
-<div class="eyebrow">FINORA • ERP</div>
-<h1>فروش حرفه‌ای، از صدور تا وصول</h1>
-<p class="muted">فاز نخست فینورا؛ مدیریت امن و یکپارچه فاکتور فروش</p>
-<div class="auth-mode" role="group" aria-label="نوع دسترسی">
-<button class="auth-mode-button is-active" id="loginMode" type="button">ورود</button>
-<button class="auth-mode-button" id="signupMode" type="button">ایجاد حساب</button>
-</div>
-<div id="message" class="notice" role="status" aria-live="polite" hidden></div>
-<form id="authForm" novalidate>
-<div class="field">
-<label for="email">ایمیل</label>
-<input class="input" id="email" name="email" type="email" autocomplete="username" inputmode="email" required>
-</div>
-<div class="field" style="margin-top:14px">
-<label for="password">رمز عبور</label>
-<input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
-</div>
-<div class="field" id="confirmPasswordField" style="margin-top:14px" hidden>
-<label for="confirmPassword">تکرار رمز عبور</label>
-<input class="input" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="8">
-</div>
-<button class="btn btn-primary" id="submitButton" style="width:100%;margin-top:20px" type="submit">ورود امن</button>
-<button class="btn btn-secondary" id="resendButton" style="width:100%;margin-top:10px" type="button" hidden>ارسال مجدد ایمیل تأیید</button>
-</form>
-<a class="btn btn-secondary" style="display:block;text-align:center;text-decoration:none;margin-top:10px" href="dashboard.html?demo=1">مشاهده نسخه نمایشی</a>
-</section>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js"></script>
-<script>
-(()=>{'use strict';
-const cfg=window.FINORA_SUPABASE_CONFIG,client=supabase.createClient(cfg.url,cfg.publishableKey),form=document.querySelector('#authForm'),msg=document.querySelector('#message'),emailInput=document.querySelector('#email'),passwordInput=document.querySelector('#password'),confirmPasswordInput=document.querySelector('#confirmPassword'),confirmPasswordField=document.querySelector('#confirmPasswordField'),submitButton=document.querySelector('#submitButton'),resendButton=document.querySelector('#resendButton'),loginMode=document.querySelector('#loginMode'),signupMode=document.querySelector('#signupMode');let mode='login',pendingEmail='';
-const redirectUrl=()=>new URL('index.html?email-confirmed=1',location.href).href;
-function show(text,error=false){msg.hidden=false;msg.textContent=text;msg.classList.toggle('notice-error',error)}
-function setBusy(busy){submitButton.disabled=busy;loginMode.disabled=busy;signupMode.disabled=busy}
-function setMode(next){mode=next;const signup=mode==='signup';loginMode.classList.toggle('is-active',!signup);signupMode.classList.toggle('is-active',signup);confirmPasswordField.hidden=!signup;confirmPasswordInput.required=signup;passwordInput.autocomplete=signup?'new-password':'current-password';submitButton.textContent=signup?'ساخت حساب و ارسال ایمیل تأیید':'ورود امن';resendButton.hidden=true;msg.hidden=true;confirmPasswordInput.value=''}
-loginMode.onclick=()=>setMode('login');signupMode.onclick=()=>setMode('signup');
-form.addEventListener('submit',async event=>{event.preventDefault();msg.hidden=true;const email=emailInput.value.trim(),password=passwordInput.value;if(!emailInput.checkValidity())return show('یک نشانی ایمیل معتبر وارد کنید.',true);if(password.length<8)return show('رمز عبور باید حداقل ۸ نویسه باشد.',true);if(mode==='signup'&&password!==confirmPasswordInput.value)return show('رمز عبور و تکرار آن یکسان نیستند.',true);setBusy(true);try{if(mode==='signup'){const{data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectUrl()}});if(error)return show('ساخت حساب انجام نشد. اطلاعات را بررسی کنید یا از ارسال مجدد ایمیل استفاده کنید.',true);pendingEmail=email;if(data.session)await client.auth.signOut();passwordInput.value='';confirmPasswordInput.value='';resendButton.hidden=false;show('حساب ساخته شد. لینک تأیید به ایمیل شما ارسال شد؛ تا پیش از تأیید، ورود مجاز نیست.')}else{const{error}=await client.auth.signInWithPassword({email,password});if(error)return show(String(error.message||'').toLowerCase().includes('email not confirmed')?'ابتدا لینک تأیید ارسال‌شده به ایمیل را باز کنید.':'ورود انجام نشد. ایمیل و رمز عبور را بررسی کنید.',true);location.href='dashboard.html'}}finally{setBusy(false)}});
-resendButton.onclick=async()=>{const email=pendingEmail||emailInput.value.trim();if(!email)return show('ابتدا ایمیل ثبت‌نام را وارد کنید.',true);resendButton.disabled=true;const{error}=await client.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectUrl()}});resendButton.disabled=false;show(error?'ارسال مجدد انجام نشد؛ کمی بعد دوباره تلاش کنید.':'ایمیل تأیید دوباره ارسال شد.',Boolean(error))};
-if(new URLSearchParams(location.search).get('email-confirmed')==='1')show('ایمیل تأیید شد. اکنون می‌توانید وارد شوید.');
-client.auth.getSession().then(({data})=>{if(data.session)location.href='dashboard.html'});
-})();
-</script>
+<body style="background-color: var(--bg-main); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem;">
+
+  <div class="auth-container">
+    <div class="auth-header">
+      <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">⚡</div>
+      <h1 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 0.5rem;">پلتفرم یکپارچه مالی فینورا</h1>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">سیستم جامع مدیریت مالی، تدارکات، خزانه‌داری، صیاد و مؤدیان</p>
+    </div>
+
+    <div class="admin-callout">
+      <strong>👑 تنظیمات مدیر کل سامانه (Super Admin):</strong><br>
+      ایمیل <code>davoodmehraban89@gmail.com</code> به عنوان مدیر ارشد و مالک کل سیستم شناخته شده است و به محض ورود تمامی اختیارات و ماژول‌ها بدون محدودیت فعال می‌گردند.
+    </div>
+
+    <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">آدرس ایمیل</label>
+        <input type="email" id="email-input" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);" value="davoodmehraban89@gmail.com" required dir="ltr">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem;">نام و نام خانوادگی</label>
+        <input type="text" id="name-input" class="form-control" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius);" value="داوود مهربان" required>
+      </div>
+
+      <div id="auth-status-msg" style="display: none; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem;"></div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; cursor: pointer;">
+          ورود / ثبت‌نام به عنوان مدیر ارشد 🚀
+        </button>
+
+        <a href="dashboard.html" class="btn btn-secondary" style="width: 100%; text-align: center; padding: 0.85rem; font-size: 0.9rem; text-decoration: none; display: block; box-sizing: border-box;">
+          ورود مستقیم به پیشخوان مدیریت (Dashboard)
+        </a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('email-input').value.trim();
+      const name = document.getElementById('name-input').value.trim();
+      const statusEl = document.getElementById('auth-status-msg');
+
+      if (!window.finora) {
+        window.finora = new FinoraClient();
+      }
+
+      const res = window.finora.authenticate({ email: email, fullName: name });
+
+      statusEl.style.display = 'block';
+      if (res.isAdmin) {
+        statusEl.style.background = '#dcfce7';
+        statusEl.style.color = '#15803d';
+        statusEl.innerHTML = '<strong>احراز هویت موفقیت‌آمیز:</strong> هویت مدیر ارشد (Super Admin / Owner) تأیید شد. در حال انتقال به پیشخوان...';
+      } else {
+        statusEl.style.background = '#e0f2fe';
+        statusEl.style.color = '#0369a1';
+        statusEl.innerHTML = '<strong>احراز هویت کاربر استاندارد:</strong> خوش آمدید. در حال انتقال...';
+      }
+
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 700);
+    }
+  </script>
 </body>
 </html>
