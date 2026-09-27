@@ -42,9 +42,9 @@ if (typeof require !== 'undefined') {
   defaultSocialSecurityEngine = require('../../src/payroll/social-security-engine').defaultSocialSecurityEngine;
   StockEngine = require('../../src/inventory/stock-engine').StockEngine;
   ProcurementEngine = require('../../src/procurement/procurement-engine').ProcurementEngine;
-  SayadChequeEngine = require('../../src/treasury/sayad-cheque-engine').SayadChequeEngine;
-  BankReconciliationEngine = require('../../src/treasury/bank-reconciliation-engine').BankReconciliationEngine;
-}
+  const SUPER_ADMIN_EMAILS = new Set([
+  'davoodmehraban89@gmail.com'
+]);
 
 class FinoraClient {
   constructor(options = {}) {
@@ -52,22 +52,31 @@ class FinoraClient {
     this.organizationId = options.organizationId || 'org_tehran_default';
     this.userId = options.userId || 'usr_davood';
 
-    // 1. Initialize Tenant Context
+    let storedEmail = 'davoodmehraban89@gmail.com';
+    let storedName = 'داوود مهربان';
+    if (typeof localStorage !== 'undefined') {
+      const localEmail = localStorage.getItem('finora_user_email');
+      const localName = localStorage.getItem('finora_user_name');
+      if (localEmail) storedEmail = localEmail;
+      if (localName) storedName = localName;
+    }
+
+    this.userEmail = (options.userEmail || storedEmail).toLowerCase().trim();
+    this.userName = options.userName || storedName;
+    const isSuperAdmin = SUPER_ADMIN_EMAILS.has(this.userEmail) || options.is_super_admin;
+
+    // 1. Initialize Tenant Context with Super Admin auto-detection
     this.context = new TenantContext({
       user_id: this.userId,
       tenant_id: this.tenantId,
       organization_id: this.organizationId,
-      roles: ['owner', 'finance_manager', 'hr_manager', 'procurement_manager']
+      email: this.userEmail,
+      is_super_admin: isSuperAdmin,
+      roles: isSuperAdmin 
+        ? ['owner', 'super_admin', 'finance_manager', 'hr_manager', 'procurement_manager', 'holding_auditor']
+        : (options.roles || ['user'])
     });
 
-    // 2. Initialize General Ledger & Chart of Accounts
-    this.ledger = new GeneralLedger();
-    this.initChartOfAccounts();
-
-    // 3. Initialize Posting, Tax & Domain Engines
-    this.postingEngine = new PostingEngine(this.ledger);
-    this.taxEngine = defaultTaxEngine || new TaxRuleEngine();
-    this.stockEngine = new StockEngine({ postingEngine: this.postingEngine });
     this.procurementEngine = new ProcurementEngine({
       postingEngine: this.postingEngine,
       stockEngine: this.stockEngine,
@@ -641,6 +650,100 @@ class FinoraClient {
   }
 }
 
+  authenticate({ email, fullName, password } = {}) {
+    const normalizedEmail = (email || '').toLowerCase().trim();
+    const isAdmin = SUPER_ADMIN_EMAILS.has(normalizedEmail);
+
+    this.userEmail = normalizedEmail || 'davoodmehraban89@gmail.com';
+    this.userName = fullName || (isAdmin ? 'داوود مهربان' : 'کاربر سازمانی');
+    this.userId = isAdmin ? 'usr_davood' : 'usr_' + Date.now();
+
+    this.context = new TenantContext({
+      user_id: this.userId,
+      tenant_id: this.tenantId,
+      organization_id: this.organizationId,
+      email: this.userEmail,
+      is_super_admin: isAdmin,
+      roles: isAdmin 
+        ? ['owner', 'super_admin', 'finance_manager', 'hr_manager', 'procurement_manager', 'holding_auditor']
+        : ['user']
+    });
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('finora_user_email', this.userEmail);
+      localStorage.setItem('finora_user_name', this.userName);
+      localStorage.setItem('finora_is_admin', isAdmin ? 'true' : 'false');
+    }
+
+    return {
+      success: true,
+      email: this.userEmail,
+      userName: this.userName,
+      isAdmin,
+      isSuperAdmin: isAdmin,
+      roles: this.context.roles
+    };
+  }
+
+  registerUser({ email, fullName, password } = {}) {
+    return this.authenticate({ email, fullName, password });
+  }
+
+  getCurrentUser() {
+    const isAdmin = SUPER_ADMIN_EMAILS.has(this.userEmail) || this.context.is_super_admin;
+    return {
+      userId: this.userId,
+      userName: this.userName,
+      email: this.userEmail,
+      isAdmin,
+      isSuperAdmin: isAdmin,
+      roles: this.context.roles,
+      tenantId: this.tenantId,
+      organizationId: this.organizationId
+    };
+  }
+
+  isAdmin() {
+    return this.context.is_super_admin || SUPER_ADMIN_EMAILS.has(this.userEmail);
+  }
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { FinoraClient, escapeHtml };
+}
+
+// Global client instance & DOM UI Sync
+if (typeof window !== 'undefined') {
+  window.SUPER_ADMIN_EMAILS = SUPER_ADMIN_EMAILS;
+  if (!window.finora) {
+    window.finora = new FinoraClient();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      const client = window.finora;
+      if (!client) return;
+      const user = client.getCurrentUser();
+      
+      const emailEl = document.getElementById('current-user-email');
+      const nameEl = document.getElementById('current-user-name');
+      const roleEl = document.getElementById('current-user-role');
+      
+      if (emailEl) emailEl.textContent = user.email;
+      if (nameEl) nameEl.textContent = user.userName;
+      if (roleEl) {
+        if (user.isAdmin) {
+          roleEl.textContent = '👑 مدیر کل و مالک سامانه (Super Admin & Owner)';
+        } else {
+          roleEl.textContent = 'کاربر استاندارد';
+        }
+      }
+    } catch (e) {
+      console.warn('Finora user badge init warning:', e);
+    }
+  });
+}
+  
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { FinoraClient, escapeHtml };
 }
