@@ -25,7 +25,8 @@ async function signOut(){if(!demo&&client)await client.auth.signOut();location.r
 function currencyLabel(unit='rial'){return unit==='toman'?'تومان':'ریال';}
 function fromBaseAmount(value,unit='rial'){return unit==='toman'?(Number(value)||0)/10:Number(value)||0;}
 function toBaseAmount(value,unit='rial'){return unit==='toman'?(Number(value)||0)*10:Number(value)||0;}
-function money(value,unit='rial'){return`${new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2}).format(fromBaseAmount(value,unit))} ${currencyLabel(unit)}`;}
+const moneyFormatter=new Intl.NumberFormat('fa-IR',{maximumFractionDigits:2});
+function money(value,unit='rial'){return`${moneyFormatter.format(fromBaseAmount(value,unit))} ${currencyLabel(unit)}`;}
 function escape(value){const el=document.createElement('div');el.textContent=value==null?'':String(value);return el.innerHTML;}
 function today(){return new Intl.DateTimeFormat('fa-IR-u-nu-latn',{year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replaceAll('/','-');}
 window.Finora={demo,sdk:client,state,requireAuth,list,get,save,archive,saveInvoice,signOut,money,currencyLabel,fromBaseAmount,toBaseAmount,customerSnapshot,sellerSnapshot,escape,today};
